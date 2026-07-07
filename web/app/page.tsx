@@ -13,8 +13,8 @@ export default function Home() {
             Ensuring fairness, anonymity, and AI-assisted evaluation for every project.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <Link href="/projects" className="btn btn-primary">
-              View Active Projects
+            <Link href="/procurements" className="btn btn-primary">
+              View Active Procurements
             </Link>
             <Link href="/bids/new" className="btn btn-outline">
               Submit a Bid
@@ -65,29 +65,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Recent Projects Preview */}
+      {/* Recent Procurements Preview */}
       <section className="container" style={{ paddingBottom: '80px' }}>
         <div className={styles.recentProjectsHeader}>
           <h2>Recent Solicitations</h2>
-          <Link href="/projects" className="btn btn-outline">View All</Link>
+          <Link href="/procurements" className="btn btn-outline">View All</Link>
         </div>
         
         <div style={{ display: 'grid', gap: '24px' }}>
-          {/* Mock Project 1 */}
+          {/* Mock Procurement 1 */}
           <div className={`card ${styles.projectCard}`}>
             <div className={styles.projectCardHeader}>
               <div>
-                <h3 className={styles.projectCardTitle}>Construction of Public Library - Phase 1</h3>
+                <h3 className={styles.projectCardTitle}>Procurement of Medical Supplies (Q3 2026)</h3>
                 <div className={styles.projectMeta}>
-                  <span>📍 Cebu City Gov</span>
-                  <span>💰 Est. 50,000,000 PHP</span>
+                  <span>📍 DOH Region 7</span>
+                  <span>💰 Est. 5,000,000 PHP</span>
                   <span>⏳ Closes in 12 days</span>
                 </div>
               </div>
               <span className="badge">Open</span>
             </div>
             <p style={{ color: 'var(--color-text-muted)' }}>
-              Looking for licensed contractors to build the new public library located at the city center. Must have 10+ years of experience in civic projects.
+              Looking for verified suppliers of medical-grade face masks, PPEs, and surgical gloves for public hospitals. Must have FDA clearance.
             </p>
           </div>
 
