@@ -76,10 +76,9 @@ export default function UserDashboard() {
     (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "User");
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container py-8 max-w-6xl mx-auto px-4">
-        
-        {/* Welcome Section */}
+    <div className="py-8 px-8 max-w-6xl mx-auto w-full">
+      
+      {/* Welcome Section */}
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-text-main mb-2 font-heading tracking-tight">
             Welcome back, <span className="text-primary">{ready ? displayName : '...'}</span>
@@ -184,7 +183,6 @@ export default function UserDashboard() {
             </div>
           </div>
 
-        </div>
       </div>
     </div>
   );
