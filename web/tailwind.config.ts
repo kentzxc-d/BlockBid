@@ -9,15 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#0052CC",
-        "primary-hover": "#0043A6",
-        secondary: "#00875A",
-        "secondary-hover": "#006B47",
-        background: "#F4F5F7",
+        primary: "#2563EB", // Primary Blue
+        "primary-hover": "#1D4ED8",
+        secondary: "#10B981", // Success Green
+        "secondary-hover": "#059669",
+        warning: "#F59E0B", // Warning Amber
+        danger: "#EF4444", // Danger Red
+        background: "#F5F7FA", // Soft blue-gray
         surface: "#FFFFFF",
-        "text-main": "#172B4D",
-        "text-muted": "#6B778C",
-        border: "#DFE1E6",
+        "text-main": "#1E293B", // Dark navy text
+        "text-muted": "#64748B",
+        border: "#EAECF0", // Subtle border
       },
     },
   },

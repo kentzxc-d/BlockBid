@@ -40,20 +40,26 @@ export default function DashboardTopbar() {
         {/* Wallet / ID Display */}
         {ready ? (
           <div 
-            onClick={handleCopy}
-            className="flex items-center gap-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 px-4 py-2 rounded-full cursor-pointer transition-all duration-200"
-            title="Click to copy"
+            onClick={identifier ? handleCopy : undefined}
+            className={`flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-200 border ${
+              identifier 
+                ? "bg-gray-50 hover:bg-gray-100 border-gray-200 cursor-pointer" 
+                : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help group relative"
+            }`}
+            title={identifier ? "Click to copy" : "Wallet not connected. Your session is active, but a blockchain wallet is missing."}
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-            <span className="text-sm font-semibold text-gray-700 font-mono tracking-tight">
+            <div className={`w-2.5 h-2.5 rounded-full ${identifier ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"}`}></div>
+            <span className={`text-sm font-semibold font-mono tracking-tight ${identifier ? "text-gray-700" : "text-red-700"}`}>
               {identifier 
                 ? (identifier.length > 15 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) 
                 : "Not Connected"}
             </span>
-            {copied ? (
-              <CheckIcon className="w-4 h-4 text-green-600" />
-            ) : (
-              <DocumentDuplicateIcon className="w-4 h-4 text-gray-400" />
+            {identifier && (
+              copied ? (
+                <CheckIcon className="w-4 h-4 text-green-600" />
+              ) : (
+                <DocumentDuplicateIcon className="w-4 h-4 text-gray-400" />
+              )
             )}
           </div>
         ) : (

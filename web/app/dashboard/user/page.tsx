@@ -8,7 +8,9 @@ import {
   UserGroupIcon, 
   ArrowRightIcon, 
   CheckCircleIcon, 
-  ClockIcon 
+  ClockIcon,
+  DocumentChartBarIcon,
+  TrophyIcon
 } from "@heroicons/react/24/outline";
 
 // Mock Data for Active Solicitations (Item Procurements)
@@ -21,7 +23,7 @@ const ACTIVE_SOLICITATIONS = [
     deadline: "3 Days",
     icon: AcademicCapIcon,
     bgColor: "bg-blue-50",
-    iconColor: "text-blue-600",
+    iconColor: "text-blue-500",
   },
   {
     id: "SOL-2026-002",
@@ -30,8 +32,8 @@ const ACTIVE_SOLICITATIONS = [
     budget: "₱ 2,500,000",
     deadline: "12 Days",
     icon: BuildingOfficeIcon,
-    bgColor: "bg-green-50",
-    iconColor: "text-green-600",
+    bgColor: "bg-teal-50",
+    iconColor: "text-teal-500",
   },
   {
     id: "SOL-2026-003",
@@ -40,8 +42,8 @@ const ACTIVE_SOLICITATIONS = [
     budget: "₱ 500,000",
     deadline: "5 Days",
     icon: UserGroupIcon,
-    bgColor: "bg-purple-50",
-    iconColor: "text-purple-600",
+    bgColor: "bg-indigo-50",
+    iconColor: "text-indigo-500",
   }
 ];
 
@@ -53,8 +55,9 @@ const MY_BIDS = [
     submittedAt: "2 Days Ago",
     status: "Under Evaluation",
     statusIcon: ClockIcon,
-    statusColor: "text-amber-600",
-    statusBg: "bg-amber-100"
+    statusColor: "text-warning",
+    statusBg: "bg-amber-50",
+    borderColor: "border-l-warning"
   },
   {
     id: "BID-0041",
@@ -62,8 +65,9 @@ const MY_BIDS = [
     submittedAt: "1 Month Ago",
     status: "Won",
     statusIcon: CheckCircleIcon,
-    statusColor: "text-green-600",
-    statusBg: "bg-green-100"
+    statusColor: "text-secondary",
+    statusBg: "bg-emerald-50",
+    borderColor: "border-l-secondary"
   }
 ];
 
@@ -76,31 +80,46 @@ export default function UserDashboard() {
     (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "User");
 
   return (
-    <div className="py-8 px-8 max-w-6xl mx-auto w-full">
+    <div className="py-10 px-8 max-w-[1400px] mx-auto w-full">
       
       {/* Welcome Section */}
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-text-main mb-2 font-heading tracking-tight">
             Welcome back, <span className="text-primary">{ready ? displayName : '...'}</span>
           </h1>
-          <p className="text-text-muted">
-            Manage your item procurement bids, discover new opportunities across various sectors, and track your success.
+          <p className="text-text-muted text-sm md:text-base">
+            Manage your bids, discover new opportunities, and track your success.
           </p>
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-surface rounded-xl p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-text-muted text-sm font-medium mb-1">Total Bids Submitted</h3>
-            <p className="text-3xl font-bold text-text-main">12</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-surface rounded-2xl p-6 border border-border shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
+            <div className="p-4 bg-blue-50 rounded-xl">
+              <DocumentChartBarIcon className="w-8 h-8 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-text-muted text-sm font-medium mb-1">Total Bids Submitted</h3>
+              <p className="text-3xl font-bold text-text-main">12</p>
+            </div>
           </div>
-          <div className="bg-surface rounded-xl p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-text-muted text-sm font-medium mb-1">Bids Won</h3>
-            <p className="text-3xl font-bold text-secondary">3</p>
+          <div className="bg-surface rounded-2xl p-6 border border-border shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
+            <div className="p-4 bg-emerald-50 rounded-xl">
+              <TrophyIcon className="w-8 h-8 text-secondary" />
+            </div>
+            <div>
+              <h3 className="text-text-muted text-sm font-medium mb-1">Bids Won</h3>
+              <p className="text-3xl font-bold text-secondary">3</p>
+            </div>
           </div>
-          <div className="bg-surface rounded-xl p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-text-muted text-sm font-medium mb-1">Pending Evaluation</h3>
-            <p className="text-3xl font-bold text-amber-500">4</p>
+          <div className="bg-surface rounded-2xl p-6 border border-border shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
+            <div className="p-4 bg-amber-50 rounded-xl">
+              <ClockIcon className="w-8 h-8 text-warning" />
+            </div>
+            <div>
+              <h3 className="text-text-muted text-sm font-medium mb-1">Pending Evaluation</h3>
+              <p className="text-3xl font-bold text-warning">4</p>
+            </div>
           </div>
         </div>
 
@@ -109,40 +128,43 @@ export default function UserDashboard() {
           {/* Main Content Area (Active Solicitations) */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-text-main font-heading">Active Solicitations (Item Procurements)</h2>
-              <Link href="/procurements" className="text-sm font-medium text-primary hover:text-primary-hover flex items-center gap-1">
-                View all <ArrowRightIcon className="w-4 h-4" />
+              <h2 className="text-xl font-bold text-text-main font-heading">Active Solicitations</h2>
+              <Link href="/procurements" className="text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-1">
+                View all <ArrowRightIcon className="w-4 h-4 stroke-2" />
               </Link>
             </div>
             
             <div className="grid gap-4">
               {ACTIVE_SOLICITATIONS.map((solicitation) => (
-                <div key={solicitation.id} className="bg-surface rounded-xl p-5 border border-border shadow-sm hover:shadow-md transition-all group flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-lg ${solicitation.bgColor}`}>
-                      <solicitation.icon className={`w-6 h-6 ${solicitation.iconColor}`} />
+                <div key={solicitation.id} className="bg-surface rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                  <div className="flex items-start gap-5">
+                    <div className={`p-3.5 rounded-xl ${solicitation.bgColor}`}>
+                      <solicitation.icon className={`w-7 h-7 ${solicitation.iconColor}`} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-text-main group-hover:text-primary transition-colors">
+                      <h3 className="font-bold text-text-main text-lg group-hover:text-primary transition-colors">
                         {solicitation.title}
                       </h3>
-                      <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-text-muted">
-                        <span className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-border"></span>
-                          {solicitation.sector} Sector
+                      <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-text-muted font-medium">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                          {solicitation.sector}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-border"></span>
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
                           Est: {solicitation.budget}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2 border-t sm:border-t-0 pt-4 sm:pt-0 border-border">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                  <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 border-t sm:border-t-0 pt-5 sm:pt-0 border-border">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-primary">
                       Closes in {solicitation.deadline}
                     </span>
-                    <Link href={`/procurements/${solicitation.id}`} className="text-sm font-medium text-primary hover:underline">
+                    <Link 
+                      href={`/procurements/${solicitation.id}`} 
+                      className="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-hover transition-colors shadow-sm"
+                    >
                       Submit Bid
                     </Link>
                   </div>
@@ -155,28 +177,28 @@ export default function UserDashboard() {
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-text-main font-heading">My Recent Bids</h2>
             
-            <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-sm">
-              <div className="divide-y divide-border">
+            <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm flex flex-col">
+              <div className="divide-y divide-border flex-1">
                 {MY_BIDS.map((bid) => (
-                  <div key={bid.id} className="p-5 hover:bg-gray-50 transition-colors">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">{bid.id}</span>
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${bid.statusBg} ${bid.statusColor}`}>
-                        <bid.statusIcon className="w-3.5 h-3.5" />
+                  <div key={bid.id} className={`p-6 hover:bg-slate-50 transition-colors border-l-4 ${bid.borderColor}`}>
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="text-base font-bold text-text-main tracking-tight">{bid.id}</span>
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold ${bid.statusBg} ${bid.statusColor}`}>
+                        <bid.statusIcon className="w-3.5 h-3.5 stroke-2" />
                         {bid.status}
                       </span>
                     </div>
-                    <h4 className="font-medium text-text-main text-sm mb-1 leading-snug">
+                    <h4 className="font-semibold text-text-muted text-sm mb-1.5 leading-snug">
                       {bid.solicitationTitle}
                     </h4>
-                    <p className="text-xs text-text-muted">
+                    <p className="text-xs text-slate-400 font-medium">
                       Submitted {bid.submittedAt}
                     </p>
                   </div>
                 ))}
               </div>
-              <div className="p-4 border-t border-border bg-gray-50 text-center">
-                <Link href="/dashboard/bids" className="text-sm font-medium text-text-muted hover:text-text-main">
+              <div className="p-5 border-t border-border bg-slate-50 text-center mt-auto">
+                <Link href="/dashboard/bids" className="text-sm font-bold text-primary hover:text-primary-hover">
                   View all bid history
                 </Link>
               </div>
