@@ -24,8 +24,13 @@ export default function LoginButton() {
   }
 
   return (
-    <button className="btn btn-primary" onClick={login}>
-      Log In / Sign Up
-    </button>
+    <div style={{ display: 'flex', gap: '8px' }}>
+      <button className="btn btn-outline" onClick={login}>
+        Admin Login
+      </button>
+      <button className="btn btn-primary" onClick={login}>
+        User Login
+      </button>
+    </div>
   );
 }
