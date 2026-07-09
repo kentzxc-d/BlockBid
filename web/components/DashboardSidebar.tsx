@@ -75,7 +75,7 @@ export default function DashboardSidebar() {
             <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
             <span className="text-sm font-semibold text-white">Network Status</span>
           </div>
-          <p className="text-xs text-slate-400">Connected to Base Sepolia Testnet. All systems operational.</p>
+          <p className="text-xs text-slate-400">Connected to Polygon Amoy Testnet. All systems operational.</p>
         </div>
         <div className="mt-4 text-xs text-slate-500 text-center font-medium">
           &copy; 2026 BlockBid.
