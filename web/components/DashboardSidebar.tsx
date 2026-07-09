@@ -7,7 +7,8 @@ import {
   DocumentTextIcon, 
   ClipboardDocumentCheckIcon,
   PlusCircleIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  FolderOpenIcon
 } from "@heroicons/react/24/outline";
 
 export default function DashboardSidebar() {
@@ -16,6 +17,7 @@ export default function DashboardSidebar() {
   const navItems = [
     { name: "Overview", href: "/dashboard/user", icon: HomeIcon },
     { name: "Active Solicitations", href: "/dashboard/procurements", icon: DocumentTextIcon },
+    { name: "My Procurements", href: "/dashboard/my-procurements", icon: FolderOpenIcon },
     { name: "My Bids", href: "/dashboard/bids", icon: ClipboardDocumentCheckIcon },
     { name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon },
   ];
