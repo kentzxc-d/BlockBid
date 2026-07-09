@@ -129,7 +129,7 @@ export default function UserDashboard() {
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-text-main font-heading">Active Solicitations</h2>
-              <Link href="/procurements" className="text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-1">
+              <Link href="/dashboard/procurements" className="text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-1">
                 View all <ArrowRightIcon className="w-4 h-4 stroke-2" />
               </Link>
             </div>

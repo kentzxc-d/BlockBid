@@ -15,7 +15,7 @@ export default function DashboardSidebar() {
 
   const navItems = [
     { name: "Overview", href: "/dashboard/user", icon: HomeIcon },
-    { name: "Active Solicitations", href: "/procurements", icon: DocumentTextIcon },
+    { name: "Active Solicitations", href: "/dashboard/procurements", icon: DocumentTextIcon },
     { name: "My Bids", href: "/dashboard/bids", icon: ClipboardDocumentCheckIcon },
     { name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon },
   ];
