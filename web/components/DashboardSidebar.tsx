@@ -18,7 +18,7 @@ export default function DashboardSidebar() {
     { name: "Overview", href: "/dashboard/user", icon: HomeIcon },
     { name: "Active Solicitations", href: "/dashboard/procurements", icon: DocumentTextIcon },
     { name: "My Procurements", href: "/dashboard/my-procurements", icon: FolderOpenIcon },
-    { name: "My Bids", href: "/dashboard/bids", icon: ClipboardDocumentCheckIcon },
+    { name: "My Bids", href: "/dashboard/my-bids", icon: ClipboardDocumentCheckIcon },
     { name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon },
   ];
 
