@@ -22,7 +22,7 @@ const evaluationSchema = z.object({
   )
 });
 
-export const maxDuration = 60; // Allow up to 60 seconds for AI processing
+export const runtime = 'edge'; // Use Edge runtime to avoid 10s Node serverless timeout
 
 export async function POST(req: Request) {
   try {
