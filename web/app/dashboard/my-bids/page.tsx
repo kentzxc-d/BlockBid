@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useMemo } from "react";
+
 import Link from "next/link";
 import { 
   DocumentTextIcon, 
@@ -63,6 +65,31 @@ const SUBMITTED_BIDS = [
 ];
 
 export default function MyBidsPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All Bids");
+  const [viewingBid, setViewingBid] = useState<typeof SUBMITTED_BIDS[0] | null>(null);
+
+  const filteredBids = useMemo(() => {
+    return SUBMITTED_BIDS.filter(bid => {
+      const matchesSearch = bid.procurementTitle.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            bid.id.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      let matchesTab = true;
+      if (activeTab === "Pending") matchesTab = bid.status === "Pending";
+      if (activeTab === "Awarded") matchesTab = bid.status === "Awarded";
+      if (activeTab === "Rejected") matchesTab = bid.status === "Rejected";
+
+      return matchesSearch && matchesTab;
+    });
+  }, [searchQuery, activeTab]);
+
+  const counts = {
+    all: SUBMITTED_BIDS.length,
+    pending: SUBMITTED_BIDS.filter(b => b.status === "Pending").length,
+    awarded: SUBMITTED_BIDS.filter(b => b.status === "Awarded").length,
+    rejected: SUBMITTED_BIDS.filter(b => b.status === "Rejected").length,
+  };
+
   return (
     <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
@@ -84,6 +111,8 @@ export default function MyBidsPage() {
             <input 
               type="text" 
               placeholder="Search by ID or Title..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 pr-4 py-2.5 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm font-medium w-full md:w-64"
             />
           </div>
@@ -96,23 +125,44 @@ export default function MyBidsPage() {
 
       {/* Tabs */}
       <div className="flex items-center gap-6 mb-8 border-b border-border overflow-x-auto">
-        <button className="pb-3 text-sm font-bold text-primary border-b-2 border-primary whitespace-nowrap">
-          All Bids (4)
+        <button 
+          onClick={() => setActiveTab("All Bids")}
+          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "All Bids" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+        >
+          All Bids ({counts.all})
         </button>
-        <button className="pb-3 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors whitespace-nowrap">
-          Pending (1)
+        <button 
+          onClick={() => setActiveTab("Pending")}
+          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "Pending" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+        >
+          Pending ({counts.pending})
         </button>
-        <button className="pb-3 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors whitespace-nowrap">
-          Awarded (2)
+        <button 
+          onClick={() => setActiveTab("Awarded")}
+          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "Awarded" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+        >
+          Awarded ({counts.awarded})
         </button>
-        <button className="pb-3 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors whitespace-nowrap">
-          Rejected (1)
+        <button 
+          onClick={() => setActiveTab("Rejected")}
+          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "Rejected" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+        >
+          Rejected ({counts.rejected})
         </button>
       </div>
 
       {/* Bids List */}
       <div className="grid gap-5">
-        {SUBMITTED_BIDS.map((bid) => (
+        {filteredBids.length === 0 ? (
+          <div className="bg-surface rounded-2xl p-10 border border-border text-center">
+            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+              <MagnifyingGlassIcon className="w-8 h-8 text-slate-300" />
+            </div>
+            <h3 className="font-bold text-slate-700 text-lg mb-1">No bids found</h3>
+            <p className="text-slate-500 text-sm">Try adjusting your search or tab filter.</p>
+          </div>
+        ) : (
+          filteredBids.map((bid) => (
           <div key={bid.id} className="bg-surface rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all group flex flex-col md:flex-row md:items-center justify-between gap-6">
             
             <div className="flex items-start gap-5 flex-1">
@@ -145,14 +195,72 @@ export default function MyBidsPage() {
                 <bid.statusIcon className="w-4 h-4 stroke-2" />
                 {bid.status}
               </div>
-              <button className="px-5 py-2.5 bg-slate-50 text-slate-600 text-sm font-bold rounded-lg hover:bg-slate-100 hover:text-primary border border-slate-200 transition-colors shadow-sm flex items-center gap-2">
+              <button 
+                onClick={() => setViewingBid(bid)}
+                className="px-5 py-2.5 bg-slate-50 text-slate-600 text-sm font-bold rounded-lg hover:bg-slate-100 hover:text-primary border border-slate-200 transition-colors shadow-sm flex items-center gap-2"
+              >
                 <EyeIcon className="w-4 h-4 stroke-2" /> View Details
               </button>
             </div>
 
           </div>
-        ))}
+        )))}
       </div>
+
+      {/* View Details Modal */}
+      {viewingBid && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-6 border-b border-border">
+              <div>
+                <h2 className="text-xl font-bold font-heading">Bid Details</h2>
+                <p className="text-sm font-medium text-slate-500">{viewingBid.id}</p>
+              </div>
+              <button 
+                onClick={() => setViewingBid(null)} 
+                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <XCircleIcon className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+                <p className="text-xs font-bold text-slate-400 mb-1 uppercase tracking-widest">Procurement</p>
+                <p className="font-bold text-slate-700">{viewingBid.procurementTitle}</p>
+                <p className="text-sm font-medium text-slate-500 mt-1">{viewingBid.procurementId}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-between pb-4 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">Submitted On</span>
+                  <span className="font-bold text-slate-700">{viewingBid.submittedAt}</span>
+                </div>
+                <div className="flex justify-between pb-4 border-b border-slate-100">
+                  <span className="text-slate-500 font-medium">Bid Amount</span>
+                  <span className="font-bold text-primary text-lg">{viewingBid.amount}</span>
+                </div>
+                <div className="flex justify-between items-center pb-2">
+                  <span className="text-slate-500 font-medium">Current Status</span>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-bold border ${viewingBid.statusBg} ${viewingBid.statusColor} ${viewingBid.statusBorder}`}>
+                    <viewingBid.statusIcon className="w-4 h-4 stroke-2" />
+                    {viewingBid.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-border bg-slate-50 text-center">
+              <button 
+                onClick={() => setViewingBid(null)}
+                className="px-6 py-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

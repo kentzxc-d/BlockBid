@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useMemo } from "react";
+
 import Link from "next/link";
 import { 
   BuildingOfficeIcon, 
@@ -64,6 +66,19 @@ const ACTIVE_SOLICITATIONS = [
 ];
 
 export default function ActiveSolicitationsPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSector, setSelectedSector] = useState("All");
+
+  const filteredSolicitations = useMemo(() => {
+    return ACTIVE_SOLICITATIONS.filter(solicitation => {
+      const matchesSearch = solicitation.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            solicitation.id.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSector = selectedSector === "All" || solicitation.sector === selectedSector;
+      
+      return matchesSearch && matchesSector;
+    });
+  }, [searchQuery, selectedSector]);
+
   return (
     <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
@@ -85,55 +100,86 @@ export default function ActiveSolicitationsPage() {
             <input 
               type="text" 
               placeholder="Search procurements..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 pr-4 py-2.5 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm font-medium w-full md:w-64"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-xl text-sm font-bold text-text-main hover:bg-slate-50 transition-colors shadow-sm">
-            <FunnelIcon className="w-5 h-5 stroke-2 text-slate-500" />
-            Filter
-          </button>
+          <div className="relative group">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-xl text-sm font-bold text-text-main hover:bg-slate-50 transition-colors shadow-sm">
+              <FunnelIcon className="w-5 h-5 stroke-2 text-slate-500" />
+              {selectedSector === "All" ? "Filter" : selectedSector}
+            </button>
+            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 py-2">
+              {["All", "Education", "Institution", "Individual"].map((sector) => (
+                <button
+                  key={sector}
+                  onClick={() => setSelectedSector(sector)}
+                  className={`w-full text-left px-4 py-2 text-sm font-medium hover:bg-slate-50 ${selectedSector === sector ? 'text-primary font-bold bg-blue-50/50' : 'text-slate-600'}`}
+                >
+                  {sector === "All" ? "All Sectors" : sector}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Solicitations List */}
       <div className="grid gap-5">
-        {ACTIVE_SOLICITATIONS.map((solicitation) => (
-          <div key={solicitation.id} className="bg-surface rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            <div className="flex items-start gap-5">
-              <div className={`p-4 rounded-xl ${solicitation.bgColor}`}>
-                <solicitation.icon className={`w-8 h-8 ${solicitation.iconColor}`} />
-              </div>
-              <div>
-                <div className="flex items-center gap-3 mb-1">
-                  <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">{solicitation.id}</span>
-                </div>
-                <h3 className="font-bold text-text-main text-xl group-hover:text-primary transition-colors">
-                  {solicitation.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-4 mt-2.5 text-sm text-text-muted font-medium">
-                  <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">
-                    {solicitation.sector} Sector
-                  </span>
-                  <span className="flex items-center gap-1.5 font-bold text-text-main">
-                    Est. Budget: {solicitation.budget}
-                  </span>
-                </div>
-              </div>
+        {filteredSolicitations.length === 0 ? (
+          <div className="bg-surface rounded-2xl p-10 border border-border text-center">
+            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+              <MagnifyingGlassIcon className="w-8 h-8 text-slate-300" />
             </div>
-            
-            <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 border-t sm:border-t-0 pt-5 sm:pt-0 border-border">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-primary">
-                Closes in {solicitation.deadline}
-              </span>
-              <Link 
-                href={`/dashboard/procurements/${solicitation.id}/bid`} 
-                className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-hover transition-colors shadow-sm"
-              >
-                Submit Bid
-              </Link>
-            </div>
+            <h3 className="font-bold text-slate-700 text-lg mb-1">No solicitations found</h3>
+            <p className="text-slate-500 text-sm">Try adjusting your search or filter to find what you're looking for.</p>
+            <button 
+              onClick={() => { setSearchQuery(""); setSelectedSector("All"); }}
+              className="mt-6 px-5 py-2 text-primary font-bold hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              Clear Filters
+            </button>
           </div>
-        ))}
+        ) : (
+          filteredSolicitations.map((solicitation) => (
+            <div key={solicitation.id} className="bg-surface rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="flex items-start gap-5">
+                <div className={`p-4 rounded-xl ${solicitation.bgColor}`}>
+                  <solicitation.icon className={`w-8 h-8 ${solicitation.iconColor}`} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-3 mb-1">
+                    <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">{solicitation.id}</span>
+                  </div>
+                  <h3 className="font-bold text-text-main text-xl group-hover:text-primary transition-colors">
+                    {solicitation.title}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-4 mt-2.5 text-sm text-text-muted font-medium">
+                    <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-600">
+                      {solicitation.sector} Sector
+                    </span>
+                    <span className="flex items-center gap-1.5 font-bold text-text-main">
+                      Est. Budget: {solicitation.budget}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 border-t sm:border-t-0 pt-5 sm:pt-0 border-border">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-primary">
+                  Closes in {solicitation.deadline}
+                </span>
+                <Link 
+                  href={`/dashboard/procurements/${solicitation.id}/bid`} 
+                  className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-hover transition-colors shadow-sm"
+                >
+                  Submit Bid
+                </Link>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
     </div>
