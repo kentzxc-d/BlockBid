@@ -51,9 +51,9 @@ export async function POST(req: Request) {
       Provide a brief reasoning for each score, and an overall summary for the bid.
     `;
 
-    // Use the latest 3.5 Flash model for optimal reasoning and speed
+    // Use the extremely fast gemini-1.5-flash model to prevent Vercel 504 Timeouts
     const { object } = await generateObject({
-      model: google('gemini-3.5-flash'),
+      model: google('gemini-1.5-flash'),
       schema: evaluationSchema,
       prompt: prompt,
     });
