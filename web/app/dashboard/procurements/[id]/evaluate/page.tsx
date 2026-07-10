@@ -86,10 +86,15 @@ export default function EvaluateBidsPage() {
           const sorted = data.evaluations.sort((a: BidEvaluation, b: BidEvaluation) => b.totalScore - a.totalScore);
           setEvaluations(sorted);
         } else {
-          setError("API request failed. If you are on Vercel, make sure GOOGLE_GENERATIVE_AI_API_KEY is added to your Vercel Environment Variables.");
+          try {
+            const errData = await response.json();
+            setError(`API Error: ${errData.error}`);
+          } catch(e) {
+            setError("API request failed. If you are on Vercel, make sure GOOGLE_GENERATIVE_AI_API_KEY is added to your Vercel Environment Variables.");
+          }
         }
-      } catch (error) {
-        setError("Network error occurred while reaching the AI API.");
+      } catch (error: any) {
+        setError(`Network error occurred: ${error.message || 'Unknown error'}`);
       } finally {
         setIsEvaluating(false);
       }

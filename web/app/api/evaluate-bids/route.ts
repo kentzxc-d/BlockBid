@@ -22,6 +22,8 @@ const evaluationSchema = z.object({
   )
 });
 
+export const maxDuration = 60; // Allow up to 60 seconds for AI processing
+
 export async function POST(req: Request) {
   try {
     const { criteria, bids, procurementDetails } = await req.json();
@@ -57,8 +59,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(object);
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Evaluation Error:", error);
-    return NextResponse.json({ error: "Failed to evaluate bids." }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to evaluate bids." }, { status: 500 });
   }
 }
