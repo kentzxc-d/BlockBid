@@ -174,11 +174,14 @@ export default function EvaluateBidsPage() {
             setExpandedBidId(sorted[0].bidId);
           }
         } else {
+          const status = response.status;
           try {
             const errData = await response.json();
-            setError(`API Error: ${errData.error}`);
+            setError(`API Error (${status}): ${errData.error}`);
           } catch(e) {
-            setError("API request failed. If you are on Vercel, make sure GOOGLE_GENERATIVE_AI_API_KEY is added to your Vercel Environment Variables.");
+            const rawText = await response.text();
+            console.error("Raw response:", rawText);
+            setError(`Vercel Error (${status}): The server returned a non-JSON response. This is usually a 504 Timeout or configuration issue. Check Vercel logs.`);
           }
         }
       } catch (error: any) {
