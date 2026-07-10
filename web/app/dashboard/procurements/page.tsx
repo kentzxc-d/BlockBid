@@ -126,7 +126,7 @@ export default function ActiveSolicitationsPage() {
                 Closes in {solicitation.deadline}
               </span>
               <Link 
-                href={`/procurements/${solicitation.id}`} 
+                href={`/dashboard/procurements/${solicitation.id}/bid`} 
                 className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary-hover transition-colors shadow-sm"
               >
                 Submit Bid
