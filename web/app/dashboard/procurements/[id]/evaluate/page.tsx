@@ -175,13 +175,13 @@ export default function EvaluateBidsPage() {
           }
         } else {
           const status = response.status;
+          const rawText = await response.text();
           try {
-            const errData = await response.json();
+            const errData = JSON.parse(rawText);
             setError(`API Error (${status}): ${errData.error}`);
           } catch(e) {
-            const rawText = await response.text();
             console.error("Raw response:", rawText);
-            setError(`Vercel Error (${status}): The server returned a non-JSON response. This is usually a 504 Timeout or configuration issue. Check Vercel logs.`);
+            setError(`Vercel Error (${status}): The server returned a non-JSON response. This is usually a 504 Timeout or configuration issue.`);
           }
         }
       } catch (error: any) {
