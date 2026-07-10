@@ -7,7 +7,8 @@ import {
   SparklesIcon,
   CheckBadgeIcon,
   EyeIcon,
-  TrophyIcon
+  TrophyIcon,
+  ExclamationCircleIcon
 } from "@heroicons/react/24/outline";
 
 // Mock Data representing the original Request & Criteria
@@ -58,6 +59,7 @@ type BidEvaluation = {
 export default function EvaluateBidsPage() {
   const [evaluations, setEvaluations] = useState<BidEvaluation[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [revealedBidder, setRevealedBidder] = useState<string | null>(null);
 
   useEffect(() => {
@@ -84,10 +86,10 @@ export default function EvaluateBidsPage() {
           const sorted = data.evaluations.sort((a: BidEvaluation, b: BidEvaluation) => b.totalScore - a.totalScore);
           setEvaluations(sorted);
         } else {
-          console.error("Evaluation failed");
+          setError("API request failed. If you are on Vercel, make sure GOOGLE_GENERATIVE_AI_API_KEY is added to your Vercel Environment Variables.");
         }
       } catch (error) {
-        console.error("Error fetching evaluations:", error);
+        setError("Network error occurred while reaching the AI API.");
       } finally {
         setIsEvaluating(false);
       }
@@ -137,6 +139,15 @@ export default function EvaluateBidsPage() {
           <h2 className="text-xl font-bold text-text-main mb-2">AI is evaluating proposals...</h2>
           <p className="text-slate-500 font-medium max-w-md mx-auto">
             Reading attachments, analyzing pricing, and scoring against your custom criteria to prevent bias.
+          </p>
+        </div>
+      ) : error ? (
+        // Error State
+        <div className="bg-red-50 rounded-2xl p-8 border border-red-200 text-center">
+          <ExclamationCircleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-red-700 mb-2">Evaluation Failed</h2>
+          <p className="text-red-600 font-medium">
+            {error}
           </p>
         </div>
       ) : (
