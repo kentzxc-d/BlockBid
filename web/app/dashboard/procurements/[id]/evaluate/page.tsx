@@ -32,15 +32,82 @@ const MOCK_PROCUREMENT = {
 const MOCK_BIDS = [
   {
     bidId: "Bidder Alpha",
-    proposalText: "We offer 100 Dell Latitude laptops with 32GB RAM and 1TB SSD. Total price is ₱ 7,500,000. Includes 5-year premium support. Can deliver in 14 days.",
+    proposalText: `FORMAL PROPOSAL SUBMISSION
+==========================
+Date: October 12, 2026
+Subject: Proposal for 100 High-Performance Laptops (REQ-2026-081)
+
+To the Procurement Committee,
+
+We are pleased to submit our formal bid for the supply of 100 high-performance laptops for your new department. Our proposed equipment exceeds the minimum technical specifications while offering exceptional long-term value.
+
+1. TECHNICAL SPECIFICATIONS
+---------------------------
+• Model: Dell Latitude 7440 (Latest Gen)
+• Processor: Intel Core i7-1355U (10 Cores)
+• Memory: 32GB LPDDR5 RAM (Exceeds 16GB req)
+• Storage: 1TB PCIe NVMe SSD (Exceeds 512GB req)
+• OS: Windows 11 Pro
+
+2. PRICING & FINANCIALS
+-----------------------
+• Unit Price: ₱ 75,000.00
+• Total Quantity: 100 units
+• GRAND TOTAL: ₱ 7,500,000.00 (VAT Inclusive)
+
+3. WARRANTY & SUPPORT
+---------------------
+• 5-Year Premium ProSupport Plus (Next Business Day Onsite Service)
+• Accidental Damage Protection included.
+
+4. DELIVERY TIMELINE
+--------------------
+• We commit to delivering all 100 units within 14 calendar days upon Notice to Proceed.`,
   },
   {
     bidId: "Bidder Beta",
-    proposalText: "We offer 100 Lenovo ThinkPads, 16GB RAM, 512GB SSD. Total price is ₱ 6,000,000. Includes standard 1-year warranty. Can deliver in 3 days.",
+    proposalText: `PROPOSAL SUBMISSION
+Ref: REQ-2026-081
+
+Dear Sir/Madam,
+
+Here is our bid for the 100 laptops requested.
+
+Specifications:
+- Lenovo ThinkPad E14 Gen 5
+- Intel Core i7-1355U
+- 16GB RAM DDR4
+- 512GB SSD Storage
+
+Financial Proposal:
+- Total Bid Price: ₱ 6,000,000.00
+
+Warranty:
+- Standard 1-Year Depot Warranty (Carry-in service only).
+
+Delivery:
+- 3 days (Ready stock available locally).`,
   },
   {
     bidId: "Bidder Gamma",
-    proposalText: "We offer 100 HP EliteBooks, 16GB RAM, 512GB SSD. Total price is ₱ 7,900,000. Includes 3-year warranty. Can deliver in 30 days.",
+    proposalText: `PROPOSAL FOR LAPTOP PROCUREMENT
+REQ-2026-081
+
+EXECUTIVE SUMMARY
+We propose to supply 100 units of enterprise-grade HP laptops tailored for heavy departmental workloads.
+
+HARDWARE SPECS
+- Brand/Model: HP EliteBook 840 G10
+- CPU: Intel Core i7-1360P
+- RAM: 16GB DDR5
+- Storage: 512GB NVMe SSD
+
+FINANCIAL SUMMARY
+- Total Cost: ₱ 7,900,000.00
+
+TERMS & CONDITIONS
+- Warranty: 3-Year Standard Manufacturer Warranty.
+- Delivery Time: 30 days indent order from the manufacturer.`,
   }
 ];
 
