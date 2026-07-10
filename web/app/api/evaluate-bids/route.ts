@@ -51,9 +51,9 @@ export async function POST(req: Request) {
       Provide a brief reasoning for each score, and an overall summary for the bid.
     `;
 
-    // Use gemini-3.5-flash as requested
+    // Use gemini-1.5-flash for maximum speed to avoid Vercel 504 Timeouts
     const { object } = await generateObject({
-      model: google('gemini-3.5-flash'),
+      model: google('gemini-1.5-flash'),
       schema: evaluationSchema,
       prompt: prompt,
     });
