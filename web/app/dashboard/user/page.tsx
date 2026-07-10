@@ -80,7 +80,7 @@ export default function UserDashboard() {
     (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "User");
 
   return (
-    <div className="py-10 px-8 max-w-[1400px] mx-auto w-full">
+    <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
       {/* Welcome Section */}
         <div className="mb-10">
