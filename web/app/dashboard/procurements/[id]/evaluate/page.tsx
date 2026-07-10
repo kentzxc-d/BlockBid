@@ -11,7 +11,8 @@ import {
   ExclamationCircleIcon,
   XMarkIcon,
   NoSymbolIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  ChevronDownIcon
 } from "@heroicons/react/24/outline";
 
 // Mock Data representing the original Request & Criteria
@@ -131,6 +132,7 @@ export default function EvaluateBidsPage() {
   const [isEvaluating, setIsEvaluating] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [revealedBidder, setRevealedBidder] = useState<string | null>(null);
+  const [expandedBidId, setExpandedBidId] = useState<string | null>(null);
 
   // Modal States
   const [viewingProposalFor, setViewingProposalFor] = useState<string | null>(null);
@@ -168,6 +170,9 @@ export default function EvaluateBidsPage() {
           // Sort by highest score first
           const sorted = data.evaluations.sort((a: BidEvaluation, b: BidEvaluation) => b.totalScore - a.totalScore);
           setEvaluations(sorted);
+          if (sorted.length > 0) {
+            setExpandedBidId(sorted[0].bidId);
+          }
         } else {
           try {
             const errData = await response.json();
@@ -239,102 +244,136 @@ export default function EvaluateBidsPage() {
         </div>
       ) : (
         // Results State
-        <div className="space-y-6">
+        <div className="space-y-4">
           {evaluations.map((evalData, index) => {
             const isWinner = index === 0;
+            const isExpanded = expandedBidId === evalData.bidId;
+
             return (
-              <div key={evalData.bidId} className={`relative bg-surface rounded-2xl p-6 md:p-8 border shadow-sm transition-all ${isWinner ? 'border-primary ring-1 ring-primary/20' : 'border-border'}`}>
+              <div key={evalData.bidId} className={`relative bg-surface rounded-2xl border shadow-sm transition-all overflow-hidden ${isWinner ? 'border-primary ring-1 ring-primary/20' : 'border-border'}`}>
                 
-                {/* AI Recommendation Badge */}
-                {isWinner && (
-                  <div className="absolute -top-4 left-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1.5">
-                    <SparklesIcon className="w-4 h-4" /> AI Top Recommendation
-                  </div>
-                )}
-
-                <div className="flex flex-col lg:flex-row gap-8">
-                  
-                  {/* Left Column: Bidder & Score */}
-                  <div className="lg:w-1/3 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-border pb-6 lg:pb-0 lg:pr-8">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        {isWinner ? <TrophyIcon className="w-7 h-7 text-amber-500" /> : null}
-                        <h2 className="text-2xl font-bold text-text-main font-heading">Rank #{index + 1}</h2>
-                      </div>
-                      <p className="text-lg font-bold text-slate-500 mb-6">{evalData.bidId}</p>
-                      
-                      <div className="bg-slate-50 rounded-xl p-4 text-center border border-slate-200">
-                        <span className="block text-sm font-bold text-slate-500 mb-1">Total AI Score</span>
-                        <div className="flex items-baseline justify-center gap-1">
-                          <span className={`text-5xl font-black tracking-tighter ${isWinner ? 'text-primary' : 'text-slate-700'}`}>
-                            {evalData.totalScore}
-                          </span>
-                          <span className="text-xl font-bold text-slate-400">/ 100</span>
-                        </div>
-                      </div>
+                {/* Minimized Header (Always Visible) */}
+                <div 
+                  onClick={() => setExpandedBidId(isExpanded ? null : evalData.bidId)}
+                  className={`p-5 md:p-6 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors ${isExpanded ? 'border-b border-border bg-slate-50/50' : ''}`}
+                >
+                  <div className="flex items-center gap-4 md:gap-8">
+                    <div className="flex items-center gap-3 w-32">
+                      {isWinner ? <TrophyIcon className="w-6 h-6 text-amber-500" /> : <div className="w-6" />}
+                      <h2 className="text-xl font-bold text-text-main font-heading">Rank #{index + 1}</h2>
                     </div>
-
-                    <div className="mt-6 flex flex-col gap-3">
-                      <button 
-                        onClick={() => setViewingProposalFor(evalData.bidId)}
-                        className="w-full py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 hover:text-primary transition-colors flex items-center justify-center gap-2"
-                      >
-                        <EyeIcon className="w-5 h-5 stroke-2" /> Read Full Proposal
-                      </button>
-                      <button 
-                        onClick={() => setAwardingBidFor(evalData.bidId)}
-                        className={`w-full py-2.5 rounded-xl text-white font-bold transition-all shadow-sm flex items-center justify-center gap-2 ${isWinner ? 'bg-primary hover:bg-primary-hover shadow-blue-500/25' : 'bg-slate-800 hover:bg-slate-700'}`}
-                      >
-                        <CheckBadgeIcon className="w-5 h-5 stroke-2" /> Award Contract
-                      </button>
-                      <button 
-                        onClick={() => setRejectingBidFor(evalData.bidId)}
-                        className="w-full py-2.5 rounded-xl border-2 border-red-100 text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
-                      >
-                        <NoSymbolIcon className="w-5 h-5 stroke-2" /> Reject Bid
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Breakdown & Summary */}
-                  <div className="lg:w-2/3">
-                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Criteria Breakdown</h3>
                     
-                    <div className="space-y-4 mb-6">
-                      {evalData.scores.map((score, i) => {
-                        const percent = (score.scoreAchieved / score.maxWeight) * 100;
-                        let barColor = "bg-primary";
-                        if (percent < 50) barColor = "bg-red-500";
-                        else if (percent < 80) barColor = "bg-amber-500";
-                        else if (percent >= 90) barColor = "bg-emerald-500";
-
-                        return (
-                          <div key={i}>
-                            <div className="flex justify-between items-end mb-1.5">
-                              <span className="text-sm font-bold text-text-main">{score.criterionName}</span>
-                              <span className="text-sm font-bold text-slate-600">{score.scoreAchieved} <span className="text-slate-400 font-medium">/ {score.maxWeight} pts</span></span>
-                            </div>
-                            <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner mb-1.5">
-                              <div className={`h-full ${barColor} rounded-full`} style={{ width: `${percent}%` }} />
-                            </div>
-                            <p className="text-xs text-slate-500 font-medium leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                              {score.reasoning}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="bg-blue-50/50 rounded-xl p-5 border border-blue-100">
-                      <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
-                        <SparklesIcon className="w-4 h-4 text-primary" /> AI Summary
-                      </h3>
-                      <p className="text-sm text-blue-800/80 font-medium leading-relaxed">
-                        {evalData.aiSummary}
-                      </p>
+                    <div className="hidden sm:block">
+                      <p className="text-base font-bold text-slate-700">{evalData.bidId}</p>
+                      {isWinner && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wider mt-1">
+                          <SparklesIcon className="w-3 h-3" /> Top Choice
+                        </span>
+                      )}
                     </div>
                   </div>
 
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">AI Score</span>
+                      <div className="flex items-baseline gap-1">
+                        <span className={`text-2xl font-black ${isWinner ? 'text-primary' : 'text-slate-700'}`}>
+                          {evalData.totalScore}
+                        </span>
+                        <span className="text-sm font-bold text-slate-400">/100</span>
+                      </div>
+                    </div>
+                    
+                    <div className={`p-2 rounded-full transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-slate-200' : 'bg-slate-100 group-hover:bg-slate-200'}`}>
+                      <ChevronDownIcon className="w-5 h-5 text-slate-500" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded Body */}
+                <div 
+                  className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
+                >
+                  <div className="p-6 md:p-8 flex flex-col lg:flex-row gap-8">
+                    
+                    {/* Left Column: Action Buttons */}
+                    <div className="lg:w-1/3 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-border pb-6 lg:pb-0 lg:pr-8">
+                      <div>
+                        <div className="sm:hidden mb-6">
+                          <p className="text-lg font-bold text-slate-700">{evalData.bidId}</p>
+                          {isWinner && (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wider mt-1">
+                              <SparklesIcon className="w-3 h-3" /> Top Choice
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-500 font-medium mb-4">
+                          This proposal was evaluated automatically against your predefined criteria to prevent bias.
+                        </p>
+                      </div>
+
+                      <div className="mt-auto flex flex-col gap-3">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setViewingProposalFor(evalData.bidId); }}
+                          className="w-full py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 hover:text-primary transition-colors flex items-center justify-center gap-2"
+                        >
+                          <EyeIcon className="w-5 h-5 stroke-2" /> Read Full Proposal
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setAwardingBidFor(evalData.bidId); }}
+                          className={`w-full py-2.5 rounded-xl text-white font-bold transition-all shadow-sm flex items-center justify-center gap-2 ${isWinner ? 'bg-primary hover:bg-primary-hover shadow-blue-500/25' : 'bg-slate-800 hover:bg-slate-700'}`}
+                        >
+                          <CheckBadgeIcon className="w-5 h-5 stroke-2" /> Award Contract
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setRejectingBidFor(evalData.bidId); }}
+                          className="w-full py-2.5 rounded-xl border-2 border-red-100 text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                        >
+                          <NoSymbolIcon className="w-5 h-5 stroke-2" /> Reject Bid
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Breakdown & Summary */}
+                    <div className="lg:w-2/3">
+                      <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Criteria Breakdown</h3>
+                      
+                      <div className="space-y-4 mb-6">
+                        {evalData.scores.map((score, i) => {
+                          const percent = (score.scoreAchieved / score.maxWeight) * 100;
+                          let barColor = "bg-primary";
+                          if (percent < 50) barColor = "bg-red-500";
+                          else if (percent < 80) barColor = "bg-amber-500";
+                          else if (percent >= 90) barColor = "bg-emerald-500";
+
+                          return (
+                            <div key={i}>
+                              <div className="flex justify-between items-end mb-1.5">
+                                <span className="text-sm font-bold text-text-main">{score.criterionName}</span>
+                                <span className="text-sm font-bold text-slate-600">{score.scoreAchieved} <span className="text-slate-400 font-medium">/ {score.maxWeight} pts</span></span>
+                              </div>
+                              <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner mb-1.5">
+                                <div className={`h-full ${barColor} rounded-full`} style={{ width: `${percent}%` }} />
+                              </div>
+                              <p className="text-xs text-slate-500 font-medium leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                {score.reasoning}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="bg-blue-50/50 rounded-xl p-5 border border-blue-100">
+                        <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
+                          <SparklesIcon className="w-4 h-4 text-primary" /> AI Summary
+                        </h3>
+                        <p className="text-sm text-blue-800/80 font-medium leading-relaxed">
+                          {evalData.aiSummary}
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
               </div>
             );
