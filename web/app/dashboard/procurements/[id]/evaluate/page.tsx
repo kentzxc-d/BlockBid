@@ -59,6 +59,7 @@ type BidEvaluation = {
   aiSummary: string;
 };
 
+export default function EvaluateBidsPage() {
   const [evaluations, setEvaluations] = useState<BidEvaluation[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(true);
   const [error, setError] = useState<string | null>(null);
