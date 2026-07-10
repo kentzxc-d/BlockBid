@@ -9,14 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.11",
     "@heroicons/react": "^2.2.0",
     "@privy-io/react-auth": "^3.33.1",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.0",
+    "ai": "^7.0.19",
     "next": "^16.2.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "viem": "^2.52.0"
+    "viem": "^2.52.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
