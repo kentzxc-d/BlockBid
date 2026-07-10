@@ -51,9 +51,9 @@ export async function POST(req: Request) {
       Provide a brief reasoning for each score, and an overall summary for the bid.
     `;
 
-    // Use Gemini 1.5 Flash for fast, structured evaluation
+    // Use Gemini 1.5 Pro as fallback
     const { object } = await generateObject({
-      model: google('gemini-1.5-flash-latest'),
+      model: google('gemini-1.5-pro'),
       schema: evaluationSchema,
       prompt: prompt,
     });
