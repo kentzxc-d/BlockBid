@@ -53,7 +53,7 @@ export async function POST(req: Request) {
 
     // Use Gemini 1.5 Flash for fast, structured evaluation
     const { object } = await generateObject({
-      model: google('gemini-1.5-flash'),
+      model: google('gemini-1.5-flash-latest'),
       schema: evaluationSchema,
       prompt: prompt,
     });
