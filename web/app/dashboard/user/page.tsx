@@ -198,7 +198,7 @@ export default function UserDashboard() {
                 ))}
               </div>
               <div className="p-5 border-t border-border bg-slate-50 text-center mt-auto">
-                <Link href="/dashboard/bids" className="text-sm font-bold text-primary hover:text-primary-hover">
+                <Link href="/dashboard/my-bids" className="text-sm font-bold text-primary hover:text-primary-hover">
                   View all bid history
                 </Link>
               </div>
