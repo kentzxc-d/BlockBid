@@ -8,7 +8,10 @@ import {
   CheckBadgeIcon,
   EyeIcon,
   TrophyIcon,
-  ExclamationCircleIcon
+  ExclamationCircleIcon,
+  XMarkIcon,
+  NoSymbolIcon,
+  DocumentTextIcon
 } from "@heroicons/react/24/outline";
 
 // Mock Data representing the original Request & Criteria
@@ -56,11 +59,23 @@ type BidEvaluation = {
   aiSummary: string;
 };
 
-export default function EvaluateBidsPage() {
   const [evaluations, setEvaluations] = useState<BidEvaluation[]>([]);
   const [isEvaluating, setIsEvaluating] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [revealedBidder, setRevealedBidder] = useState<string | null>(null);
+
+  // Modal States
+  const [viewingProposalFor, setViewingProposalFor] = useState<string | null>(null);
+  const [rejectingBidFor, setRejectingBidFor] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+  const [awardingBidFor, setAwardingBidFor] = useState<string | null>(null);
+  
+  // Real identities (mock)
+  const realIdentities: Record<string, string> = {
+    "Bidder Alpha": "TechSource Solutions Inc.",
+    "Bidder Beta": "Global IT Supplies Corp.",
+    "Bidder Gamma": "Elite Systems Manila"
+  };
 
   useEffect(() => {
     // Call our AI API when the page loads
@@ -103,16 +118,15 @@ export default function EvaluateBidsPage() {
     fetchEvaluations();
   }, []);
 
-  const handleAward = (bidId: string) => {
-    // In a real app, this would trigger a blockchain transaction and smart contract escrow.
-    // For now, we simulate "Revealing" the identity.
-    const realIdentities: Record<string, string> = {
-      "Bidder Alpha": "TechSource Solutions Inc.",
-      "Bidder Beta": "Global IT Supplies Corp.",
-      "Bidder Gamma": "Elite Systems Manila"
-    };
-    alert(`Identity Revealed! You are about to award the contract to: ${realIdentities[bidId]}\n\nProceeding to Smart Contract Escrow...`);
+  const confirmAward = (bidId: string) => {
     setRevealedBidder(bidId);
+    setAwardingBidFor(null);
+  };
+
+  const confirmReject = (bidId: string) => {
+    setEvaluations(prev => prev.filter(b => b.bidId !== bidId));
+    setRejectingBidFor(null);
+    setRejectReason("");
   };
 
   return (
@@ -193,14 +207,23 @@ export default function EvaluateBidsPage() {
                     </div>
 
                     <div className="mt-6 flex flex-col gap-3">
-                      <button className="w-full py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 hover:text-primary transition-colors flex items-center justify-center gap-2">
+                      <button 
+                        onClick={() => setViewingProposalFor(evalData.bidId)}
+                        className="w-full py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-50 hover:text-primary transition-colors flex items-center justify-center gap-2"
+                      >
                         <EyeIcon className="w-5 h-5 stroke-2" /> Read Full Proposal
                       </button>
                       <button 
-                        onClick={() => handleAward(evalData.bidId)}
+                        onClick={() => setAwardingBidFor(evalData.bidId)}
                         className={`w-full py-2.5 rounded-xl text-white font-bold transition-all shadow-sm flex items-center justify-center gap-2 ${isWinner ? 'bg-primary hover:bg-primary-hover shadow-blue-500/25' : 'bg-slate-800 hover:bg-slate-700'}`}
                       >
                         <CheckBadgeIcon className="w-5 h-5 stroke-2" /> Award Contract
+                      </button>
+                      <button 
+                        onClick={() => setRejectingBidFor(evalData.bidId)}
+                        className="w-full py-2.5 rounded-xl border-2 border-red-100 text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <NoSymbolIcon className="w-5 h-5 stroke-2" /> Reject Bid
                       </button>
                     </div>
                   </div>
@@ -248,6 +271,116 @@ export default function EvaluateBidsPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* --- MODALS --- */}
+      
+      {/* 1. Read Proposal Modal */}
+      {viewingProposalFor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-lg text-text-main flex items-center gap-2">
+                <DocumentTextIcon className="w-5 h-5 text-primary" />
+                Original Proposal: <span className="text-primary">{viewingProposalFor}</span>
+              </h3>
+              <button onClick={() => setViewingProposalFor(null)} className="p-2 hover:bg-slate-200 rounded-full transition-colors">
+                <XMarkIcon className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+            <div className="p-6 max-h-[60vh] overflow-y-auto text-slate-600 leading-relaxed whitespace-pre-wrap">
+              {MOCK_BIDS.find(b => b.bidId === viewingProposalFor)?.proposalText}
+            </div>
+            <div className="px-6 py-4 bg-slate-50 border-t border-border flex justify-end">
+              <button onClick={() => setViewingProposalFor(null)} className="px-5 py-2 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-colors">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Reject Bid Modal */}
+      {rejectingBidFor && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-red-50">
+              <h3 className="font-bold text-lg text-red-700 flex items-center gap-2">
+                <NoSymbolIcon className="w-5 h-5" /> Reject {rejectingBidFor}
+              </h3>
+              <button onClick={() => setRejectingBidFor(null)} className="p-2 hover:bg-red-200 rounded-full transition-colors">
+                <XMarkIcon className="w-5 h-5 text-red-500" />
+              </button>
+            </div>
+            <div className="p-6">
+              <label className="block text-sm font-bold text-slate-700 mb-2">Reason for Rejection</label>
+              <textarea 
+                className="w-full border-2 border-slate-200 rounded-xl p-3 text-slate-700 focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-400/20 transition-all resize-none h-32"
+                placeholder="E.g., Did not meet minimum technical specifications..."
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+              />
+              <p className="text-xs text-slate-500 mt-2">This reason will be recorded and sent to the supplier as feedback.</p>
+            </div>
+            <div className="px-6 py-4 bg-slate-50 border-t border-border flex justify-end gap-3">
+              <button onClick={() => setRejectingBidFor(null)} className="px-5 py-2 text-slate-600 font-bold hover:bg-slate-200 rounded-xl transition-colors">
+                Cancel
+              </button>
+              <button onClick={() => confirmReject(rejectingBidFor)} className="px-5 py-2 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-colors shadow-sm shadow-red-500/20">
+                Confirm Rejection
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Award Contract Modal */}
+      {awardingBidFor && !revealedBidder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-8 text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckBadgeIcon className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="font-bold text-2xl text-text-main mb-2">Confirm Award</h3>
+              <p className="text-slate-500 mb-6">
+                You are about to award the contract to <span className="font-bold text-slate-700">{awardingBidFor}</span>. 
+                Proceeding will reveal the supplier's true identity and transition this procurement to the smart contract escrow phase.
+              </p>
+              <div className="flex justify-center gap-3">
+                <button onClick={() => setAwardingBidFor(null)} className="px-5 py-2.5 text-slate-600 font-bold hover:bg-slate-100 border-2 border-slate-200 rounded-xl transition-colors">
+                  Cancel
+                </button>
+                <button onClick={() => confirmAward(awardingBidFor)} className="px-5 py-2.5 bg-primary text-white rounded-xl font-bold hover:bg-primary-hover transition-colors shadow-sm shadow-blue-500/20">
+                  Reveal & Award
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Revealed Success Modal */}
+      {revealedBidder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-8 text-center border-b-4 border-emerald-500">
+              <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50">
+                <TrophyIcon className="w-10 h-10 text-emerald-500" />
+              </div>
+              <h3 className="font-black text-2xl text-text-main mb-1">Contract Awarded!</h3>
+              <p className="text-slate-500 mb-6 font-medium">The true identity of {revealedBidder} is:</p>
+              
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-8">
+                <p className="text-2xl font-black text-emerald-800">{realIdentities[revealedBidder]}</p>
+              </div>
+
+              <button onClick={() => window.location.href = '/dashboard/my-procurements'} className="w-full py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/30">
+                Proceed to Escrow
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
