@@ -59,7 +59,7 @@ export default function DashboardSidebar() {
         <div className="mb-8">
           <Link 
             href="/dashboard/requestor/new"
-            className="flex items-center justify-center gap-3 w-full px-4 py-4 bg-primary text-white hover:bg-primary-hover font-heading font-bold uppercase tracking-widest transition-colors rounded-none shadow-none"
+            className="flex items-center justify-center gap-3 w-full px-4 py-4 bg-primary text-white hover:bg-primary-hover font-heading font-bold uppercase tracking-widest transition-colors rounded-xl shadow-md shadow-primary/20"
           >
             <PlusCircleIcon className="w-5 h-5 stroke-2" />
             New Request

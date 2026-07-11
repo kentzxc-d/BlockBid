@@ -109,38 +109,38 @@ export default function DashboardTopbar() {
         {ready ? (
           <div 
             onClick={identifier ? handleCopy : undefined}
-            className={`flex items-center justify-between w-48 px-4 py-2 rounded-full transition-all duration-300 border ${
+            className={`flex items-center gap-3 px-4 py-2 rounded-full transition-all duration-300 border ${
               identifier 
                 ? "bg-surface hover:bg-gray-50 border-border cursor-pointer group shadow-sm" 
                 : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help shadow-sm"
             }`}
             title={identifier ? "Click to copy identifier" : "Wallet not connected"}
           >
-            <div className="flex items-center gap-3 overflow-hidden relative w-full h-5">
-              <div className={`absolute inset-0 flex items-center transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
-                <span className="text-sm font-heading font-bold text-text-main truncate">
+            <div className="relative overflow-hidden">
+              <div className={`transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+                <span className="text-sm font-heading font-bold text-text-main whitespace-nowrap">
                   Welcome, {nickname || 'User'}
                 </span>
               </div>
               <div className={`absolute inset-0 flex items-center gap-2 transition-all duration-500 transform ${displayMode === 'wallet' ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
                 <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-500" : "bg-red-500"}`}></div>
-                <span className={`text-xs font-mono font-medium truncate ${identifier ? "text-text-muted" : "text-red-700"}`}>
-                  {identifier ? (identifier.length > 12 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) : "Not Connected"}
+                <span className={`text-xs font-mono font-medium truncate w-full ${identifier ? "text-text-muted" : "text-red-700"}`}>
+                  {identifier || "Not Connected"}
                 </span>
               </div>
             </div>
-            {identifier && (
-              <div className="shrink-0 ml-2">
-                {copied ? (
+            <div className="shrink-0">
+              {identifier && (
+                copied ? (
                   <CheckIcon className="w-4 h-4 text-green-600" />
                 ) : (
                   <DocumentDuplicateIcon className="w-4 h-4 text-border group-hover:text-text-muted transition-colors" />
-                )}
-              </div>
-            )}
+                )
+              )}
+            </div>
           </div>
         ) : (
-          <div className="h-10 w-48 bg-gray-100 rounded-full animate-pulse border border-gray-200"></div>
+          <div className="h-10 w-40 bg-gray-100 rounded-full animate-pulse border border-gray-200"></div>
         )}
 
         <div className="h-8 w-px bg-border"></div>
