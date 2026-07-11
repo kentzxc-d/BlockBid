@@ -111,7 +111,7 @@ export default function DashboardTopbar() {
             onClick={identifier ? handleCopy : undefined}
             className={`flex items-center gap-3 px-4 py-2 rounded-md transition-all duration-300 border ${
               identifier 
-                ? "bg-primary text-text-main hover:bg-primary-hover border-transparent cursor-pointer group shadow-sm" 
+                ? "bg-secondary text-white hover:bg-slate-800 border-transparent cursor-pointer group shadow-sm" 
                 : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help shadow-sm text-red-700"
             }`}
             title={identifier ? "Click to copy identifier" : "Wallet not connected"}
