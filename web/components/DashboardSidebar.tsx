@@ -59,7 +59,7 @@ export default function DashboardSidebar() {
         <div className="mb-8">
           <Link 
             href="/dashboard/requestor/new"
-            className="flex items-center justify-center gap-3 w-full px-4 py-4 bg-primary text-white hover:bg-primary-hover font-heading font-bold uppercase tracking-widest transition-colors rounded-xl shadow-md shadow-primary/20"
+            className="flex items-center justify-center gap-3 w-full px-4 py-4 bg-primary text-white hover:bg-primary-hover font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md shadow-primary/20"
           >
             <PlusCircleIcon className="w-5 h-5 stroke-2" />
             New Request
@@ -77,7 +77,7 @@ export default function DashboardSidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-4 px-4 py-3 rounded-none font-heading font-semibold transition-all duration-200 border-l-4 ${
+                className={`flex items-center gap-4 px-4 py-3 rounded-md font-heading font-semibold transition-all duration-200 border-l-4 ${
                   isActive 
                     ? "bg-primary/10 text-primary border-primary" 
                     : "text-text-inverse-muted border-transparent hover:text-white hover:bg-surface-inverse hover:border-text-inverse-muted"
