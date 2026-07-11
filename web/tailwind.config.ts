@@ -9,16 +9,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#0052CC",
-        "primary-hover": "#0043A6",
-        secondary: "#00875A",
-        "secondary-hover": "#006B47",
-        background: "#F4F5F7",
+        primary: "#C5A059", /* Seal Gold */
+        "primary-hover": "#D4AF68",
+        secondary: "#0B132B", /* Midnight Navy */
+        "secondary-hover": "#16264A",
+        background: "#F9F9F6", /* Parchment White */
         surface: "#FFFFFF",
-        "text-main": "#172B4D",
-        "text-muted": "#6B778C",
-        border: "#DFE1E6",
+        "text-main": "#0B132B",
+        "text-muted": "#4A5568",
+        "text-inverse": "#F9F9F6",
+        "text-inverse-muted": "#A0AEC0",
+        border: "#CBD5E1",
+        "border-inverse": "#1E293B",
       },
+      fontFamily: {
+        heading: ["Outfit", "sans-serif"],
+        body: ["Inter", "sans-serif"],
+        mono: ["Fira Code", "monospace"],
+      }
     },
   },
   plugins: [],

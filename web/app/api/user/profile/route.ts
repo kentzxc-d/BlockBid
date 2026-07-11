@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { id, role, entity_type, nickname, wallet_address } = await req.json();
+    const { id, role, entity_type, nickname, wallet_address, avatar_url, location } = await req.json();
     
     if (!id || !role || !entity_type || !nickname) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -17,12 +17,41 @@ export async function POST(req: Request) {
     const { data, error } = await supabase
       .from('profiles')
       .upsert([
-        { id, role, entity_type, nickname, wallet_address }
+        { id, role, entity_type, nickname, wallet_address, avatar_url, location }
       ])
       .select();
       
     if (error) {
       console.error("Supabase insert error:", error);
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    
+    return NextResponse.json({ success: true, profile: data[0] });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, ...updates } = body;
+    
+    if (!id) {
+      return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+    }
+
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', id)
+      .select();
+      
+    if (error) {
+      console.error("Supabase update error:", error);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
     

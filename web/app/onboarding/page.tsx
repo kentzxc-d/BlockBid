@@ -3,7 +3,14 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { UserCircleIcon, BuildingOfficeIcon, UserIcon, BuildingLibraryIcon, GlobeAltIcon, UsersIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { 
+  BuildingOfficeIcon, 
+  UserIcon, 
+  BuildingLibraryIcon, 
+  GlobeAltIcon, 
+  UsersIcon, 
+  CheckIcon 
+} from "@heroicons/react/24/outline";
 
 export default function OnboardingPage() {
   const { user, ready } = usePrivy();
@@ -15,22 +22,14 @@ export default function OnboardingPage() {
   const [nickname, setNickname] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If not ready or no user, just wait
   useEffect(() => {
     if (ready && !user) {
       router.push("/");
     }
   }, [user, ready, router]);
 
-  const getPrivyId = () => {
-    if (!user) return "";
-    return user.id; // did:privy:...
-  };
-
-  const getWalletOrEmail = () => {
-    if (!user) return "";
-    return user.wallet?.address || user.email?.address || "";
-  };
+  const getPrivyId = () => user?.id || "";
+  const getWalletOrEmail = () => user?.wallet?.address || user?.email?.address || "";
 
   const handleSubmit = async () => {
     if (!role || !entityType || !nickname || !user) return;
@@ -50,7 +49,6 @@ export default function OnboardingPage() {
       });
 
       if (response.ok) {
-        // Redirect to dashboard overview
         router.push("/dashboard/user");
       } else {
         const error = await response.json();
@@ -64,150 +62,217 @@ export default function OnboardingPage() {
     }
   };
 
-  if (!ready || !user) return <div className="p-8 text-center">Loading...</div>;
+  if (!ready || !user) {
+    return (
+      <div className="min-h-screen bg-secondary flex items-center justify-center">
+        <div className="text-white font-mono text-sm tracking-widest animate-pulse">
+          INITIALIZING_SECURE_SESSION...
+        </div>
+      </div>
+    );
+  }
+
+  const STEPS = [
+    { id: 1, label: "DECLARE_ROLE" },
+    { id: 2, label: "CLASSIFY_ENTITY" },
+    { id: 3, label: "REGISTER_NAME" }
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
-      <div className="max-w-xl w-full bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+    <div className="min-h-screen flex flex-col md:flex-row bg-background">
+      
+      {/* Left Panel: The Ledger (Signature Element) */}
+      <div className="md:w-1/3 bg-secondary text-white p-10 flex flex-col justify-between border-r border-border-inverse relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl mix-blend-screen pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent mix-blend-overlay pointer-events-none"></div>
+
+        <div className="relative z-10">
+          <h1 className="text-3xl font-heading font-bold text-primary mb-2 uppercase tracking-wide">
+            BlockBid
+          </h1>
+          <p className="text-text-inverse-muted font-medium text-sm max-w-xs">
+            Procurement, cryptographically sealed. Authenticate your identity to proceed.
+          </p>
+        </div>
+
+        <div className="space-y-8 relative z-10 my-16 md:my-0">
+          {STEPS.map((s) => (
+            <div key={s.id} className={`flex flex-col transition-all duration-300 ${step === s.id ? "opacity-100" : "opacity-30"}`}>
+              <span className="font-mono text-xs tracking-widest mb-1 text-primary">
+                [ 0x0{s.id} ]
+              </span>
+              <span className={`font-heading text-2xl font-semibold tracking-tight ${step === s.id ? "text-white" : "text-text-inverse-muted"}`}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
         
-        {/* Header */}
-        <div className="bg-primary px-8 py-10 text-white text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-black/10 rounded-full blur-3xl"></div>
-          <h1 className="text-3xl font-bold font-heading relative z-10">Welcome to BlockBid</h1>
-          <p className="mt-2 text-white/80 font-medium relative z-10">Let's set up your profile before we begin.</p>
-          
-          {/* Step Indicators */}
-          <div className="flex items-center justify-center gap-3 mt-8 relative z-10">
-            {[1, 2, 3].map((s) => (
-              <div key={s} className={`w-3 h-3 rounded-full transition-all ${s === step ? 'bg-white scale-125' : s < step ? 'bg-green-400' : 'bg-white/30'}`} />
-            ))}
+        <div className="relative z-10">
+          <div className="font-mono text-xs text-text-inverse-muted tracking-wider break-all">
+            CONNECTION_ESTABLISHED<br/>
+            DID: {getPrivyId()}
           </div>
         </div>
+      </div>
 
-        <div className="p-8 md:p-10">
-          {/* STEP 1: ROLE */}
-          {step === 1 && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">What brings you here?</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
-                <button 
-                  onClick={() => setRole("supplier")}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all ${role === 'supplier' ? 'border-primary bg-blue-50/50 ring-4 ring-primary/10' : 'border-slate-200 hover:border-slate-300'}`}
-                >
-                  <BuildingOfficeIcon className={`w-8 h-8 mb-4 ${role === 'supplier' ? 'text-primary' : 'text-slate-400'}`} />
-                  <h3 className="font-bold text-lg text-slate-800 mb-1">I want to Bid</h3>
-                  <p className="text-sm text-slate-500 font-medium">I am a supplier looking to win government contracts.</p>
-                </button>
-
-                <button 
-                  onClick={() => setRole("requestor")}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all ${role === 'requestor' ? 'border-primary bg-blue-50/50 ring-4 ring-primary/10' : 'border-slate-200 hover:border-slate-300'}`}
-                >
-                  <BuildingLibraryIcon className={`w-8 h-8 mb-4 ${role === 'requestor' ? 'text-primary' : 'text-slate-400'}`} />
-                  <h3 className="font-bold text-lg text-slate-800 mb-1">I want to Procure</h3>
-                  <p className="text-sm text-slate-500 font-medium">I am an agency looking to post solicitations.</p>
-                </button>
-
-                <button 
-                  onClick={() => setRole("both")}
-                  className={`p-6 rounded-2xl border-2 text-left transition-all md:col-span-2 ${role === 'both' ? 'border-primary bg-blue-50/50 ring-4 ring-primary/10' : 'border-slate-200 hover:border-slate-300'}`}
-                >
-                  <GlobeAltIcon className={`w-8 h-8 mb-4 ${role === 'both' ? 'text-primary' : 'text-slate-400'}`} />
-                  <h3 className="font-bold text-lg text-slate-800 mb-1">Both / Not Sure Yet</h3>
-                  <p className="text-sm text-slate-500 font-medium">I want to explore both bidding and procurement features.</p>
-                </button>
-
-              </div>
-              <div className="mt-10 flex justify-end">
-                <button 
-                  disabled={!role}
-                  onClick={() => setStep(2)}
-                  className="btn btn-primary px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  Continue <CheckCircleIcon className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 2: ENTITY TYPE */}
-          {step === 2 && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">What type of entity are you?</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                
-                {[
-                  { id: 'individual', label: 'Individual / Freelancer', icon: UserIcon },
-                  { id: 'company', label: 'Private Company', icon: BuildingOfficeIcon },
-                  { id: 'institution', label: 'Academic / Institution', icon: BuildingLibraryIcon },
-                  { id: 'government', label: 'Government Agency', icon: GlobeAltIcon },
-                  { id: 'ngo', label: 'NGO / Non-Profit', icon: UsersIcon },
-                ].map((type) => (
-                  <button 
-                    key={type.id}
-                    onClick={() => setEntityType(type.id)}
-                    className={`p-4 rounded-xl border-2 flex items-center gap-3 transition-all ${entityType === type.id ? 'border-primary bg-blue-50/50' : 'border-slate-200 hover:border-slate-300'}`}
-                  >
-                    <type.icon className={`w-6 h-6 ${entityType === type.id ? 'text-primary' : 'text-slate-400'}`} />
-                    <span className="font-bold text-slate-700">{type.label}</span>
-                  </button>
-                ))}
-
-              </div>
-              <div className="mt-10 flex justify-between">
-                <button onClick={() => setStep(1)} className="px-6 py-3 font-bold text-slate-500 hover:text-slate-800 transition-colors">
-                  Back
-                </button>
-                <button 
-                  disabled={!entityType}
-                  onClick={() => setStep(3)}
-                  className="btn btn-primary px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  Continue <CheckCircleIcon className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3: NICKNAME */}
-          {step === 3 && (
-            <div className="animate-in fade-in slide-in-from-right-4 duration-300 text-center">
-              <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <UserCircleIcon className="w-12 h-12 text-primary" />
-              </div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">What should we call you?</h2>
-              <p className="text-slate-500 mb-8 text-sm">This will be your display name across the dashboard.</p>
-              
-              <div className="max-w-sm mx-auto text-left">
-                <label className="block text-sm font-bold text-slate-700 mb-2">Display Name / Nickname</label>
-                <input 
-                  type="text" 
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
-                  placeholder="e.g. Acme Corp or John Doe"
-                  className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium text-slate-800"
-                  autoFocus
-                />
-              </div>
-
-              <div className="mt-10 flex justify-between max-w-sm mx-auto">
-                <button onClick={() => setStep(2)} className="px-6 py-3 font-bold text-slate-500 hover:text-slate-800 transition-colors">
-                  Back
-                </button>
-                <button 
-                  disabled={!nickname || isSubmitting}
-                  onClick={handleSubmit}
-                  className="btn btn-primary px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  {isSubmitting ? "Saving..." : "Complete Setup"}
-                </button>
-              </div>
-            </div>
-          )}
-
+      {/* Right Panel: The Form */}
+      <div className="md:w-2/3 p-10 md:p-20 flex flex-col justify-center max-w-4xl mx-auto w-full relative">
+        <div className="absolute top-0 right-0 p-8 hidden md:block">
+           <span className="badge font-mono text-xs border border-primary/30 rounded-none bg-primary/10 text-primary uppercase tracking-widest px-3 py-1.5">
+             Secure Setup
+           </span>
         </div>
+
+        {/* STEP 1: ROLE */}
+        {step === 1 && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Declare Intended Role</h2>
+            <p className="text-text-muted mb-10 font-medium max-w-lg">Select your primary operational function within the network. This dictates your interface configuration.</p>
+            
+            <div className="grid gap-4">
+              <button 
+                onClick={() => setRole("supplier")}
+                className={`p-6 border flex items-start gap-5 text-left transition-all group rounded-none ${
+                  role === "supplier" ? "border-primary bg-primary/5" : "border-border hover:border-text-main bg-surface"
+                }`}
+              >
+                <div className={`p-3 border rounded-none ${role === "supplier" ? "border-primary text-primary bg-white" : "border-border text-text-muted group-hover:text-text-main"}`}>
+                  <BuildingOfficeIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-lg text-text-main mb-1">Supplier / Bidder</h3>
+                  <p className="text-sm text-text-muted font-medium">I am seeking to fulfill government contracts.</p>
+                </div>
+              </button>
+
+              <button 
+                onClick={() => setRole("requestor")}
+                className={`p-6 border flex items-start gap-5 text-left transition-all group rounded-none ${
+                  role === "requestor" ? "border-primary bg-primary/5" : "border-border hover:border-text-main bg-surface"
+                }`}
+              >
+                <div className={`p-3 border rounded-none ${role === "requestor" ? "border-primary text-primary bg-white" : "border-border text-text-muted group-hover:text-text-main"}`}>
+                  <BuildingLibraryIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-lg text-text-main mb-1">Procuring Agency</h3>
+                  <p className="text-sm text-text-muted font-medium">I am an agency looking to post solicitations.</p>
+                </div>
+              </button>
+
+              <button 
+                onClick={() => setRole("both")}
+                className={`p-6 border flex items-start gap-5 text-left transition-all group rounded-none ${
+                  role === "both" ? "border-primary bg-primary/5" : "border-border hover:border-text-main bg-surface"
+                }`}
+              >
+                <div className={`p-3 border rounded-none ${role === "both" ? "border-primary text-primary bg-white" : "border-border text-text-muted group-hover:text-text-main"}`}>
+                  <GlobeAltIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-lg text-text-main mb-1">Dual / Undefined</h3>
+                  <p className="text-sm text-text-muted font-medium">I require access to both bidding and procurement capabilities.</p>
+                </div>
+              </button>
+            </div>
+
+            <div className="mt-12 flex justify-end">
+              <button 
+                disabled={!role}
+                onClick={() => setStep(2)}
+                className="btn btn-primary rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
+              >
+                Acknowledge & Proceed
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: ENTITY TYPE */}
+        {step === 2 && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Specify Entity Classification</h2>
+            <p className="text-text-muted mb-10 font-medium max-w-lg">Identify your legal structure for compliance and auditing purposes.</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { id: 'individual', label: 'Individual / Freelancer', icon: UserIcon },
+                { id: 'company', label: 'Private Company', icon: BuildingOfficeIcon },
+                { id: 'institution', label: 'Academic / Institution', icon: BuildingLibraryIcon },
+                { id: 'government', label: 'Government Agency', icon: GlobeAltIcon },
+                { id: 'ngo', label: 'NGO / Non-Profit', icon: UsersIcon },
+              ].map((type) => (
+                <button 
+                  key={type.id}
+                  onClick={() => setEntityType(type.id)}
+                  className={`p-5 border flex items-center gap-4 transition-all group rounded-none ${
+                    entityType === type.id ? "border-primary bg-primary/5" : "border-border hover:border-text-main bg-surface"
+                  }`}
+                >
+                  <type.icon className={`w-5 h-5 ${entityType === type.id ? 'text-primary' : 'text-text-muted group-hover:text-text-main'}`} />
+                  <span className="font-heading font-bold text-text-main">{type.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-between items-center border-t border-border pt-8">
+              <button 
+                onClick={() => setStep(1)} 
+                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5"
+              >
+                ← Return to Previous
+              </button>
+              <button 
+                disabled={!entityType}
+                onClick={() => setStep(3)}
+                className="btn btn-primary rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
+              >
+                Acknowledge & Proceed
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: NICKNAME */}
+        {step === 3 && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Register Display Name</h2>
+            <p className="text-text-muted mb-10 font-medium max-w-lg">This identifier will be visible on the public registry alongside your cryptographic signature.</p>
+            
+            <div className="max-w-md">
+              <label className="block font-mono text-xs text-text-muted mb-2 tracking-widest uppercase">
+                [ Public Identifier ]
+              </label>
+              <input 
+                type="text" 
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="e.g. Acme Corp or DOH Region 7"
+                className="w-full px-5 py-4 bg-surface border border-border focus:outline-none focus:border-primary transition-colors font-heading text-lg font-medium text-text-main rounded-none"
+                autoFocus
+              />
+            </div>
+
+            <div className="mt-12 flex justify-between items-center border-t border-border pt-8">
+              <button 
+                onClick={() => setStep(2)} 
+                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5"
+              >
+                ← Return to Previous
+              </button>
+              <button 
+                disabled={!nickname || isSubmitting}
+                onClick={handleSubmit}
+                className="btn btn-primary rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5 flex items-center gap-3"
+              >
+                {isSubmitting ? "Committing..." : "Finalize Registration"}
+                {!isSubmitting && <CheckIcon className="w-5 h-5 stroke-2" />}
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
