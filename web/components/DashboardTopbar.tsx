@@ -109,22 +109,22 @@ export default function DashboardTopbar() {
         {ready ? (
           <div 
             onClick={identifier ? handleCopy : undefined}
-            className={`flex items-center gap-3 px-4 py-2 rounded-full transition-all duration-300 border ${
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition-all duration-300 border ${
               identifier 
-                ? "bg-surface hover:bg-gray-50 border-border cursor-pointer group shadow-sm" 
-                : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help shadow-sm"
+                ? "bg-primary text-text-main hover:bg-primary-hover border-transparent cursor-pointer group shadow-sm" 
+                : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help shadow-sm text-red-700"
             }`}
             title={identifier ? "Click to copy identifier" : "Wallet not connected"}
           >
             <div className="relative overflow-hidden">
               <div className={`transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
-                <span className="text-sm font-heading font-bold text-text-main whitespace-nowrap">
+                <span className="text-sm font-heading font-bold whitespace-nowrap">
                   Welcome, {nickname || 'User'}
                 </span>
               </div>
               <div className={`absolute inset-0 flex items-center gap-2 transition-all duration-500 transform ${displayMode === 'wallet' ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
-                <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-500" : "bg-red-500"}`}></div>
-                <span className={`text-xs font-mono font-medium truncate w-full ${identifier ? "text-text-muted" : "text-red-700"}`}>
+                <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-600" : "bg-red-500"}`}></div>
+                <span className={`text-xs font-mono font-bold truncate w-full`}>
                   {identifier || "Not Connected"}
                 </span>
               </div>
@@ -132,15 +132,15 @@ export default function DashboardTopbar() {
             <div className="shrink-0">
               {identifier && (
                 copied ? (
-                  <CheckIcon className="w-4 h-4 text-green-600" />
+                  <CheckIcon className="w-4 h-4 text-green-700" />
                 ) : (
-                  <DocumentDuplicateIcon className="w-4 h-4 text-border group-hover:text-text-muted transition-colors" />
+                  <DocumentDuplicateIcon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
                 )
               )}
             </div>
           </div>
         ) : (
-          <div className="h-10 w-40 bg-gray-100 rounded-full animate-pulse border border-gray-200"></div>
+          <div className="h-10 w-40 bg-gray-100 rounded-md animate-pulse border border-gray-200"></div>
         )}
 
         <div className="h-8 w-px bg-border"></div>
@@ -155,22 +155,22 @@ export default function DashboardTopbar() {
             onChange={handleAvatarUpload}
           />
           <div 
-            className="relative p-0.5 rounded-none bg-surface border border-border cursor-pointer group w-10 h-10 flex items-center justify-center overflow-hidden"
+            className="relative p-0.5 rounded-md bg-surface border border-border cursor-pointer group w-10 h-10 flex items-center justify-center overflow-hidden"
             onClick={() => fileInputRef.current?.click()}
             title="Click to change profile picture"
           >
             {avatarUrl ? (
-              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover rounded-sm" />
             ) : (
               <span className="text-primary font-heading font-bold text-lg">{initial}</span>
             )}
-            <div className="absolute inset-0 bg-secondary/80 hidden group-hover:flex items-center justify-center transition-all">
+            <div className="absolute inset-0 bg-secondary/80 hidden group-hover:flex items-center justify-center transition-all rounded-md">
               <CameraIcon className="w-4 h-4 text-primary" />
             </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-3 py-2 rounded-none transition-all uppercase"
+            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-3 py-2 rounded-md transition-all uppercase"
           >
             <ArrowRightOnRectangleIcon className="w-4 h-4 stroke-2" />
             Sign Out
