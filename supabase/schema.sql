@@ -67,7 +67,7 @@ create policy "Public projects are viewable by everyone" on projects for select 
 create policy "Public criteria are viewable by everyone" on project_criteria for select using (true);
 
 -- Bids are only viewable by the supplier who made them, or the requestor of the project
-create policy "Suppliers can view own bids" on bids for select using (auth.uid() = supplier_id);
+create policy "Suppliers can view own bids" on bids for select using (auth.uid()::text = supplier_id);
 create policy "Requestors can view bids for their projects" on bids for select using (
-  exists (select 1 from projects where id = bids.project_id and requestor_id = auth.uid())
+  exists (select 1 from projects where id = bids.project_id and requestor_id = auth.uid()::text)
 );
