@@ -1,6 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+
+// Use admin client for server-side trusted operations to bypass RLS
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(req: Request) {
   try {
@@ -9,9 +14,6 @@ export async function POST(req: Request) {
     if (!id || !role || !entity_type || !nickname) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
-
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
     
     // Upsert to handle cases where they might update it later
     const { data, error } = await supabase
@@ -40,9 +42,6 @@ export async function PATCH(req: Request) {
     if (!id) {
       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }
-
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
     
     const { data, error } = await supabase
       .from('profiles')
@@ -67,9 +66,6 @@ export async function GET(req: Request) {
     const id = searchParams.get("id");
     
     if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 });
-    
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
 
     const { data, error } = await supabase
       .from('profiles')
@@ -78,7 +74,6 @@ export async function GET(req: Request) {
       .single();
       
     if (error) {
-      // It's normal for a new user to not have a profile yet (404)
       return NextResponse.json({ error: error.message, notFound: true }, { status: 404 });
     }
     

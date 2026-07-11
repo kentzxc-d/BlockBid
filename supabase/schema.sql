@@ -63,6 +63,11 @@
   alter table bid_values enable row level security;
 
   -- Basic RLS Policies (Can be refined later)
+  
+  -- Profiles RLS Policies
+  create policy "Public profiles are viewable by everyone" on profiles for select using (true);
+  create policy "Users can insert their own profile" on profiles for insert with check (auth.uid()::text = id);
+  create policy "Users can update their own profile" on profiles for update using (auth.uid()::text = id);
   create policy "Public projects are viewable by everyone" on projects for select using (true);
   create policy "Public criteria are viewable by everyone" on project_criteria for select using (true);
 
