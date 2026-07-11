@@ -6,107 +6,120 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className={styles.hero}>
-        <div className="container">
-          <h1 className={styles.heroTitle}>Transparent Government Procurement</h1>
+        <div className={`container ${styles.heroContainer}`}>
+          <h1 className={styles.heroTitle}>Procurement,<br/>cryptographically sealed.</h1>
           <p className={styles.heroSubtitle}>
-            BlockBid is a secure, blockchain-powered platform for government bidding. 
-            Ensuring fairness, anonymity, and AI-assisted evaluation for every project.
+            BlockBid is an immutable ledger for government bidding. 
+            Ensuring fairness, anonymity, and auditable evaluation for every project on the Base network.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <Link href="/procurements" className="btn btn-primary">
-              View Active Procurements
+            <Link href="/procurements" className="btn btn-primary" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600 }}>
+              Browse Solicitations
             </Link>
-            <Link href="/bids/new" className="btn btn-outline">
-              Submit a Bid
+            <Link href="/bids/new" className="btn btn-outline" style={{ borderColor: 'rgba(249,249,246,0.3)', color: 'var(--color-text-inverse)' }}>
+              Enter Supplier Portal
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="container">
-        <div className={styles.featuresGrid}>
-          <div className="card">
-            <div className={styles.featureIcon}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+      {/* Manifesto Section */}
+      <section className={styles.manifestoSection}>
+        <div className="container">
+          <div className={styles.manifestoList}>
+            <div className={styles.manifestoItem}>
+              <div className={styles.manifestoLabel}>[ 0x01. ON-CHAIN SECURITY ]</div>
+              <h3>Immutable procurement.</h3>
+              <p>
+                Every bid is hashed and committed directly to the Polygon network. This immutable ledger guarantees that procurement records cannot be altered or tampered with retroactively.
+              </p>
             </div>
-            <h3>On-Chain Security</h3>
-            <p style={{ color: 'var(--color-text-muted)', marginTop: '8px' }}>
-              All bids are hashed and committed to the Base Sepolia network, ensuring records cannot be tampered with.
-            </p>
-          </div>
 
-          <div className="card">
-            <div className={styles.featureIcon}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 12h4l3-9 5 18 3-9h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className={styles.manifestoItem}>
+              <div className={styles.manifestoLabel}>[ 0x02. FRICTIONLESS ACCESS ]</div>
+              <h3>No crypto experience required.</h3>
+              <p>
+                Powered by Privy, suppliers can participate using standard email or social accounts like Google. A secure, non-custodial wallet is automatically provisioned in the background.
+              </p>
             </div>
-            <h3>Dynamic Criteria</h3>
-            <p style={{ color: 'var(--color-text-muted)', marginTop: '8px' }}>
-              Procurement officers can define flexible scoring structures without being locked into rigid database columns.
-            </p>
-          </div>
 
-          <div className="card">
-            <div className={styles.featureIcon}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className={styles.manifestoItem}>
+              <div className={styles.manifestoLabel}>[ 0x03. AUDITABLE REGISTRY ]</div>
+              <h3>Absolute transparency.</h3>
+              <p>
+                From solicitation to evaluation, the entire procurement lifecycle leaves a verifiable cryptographic trail, eliminating systemic bias and ensuring public accountability.
+              </p>
             </div>
-            <h3>Blind Evaluation</h3>
-            <p style={{ color: 'var(--color-text-muted)', marginTop: '8px' }}>
-              Requestors evaluate submissions using anonymous aliases (e.g., Supplier-3F8A) to eliminate bias.
-            </p>
           </div>
         </div>
       </section>
 
       {/* Recent Procurements Preview */}
-      <section className="container" style={{ paddingBottom: '80px' }}>
-        <div className={styles.recentProjectsHeader}>
-          <h2>Recent Solicitations</h2>
-          <Link href="/procurements" className="btn btn-outline">View All</Link>
-        </div>
-        
-        <div style={{ display: 'grid', gap: '24px' }}>
-          {/* Mock Procurement 1 */}
-          <div className={`card ${styles.projectCard}`}>
-            <div className={styles.projectCardHeader}>
-              <div>
-                <h3 className={styles.projectCardTitle}>Procurement of Medical Supplies (Q3 2026)</h3>
-                <div className={styles.projectMeta}>
-                  <span>📍 DOH Region 7</span>
-                  <span>💰 Est. 5,000,000 PHP</span>
-                  <span>⏳ Closes in 12 days</span>
-                </div>
-              </div>
-              <span className="badge">Open</span>
-            </div>
-            <p style={{ color: 'var(--color-text-muted)' }}>
-              Looking for verified suppliers of medical-grade face masks, PPEs, and surgical gloves for public hospitals. Must have FDA clearance.
-            </p>
+      <section className={styles.recentProjectsSection}>
+        <div className="container">
+          <div className={styles.recentProjectsHeader}>
+            <h2>Recent Solicitations</h2>
+            <Link href="/procurements" className="btn btn-outline" style={{ borderRadius: 0, fontWeight: 600 }}>View Registry</Link>
           </div>
-
-          {/* Mock Project 2 */}
-          <div className={`card ${styles.projectCard}`}>
-            <div className={styles.projectCardHeader}>
-              <div>
-                <h3 className={styles.projectCardTitle}>IT Equipment Supply for Public Schools</h3>
-                <div className={styles.projectMeta}>
-                  <span>📍 Department of Education</span>
-                  <span>💰 Est. 5,000,000 PHP</span>
-                  <span>⏳ Closes in 3 days</span>
+          
+          <div style={{ display: 'grid', gap: '24px' }}>
+            {/* Mock Procurement 1 */}
+            <div className={styles.projectCard}>
+              <div className={styles.projectCardHeader}>
+                <h3 className={styles.projectCardTitle}>Procurement of Medical Supplies (Q3 2026)</h3>
+                <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: OPEN</span>
+              </div>
+              <p style={{ color: 'var(--color-text-muted)' }}>
+                Looking for verified suppliers of medical-grade face masks, PPEs, and surgical gloves for public hospitals. Must have FDA clearance.
+              </p>
+              <div className={styles.projectMeta}>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Location</span>
+                  <span className={styles.metaValue}>DOH Region 7</span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Est. Budget</span>
+                  <span className={styles.metaValue}>5,000,000 PHP</span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Closing Date</span>
+                  <span className={styles.metaValue}>T-12 Days</span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Contract Hash</span>
+                  <span className={styles.metaValue} style={{ color: 'var(--color-primary)' }}>0x8f2...4a1</span>
                 </div>
               </div>
-              <span className="badge">Open</span>
             </div>
-            <p style={{ color: 'var(--color-text-muted)' }}>
-              Procurement of 500 desktop computers and 50 network switches for the public high schools in the district.
-            </p>
+
+            {/* Mock Project 2 */}
+            <div className={styles.projectCard}>
+              <div className={styles.projectCardHeader}>
+                <h3 className={styles.projectCardTitle}>IT Equipment Supply for Public Schools</h3>
+                <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: OPEN</span>
+              </div>
+              <p style={{ color: 'var(--color-text-muted)' }}>
+                Procurement of 500 desktop computers and 50 network switches for the public high schools in the district.
+              </p>
+              <div className={styles.projectMeta}>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Location</span>
+                  <span className={styles.metaValue}>DepEd Central</span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Est. Budget</span>
+                  <span className={styles.metaValue}>15,000,000 PHP</span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Closing Date</span>
+                  <span className={styles.metaValue}>T-03 Days</span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Contract Hash</span>
+                  <span className={styles.metaValue} style={{ color: 'var(--color-primary)' }}>0xb41...9c2</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,26 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Clean & Professional Theme (Government) */
-  --color-primary: #0052CC; /* Trust Blue */
-  --color-primary-hover: #0043A6;
-  --color-secondary: #00875A; /* Success Green */
-  --color-secondary-hover: #006B47;
+  /* Immutable Ledger Theme */
+  --color-primary: #C5A059; /* Seal Gold */
+  --color-primary-hover: #D4AF68;
+  --color-secondary: #0B132B; /* Midnight Navy */
+  --color-secondary-hover: #16264A;
   
-  --color-background: #F4F5F7; /* Very light gray/blue */
-  --color-surface: #FFFFFF;
+  --color-background: #F9F9F6; /* Parchment White */
+  --color-surface: #FFFFFF; /* Pure white for cards */
+  --color-surface-inverse: #0B132B; /* Midnight Navy */
   
-  --color-text-main: #172B4D;
-  --color-text-muted: #6B778C;
+  --color-text-main: #0B132B;
+  --color-text-muted: #4A5568;
+  --color-text-inverse: #F9F9F6;
+  --color-text-inverse-muted: #A0AEC0;
   
-  --color-border: #DFE1E6;
+  --color-border: #CBD5E1;
+  --color-border-inverse: #1E293B;
   
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-mono: 'Fira Code', monospace;
 
   --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.1);
   --shadow-md: 0 4px 8px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.2);

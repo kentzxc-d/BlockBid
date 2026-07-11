@@ -19,8 +19,6 @@ export default function PublicLayout({
           </Link>
           
           <nav className="nav-links">
-            <Link href="/dashboard/user" className="nav-item">Dashboard</Link>
-            <Link href="/transparency" className="nav-item">Transparency</Link>
             <LoginButton />
           </nav>
         </div>
