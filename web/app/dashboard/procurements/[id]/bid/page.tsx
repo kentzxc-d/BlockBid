@@ -79,63 +79,68 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
   return (
     <div className="py-10 px-6 max-w-4xl mx-auto w-full">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 border-b border-border pb-6">
         <Link 
           href="/dashboard/procurements" 
-          className="inline-flex items-center gap-2 text-sm font-semibold text-text-muted hover:text-primary transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-4"
         >
-          <ArrowLeftIcon className="w-4 h-4" /> Back to Solicitations
+          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> Back to Solicitations
         </Link>
-        <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight mb-2">
-          Submit Proposal: <span className="text-primary">{params.id || MOCK_PROCUREMENT.id}</span>
+        <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+          [ SUBMIT_PROPOSAL: <span className="text-primary">{params.id || MOCK_PROCUREMENT.id}</span> ]
         </h1>
-        <p className="text-text-muted text-sm md:text-base">
-          Fill out the structured fields below. Our system will automatically format this into a standardized document for evaluation.
+        <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+          Enter structured bid data. System will auto-format payload for ledger execution.
         </p>
       </div>
 
-      <div className="bg-surface rounded-2xl p-6 md:p-8 border border-border shadow-sm mb-8">
-        <div className="mb-6 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
-          <h3 className="font-bold text-blue-900 mb-1">{MOCK_PROCUREMENT.title}</h3>
-          <p className="text-sm text-blue-800/80 mb-2">{MOCK_PROCUREMENT.description}</p>
-          <div className="text-sm font-bold text-slate-700">Estimated Budget: {MOCK_PROCUREMENT.budget}</div>
+      <div className="bg-surface rounded-md p-6 md:p-8 border border-border shadow-sm mb-8">
+        
+        <div className="mb-8 p-5 bg-gray-50 rounded-md border border-border">
+          <h3 className="font-heading font-bold text-text-main text-lg mb-2 uppercase">{MOCK_PROCUREMENT.title}</h3>
+          <p className="font-mono text-xs text-text-muted leading-relaxed mb-4">{MOCK_PROCUREMENT.description}</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md shadow-sm">
+            EST_BUDGET: {MOCK_PROCUREMENT.budget}
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <h2 className="text-xl font-bold text-text-main font-heading border-b border-border pb-3">Proposal Details</h2>
+          <h2 className="text-lg font-bold text-text-main font-heading uppercase tracking-tight border-b border-border pb-3">
+            Payload Details
+          </h2>
           
           {fields.map((field, index) => (
-            <div key={field.id} className="relative bg-slate-50 p-5 rounded-xl border border-slate-200 group transition-colors focus-within:border-primary/40 focus-within:bg-white">
+            <div key={field.id} className="relative bg-surface p-5 rounded-md border border-border group transition-colors focus-within:border-text-main hover:border-text-muted">
               {field.isCustom ? (
                 <div className="flex items-center gap-3 mb-3">
                   <input
                     type="text"
-                    placeholder="Enter Field Name (e.g., Value Added Services)"
+                    placeholder="ENTER_FIELD_KEY"
                     value={field.label}
                     onChange={(e) => updateCustomLabel(field.id, e.target.value)}
-                    className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                    className="flex-1 bg-surface border border-border rounded-md px-3 py-2 text-xs font-mono font-bold tracking-widest text-text-main uppercase focus:outline-none focus:border-text-main transition-all placeholder:text-slate-300"
                     required
                   />
                   <button 
                     type="button" 
                     onClick={() => removeField(field.id)}
-                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-text-muted hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 rounded-md transition-colors"
                     title="Remove field"
                   >
-                    <TrashIcon className="w-5 h-5" />
+                    <TrashIcon className="w-4 h-4 stroke-2" />
                   </button>
                 </div>
               ) : (
-                <label className="block text-sm font-bold text-slate-700 mb-2">
-                  {field.label} <span className="text-red-500">*</span>
+                <label className="block text-xs font-mono font-bold tracking-widest text-text-main uppercase mb-2">
+                  {field.label} <span className="text-primary">*</span>
                 </label>
               )}
               
               <textarea
                 value={field.value}
                 onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                placeholder={`Enter your ${field.label ? field.label.toLowerCase() : 'details'}...`}
-                className="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-700 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-y min-h-[100px]"
+                placeholder={`INPUT_${field.label ? field.label.toUpperCase().replace(/\s+/g, '_') : 'DATA'}...`}
+                className="w-full bg-surface border border-border rounded-md p-4 text-sm font-mono text-text-main focus:outline-none focus:border-text-main transition-all resize-y min-h-[120px] placeholder:text-slate-300"
                 required
               />
             </div>
@@ -144,25 +149,25 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
           <button
             type="button"
             onClick={addCustomField}
-            className="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary hover:bg-blue-50/50 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-4 rounded-md border-2 border-dashed border-border text-text-muted font-mono text-xs font-bold tracking-widest uppercase hover:border-text-main hover:text-text-main hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
           >
-            <PlusIcon className="w-5 h-5" /> Add Additional Field
+            <PlusIcon className="w-4 h-4 stroke-2" /> Add_Custom_Field
           </button>
 
           <div className="pt-6 border-t border-border flex justify-end">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 py-3.5 bg-primary text-white rounded-xl font-bold hover:bg-primary-hover transition-all shadow-sm shadow-blue-500/25 flex items-center gap-2 disabled:opacity-70"
+              className="px-8 py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-70 disabled:hover:bg-text-main shadow-sm"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Processing...
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-md animate-spin" />
+                  PROCESSING...
                 </>
               ) : (
                 <>
-                  <DocumentTextIcon className="w-5 h-5" /> Submit Proposal
+                  <DocumentTextIcon className="w-4 h-4 stroke-2" /> EXECUTE_PROPOSAL
                 </>
               )}
             </button>
@@ -172,22 +177,22 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
 
       {/* Success Modal */}
       {showSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-8 text-center border-b-4 border-emerald-500">
-              <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50">
-                <CheckBadgeIcon className="w-10 h-10 text-emerald-500" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
+          <div className="bg-surface rounded-md w-full max-w-md border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-8 text-center border-t-4 border-t-primary">
+              <div className="w-16 h-16 bg-primary/10 rounded-md flex items-center justify-center mx-auto mb-6 border border-primary/20">
+                <CheckBadgeIcon className="w-8 h-8 text-primary stroke-2" />
               </div>
-              <h3 className="font-black text-2xl text-text-main mb-2">Proposal Submitted!</h3>
-              <p className="text-slate-500 mb-6 font-medium">
-                Your structured inputs have been automatically formatted and submitted anonymously to the procurement committee.
+              <h3 className="font-heading font-bold text-2xl text-text-main mb-2 uppercase tracking-tight">TRANSACTION_SUCCESS</h3>
+              <p className="font-mono text-xs text-text-muted mb-8 leading-relaxed uppercase tracking-widest">
+                Payload formatted and transmitted anonymously to procurement ledger.
               </p>
               
               <Link 
                 href="/dashboard/procurements" 
-                className="inline-flex w-full justify-center py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/30"
+                className="inline-flex w-full justify-center py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors shadow-sm"
               >
-                Back to Solicitations
+                RETURN_TO_LEDGER
               </Link>
             </div>
           </div>
