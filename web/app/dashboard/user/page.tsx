@@ -193,13 +193,13 @@ export default function UserDashboard() {
             <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">[ RECENT_BIDS ]</h2>
           </div>
           
-          <div className="bg-surface rounded-md border border-border flex flex-col">
+          <div className="bg-surface rounded-md border border-border flex flex-col overflow-hidden">
             <div className="divide-y divide-border flex-1">
               {MY_BIDS.map((bid) => (
                 <div key={bid.id} className="p-5 hover:bg-gray-50 transition-colors border-l-4 border-l-primary group">
                   <div className="flex justify-between items-start mb-3">
                     <span className="text-sm font-mono font-bold text-text-main tracking-widest uppercase">{bid.id}</span>
-                    <span className="inline-flex items-center gap-1.5 px-2 py-1 border border-border bg-white text-[10px] font-mono font-bold tracking-widest text-text-main uppercase group-hover:border-text-main transition-colors">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-1 border border-border bg-white rounded-md text-[10px] font-mono font-bold tracking-widest text-text-main uppercase group-hover:border-text-main transition-colors">
                       <bid.statusIcon className="w-3 h-3 stroke-2" />
                       {bid.status}
                     </span>
