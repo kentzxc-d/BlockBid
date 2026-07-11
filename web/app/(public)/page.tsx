@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import HeroAuthButtons from "@/components/HeroAuthButtons";
 
 export default function Home() {
   return (
@@ -12,14 +13,7 @@ export default function Home() {
             BlockBid is an immutable ledger for government bidding. 
             Ensuring fairness, anonymity, and auditable evaluation for every project on the Base network.
           </p>
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <Link href="/procurements" className="btn btn-primary" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600 }}>
-              Browse Solicitations
-            </Link>
-            <Link href="/bids/new" className="btn btn-outline" style={{ borderColor: 'rgba(249,249,246,0.3)', color: 'var(--color-text-inverse)' }}>
-              Enter Supplier Portal
-            </Link>
-          </div>
+          <HeroAuthButtons />
         </div>
       </section>
 

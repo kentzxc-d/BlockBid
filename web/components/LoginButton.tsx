@@ -1,10 +1,22 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useLogin } from "@privy-io/react-auth";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 export default function LoginButton() {
-  const { ready, authenticated, login, logout, user } = usePrivy();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { ready, authenticated, logout, user } = usePrivy();
+
+  const { login } = useLogin({
+    onComplete: () => {
+      // If logging in from the landing page, go to dashboard
+      if (pathname === "/") {
+        router.push("/dashboard/user");
+      }
+    }
+  });
 
   if (!ready) {
     return <button className="btn btn-outline" disabled>Loading...</button>;
