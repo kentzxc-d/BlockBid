@@ -33,7 +33,7 @@ export default function Home() {
               <div className={styles.manifestoLabel}>[ 0x02. FRICTIONLESS ACCESS ]</div>
               <h3>No crypto experience required.</h3>
               <p>
-                Powered by Privy, suppliers can participate using standard email or social accounts like Google. A secure, non-custodial wallet is automatically provisioned in the background.
+                Powered by Privy, suppliers can participate using standard email accounts. A secure, non-custodial wallet is automatically provisioned in the background.
               </p>
             </div>
 
