@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { usePrivy } from "@privy-io/react-auth";
+import { useState, useEffect } from "react";
 import { 
   HomeIcon, 
   DocumentTextIcon, 
@@ -13,6 +15,21 @@ import {
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
+  const { user, ready } = usePrivy();
+  const [nickname, setNickname] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (ready && user) {
+      fetch(`/api/user/profile?id=${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.profile?.nickname) {
+            setNickname(data.profile.nickname);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [user, ready]);
 
   const navItems = [
     { name: "Overview", href: "/dashboard/user", icon: HomeIcon },
@@ -22,14 +39,16 @@ export default function DashboardSidebar() {
     { name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon },
   ];
 
+  const displayName = nickname || (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "Unknown Entity");
+
   return (
-    <div className="w-[280px] bg-slate-900 border-r border-slate-800 h-screen sticky top-0 flex flex-col hidden md:flex shrink-0">
+    <div className="w-[280px] bg-secondary border-r border-border-inverse h-screen sticky top-0 flex flex-col hidden md:flex shrink-0">
       {/* Logo Area */}
-      <div className="h-[72px] flex items-center px-6 border-b border-slate-800">
-        <Link href="/" className="flex items-center gap-2 font-heading font-bold text-xl text-white">
+      <div className="h-[72px] flex items-center px-6 border-b border-border-inverse">
+        <Link href="/" className="flex items-center gap-3 font-heading font-bold text-2xl text-primary tracking-wide uppercase">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="18" height="18" rx="4" stroke="#38BDF8" strokeWidth="2"/>
-            <path d="M8 12L11 15L16 9" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <rect x="3" y="3" width="18" height="18" rx="0" stroke="currentColor" strokeWidth="2"/>
+            <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="square"/>
           </svg>
           BlockBid
         </Link>
@@ -40,29 +59,31 @@ export default function DashboardSidebar() {
         <div className="mb-8">
           <Link 
             href="/dashboard/requestor/new"
-            className="flex items-center gap-2 w-full justify-center px-4 py-3 bg-blue-600 text-white hover:bg-blue-500 rounded-xl font-bold transition-colors shadow-md shadow-blue-900/50"
+            className="flex items-center justify-center gap-3 w-full px-4 py-4 bg-primary text-white hover:bg-primary-hover font-heading font-bold uppercase tracking-widest transition-colors rounded-none shadow-none"
           >
-            <PlusCircleIcon className="w-6 h-6 stroke-2" />
+            <PlusCircleIcon className="w-5 h-5 stroke-2" />
             New Request
           </Link>
         </div>
 
-        <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Main Menu</p>
+        <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
+          [ NAVIGATION ]
+        </p>
         
-        <div className="space-y-2">
+        <div className="space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-4 px-4 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                className={`flex items-center gap-4 px-4 py-3 rounded-none font-heading font-semibold transition-all duration-200 border-l-4 ${
                   isActive 
-                    ? "bg-slate-800 text-white shadow-sm border border-slate-700" 
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent"
+                    ? "bg-primary/10 text-primary border-primary" 
+                    : "text-text-inverse-muted border-transparent hover:text-white hover:bg-surface-inverse hover:border-text-inverse-muted"
                 }`}
               >
-                <item.icon className={`w-6 h-6 ${isActive ? "text-blue-400 stroke-2" : "text-slate-400"}`} />
+                <item.icon className={`w-5 h-5 ${isActive ? "text-primary stroke-2" : "text-text-inverse-muted"}`} />
                 {item.name}
               </Link>
             );
@@ -71,16 +92,20 @@ export default function DashboardSidebar() {
       </div>
       
       {/* Footer Widget */}
-      <div className="p-5 border-t border-slate-800">
-        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-            <span className="text-sm font-semibold text-white">Network Status</span>
-          </div>
-          <p className="text-xs text-slate-400">Connected to Polygon Amoy Testnet. All systems operational.</p>
+      <div className="p-5 border-t border-border-inverse">
+        <div className="mb-4">
+          <p className="text-xs font-mono text-text-inverse-muted tracking-wider mb-1">[ ACTIVE_ENTITY ]</p>
+          <p className="text-sm font-heading font-bold text-white truncate">{ready ? displayName : "Authenticating..."}</p>
         </div>
-        <div className="mt-4 text-xs text-slate-500 text-center font-medium">
-          &copy; 2026 BlockBid.
+
+        <div className="bg-surface-inverse p-4 border border-border-inverse rounded-none">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-2.5 h-2.5 rounded-none bg-green-500"></div>
+            <span className="text-sm font-heading font-semibold text-white tracking-wide uppercase">Network</span>
+          </div>
+          <p className="text-xs font-mono text-text-inverse-muted leading-relaxed">
+            Polygon Amoy<br/>Systems Operational
+          </p>
         </div>
       </div>
     </div>

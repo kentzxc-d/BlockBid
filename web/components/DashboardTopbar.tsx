@@ -3,7 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect, useRef } from "react";
 import { DocumentDuplicateIcon, ArrowRightOnRectangleIcon, CheckIcon } from "@heroicons/react/24/outline";
-import { UserCircleIcon, CameraIcon } from "@heroicons/react/24/solid";
+import { CameraIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
 export default function DashboardTopbar() {
@@ -14,6 +14,17 @@ export default function DashboardTopbar() {
   const [nickname, setNickname] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Animation state: 'greeting' | 'wallet'
+  const [displayMode, setDisplayMode] = useState<'greeting' | 'wallet'>('greeting');
+
+  // Alternating Header Timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDisplayMode(prev => prev === 'greeting' ? 'wallet' : 'greeting');
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Safely extract an identifier for the user
   useEffect(() => {
@@ -79,54 +90,60 @@ export default function DashboardTopbar() {
       await fetch('/api/user/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: user.id, avatar_url: fakeUrl }) // Usually the public URL
+        body: JSON.stringify({ id: user.id, avatar_url: fakeUrl }) 
       });
     } catch (error) {
       console.error("Failed to save avatar", error);
     }
   };
 
-  // Helper for initial
   const initial = nickname ? nickname.charAt(0).toUpperCase() : (identifier ? identifier.charAt(0).toUpperCase() : 'U');
 
   return (
-    <div className="h-[72px] bg-white border-b border-gray-200 flex items-center justify-end px-8 sticky top-0 z-10 shadow-sm">
+    <div className="h-[72px] bg-surface border-b border-border flex items-center justify-end px-8 sticky top-0 z-10 shadow-sm">
       
       {/* User Actions */}
       <div className="flex items-center gap-6">
         
-        {/* Wallet / ID Display */}
+        {/* Alternating Wallet / Greeting Display */}
         {ready ? (
           <div 
             onClick={identifier ? handleCopy : undefined}
-            className={`flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-200 border ${
+            className={`flex items-center justify-between w-64 px-4 py-2 rounded-none transition-all duration-300 border ${
               identifier 
-                ? "bg-gray-50 hover:bg-gray-100 border-gray-200 cursor-pointer" 
-                : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help group relative"
+                ? "bg-surface hover:bg-gray-50 border-border cursor-pointer group" 
+                : "bg-red-50 hover:bg-red-100 border-red-200 cursor-help"
             }`}
-            title={identifier ? "Click to copy" : "Wallet not connected. Your session is active, but a blockchain wallet is missing."}
+            title={identifier ? "Click to copy identifier" : "Wallet not connected"}
           >
-            <div className={`w-2.5 h-2.5 rounded-full ${identifier ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"}`}></div>
-            <span className={`text-sm font-semibold tracking-tight ${identifier ? "text-gray-700" : "text-red-700"} ${!nickname ? "font-mono" : ""}`}>
-              {nickname 
-                ? `Welcome back, ${nickname}` 
-                : (identifier 
-                  ? (identifier.length > 15 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) 
-                  : "Not Connected")}
-            </span>
+            <div className="flex items-center gap-3 overflow-hidden relative w-full h-5">
+              <div className={`absolute inset-0 flex items-center transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
+                <span className="text-sm font-heading font-bold text-text-main truncate">
+                  Welcome, {nickname || 'Unknown Entity'}
+                </span>
+              </div>
+              <div className={`absolute inset-0 flex items-center gap-2 transition-all duration-500 transform ${displayMode === 'wallet' ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
+                <div className={`w-2 h-2 rounded-none ${identifier ? "bg-green-500" : "bg-red-500"}`}></div>
+                <span className={`text-xs font-mono font-medium truncate ${identifier ? "text-text-muted" : "text-red-700"}`}>
+                  {identifier || "Not Connected"}
+                </span>
+              </div>
+            </div>
             {identifier && (
-              copied ? (
-                <CheckIcon className="w-4 h-4 text-green-600" />
-              ) : (
-                <DocumentDuplicateIcon className="w-4 h-4 text-gray-400" />
-              )
+              <div className="shrink-0 ml-2">
+                {copied ? (
+                  <CheckIcon className="w-4 h-4 text-green-600" />
+                ) : (
+                  <DocumentDuplicateIcon className="w-4 h-4 text-border group-hover:text-text-muted transition-colors" />
+                )}
+              </div>
             )}
           </div>
         ) : (
-          <div className="h-10 w-40 bg-gray-100 rounded-full animate-pulse border border-gray-200"></div>
+          <div className="h-10 w-64 bg-gray-100 rounded-none animate-pulse border border-gray-200"></div>
         )}
 
-        <div className="h-8 w-px bg-gray-200"></div>
+        <div className="h-8 w-px bg-border"></div>
 
         {/* Profile and Disconnect */}
         <div className="flex items-center gap-4">
@@ -138,24 +155,24 @@ export default function DashboardTopbar() {
             onChange={handleAvatarUpload}
           />
           <div 
-            className="relative p-0.5 rounded-full bg-blue-50 border-2 border-blue-100 cursor-pointer group w-10 h-10 flex items-center justify-center overflow-hidden"
+            className="relative p-0.5 rounded-none bg-surface border border-border cursor-pointer group w-10 h-10 flex items-center justify-center overflow-hidden"
             onClick={() => fileInputRef.current?.click()}
             title="Click to change profile picture"
           >
             {avatarUrl ? (
-              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover rounded-full" />
+              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <span className="text-blue-500 font-bold text-lg">{initial}</span>
+              <span className="text-primary font-heading font-bold text-lg">{initial}</span>
             )}
-            <div className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center rounded-full transition-all">
-              <CameraIcon className="w-4 h-4 text-white" />
+            <div className="absolute inset-0 bg-secondary/80 hidden group-hover:flex items-center justify-center transition-all">
+              <CameraIcon className="w-4 h-4 text-primary" />
             </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-sm font-bold text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-3 py-2 rounded-none transition-all uppercase"
           >
-            <ArrowRightOnRectangleIcon className="w-5 h-5 stroke-2" />
+            <ArrowRightOnRectangleIcon className="w-4 h-4 stroke-2" />
             Sign Out
           </button>
         </div>

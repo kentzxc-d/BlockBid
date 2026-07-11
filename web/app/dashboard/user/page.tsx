@@ -124,15 +124,7 @@ export default function UserDashboard() {
         onSave={handleSaveLocation} 
       />
 
-      {/* Welcome Section */}
-        <div className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-text-main mb-2 font-heading tracking-tight drop-shadow-sm">
-            Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-600">{ready ? displayName : '...'}</span>
-          </h1>
-          <p className="text-text-muted text-sm md:text-base">
-            Manage your bids, discover new opportunities, and track your success.
-          </p>
-        </div>
+
 
         {/* Quick Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
