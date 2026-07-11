@@ -1,10 +1,12 @@
 -- Enable UUID extension
 create extension if not exists "uuid-ossp";
 
--- 1. Profiles Table (extends Supabase auth.users)
+-- 1. Profiles Table (Handles Privy Auth Users)
 create table profiles (
-  id uuid references auth.users(id) primary key,
-  role text check (role in ('requestor', 'supplier', 'admin')) not null,
+  id text primary key, -- Privy DID (e.g. did:privy:...)
+  role text check (role in ('requestor', 'supplier', 'admin', 'both')) not null,
+  entity_type text check (entity_type in ('individual', 'company', 'institution', 'government', 'ngo')),
+  nickname text,
   wallet_address text, -- Derived from embedded wallet or Metamask
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
@@ -12,7 +14,7 @@ create table profiles (
 -- 2. Projects Table
 create table projects (
   id uuid default uuid_generate_v4() primary key,
-  requestor_id uuid references profiles(id) not null,
+  requestor_id text references profiles(id) not null,
   title text not null,
   description text,
   status text check (status in ('open', 'evaluating', 'awarded', 'closed')) default 'open',
@@ -34,7 +36,7 @@ create table project_criteria (
 create table bids (
   id uuid default uuid_generate_v4() primary key,
   project_id uuid references projects(id) on delete cascade not null,
-  supplier_id uuid references profiles(id) not null,
+  supplier_id text references profiles(id) not null,
   anonymous_alias text not null, -- e.g., "Supplier-3F8A" (Blind Bidding feature)
   status text check (status in ('submitted', 'evaluated', 'won', 'lost')) default 'submitted',
   on_chain_hash text, -- Hash of the bid data submitted to smart contract

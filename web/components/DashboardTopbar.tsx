@@ -9,18 +9,36 @@ export default function DashboardTopbar() {
   const { user, ready, logout } = usePrivy();
   const [copied, setCopied] = useState(false);
   const [identifier, setIdentifier] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null);
 
   // Safely extract an identifier for the user
   useEffect(() => {
-    if (ready && user) {
-      if (user.wallet?.address) {
-        setIdentifier(user.wallet.address);
-      } else if (user.email?.address) {
-        setIdentifier(user.email.address);
-      } else if (user.id) {
-        setIdentifier(user.id.replace('did:privy:', ''));
+    async function fetchProfile() {
+      if (ready && user) {
+        let defaultId = "";
+        if (user.wallet?.address) {
+          defaultId = user.wallet.address;
+        } else if (user.email?.address) {
+          defaultId = user.email.address;
+        } else if (user.id) {
+          defaultId = user.id.replace('did:privy:', '');
+        }
+        setIdentifier(defaultId);
+
+        try {
+          const res = await fetch(`/api/user/profile?id=${user.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.profile?.nickname) {
+              setNickname(data.profile.nickname);
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch nickname", error);
+        }
       }
     }
+    fetchProfile();
   }, [user, ready]);
 
   const handleCopy = () => {
@@ -49,10 +67,12 @@ export default function DashboardTopbar() {
             title={identifier ? "Click to copy" : "Wallet not connected. Your session is active, but a blockchain wallet is missing."}
           >
             <div className={`w-2.5 h-2.5 rounded-full ${identifier ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"}`}></div>
-            <span className={`text-sm font-semibold font-mono tracking-tight ${identifier ? "text-gray-700" : "text-red-700"}`}>
-              {identifier 
-                ? (identifier.length > 15 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) 
-                : "Not Connected"}
+            <span className={`text-sm font-semibold tracking-tight ${identifier ? "text-gray-700" : "text-red-700"} ${!nickname ? "font-mono" : ""}`}>
+              {nickname 
+                ? `Welcome back, ${nickname}` 
+                : (identifier 
+                  ? (identifier.length > 15 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) 
+                  : "Not Connected")}
             </span>
             {identifier && (
               copied ? (
