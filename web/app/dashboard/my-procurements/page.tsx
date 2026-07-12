@@ -5,7 +5,8 @@ import {
   PlusCircleIcon,
   ClockIcon,
   CheckBadgeIcon,
-  FolderOpenIcon
+  FolderOpenIcon,
+  ArrowRightIcon
 } from "@heroicons/react/24/outline";
 
 // Mock Data for "My Procurements" (Requests the user has created)
@@ -13,28 +14,28 @@ const MY_PROCUREMENTS = [
   {
     id: "REQ-2026-081",
     title: "100 Laptops for New Department",
-    createdAt: "Oct 24, 2026",
-    status: "Open for Bids",
+    createdAt: "OCT_24_2026",
+    status: "OPEN_FOR_BIDS",
     bidsCount: 4,
-    statusColor: "text-blue-600 bg-blue-50 border-blue-200",
+    statusColor: "text-primary bg-primary/10 border-primary/20",
     icon: ClockIcon
   },
   {
     id: "REQ-2026-055",
     title: "Office Furniture (Ergonomic Chairs)",
-    createdAt: "Sep 15, 2026",
-    status: "Evaluating",
+    createdAt: "SEP_15_2026",
+    status: "EVALUATING",
     bidsCount: 12,
-    statusColor: "text-amber-600 bg-amber-50 border-amber-200",
+    statusColor: "text-amber-500 bg-amber-500/10 border-amber-500/20",
     icon: FolderOpenIcon
   },
   {
     id: "REQ-2026-012",
     title: "Marketing Campaign Video Production",
-    createdAt: "Aug 02, 2026",
-    status: "Awarded",
+    createdAt: "AUG_02_2026",
+    status: "AWARDED",
     bidsCount: 7,
-    statusColor: "text-emerald-600 bg-emerald-50 border-emerald-200",
+    statusColor: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
     icon: CheckBadgeIcon
   }
 ];
@@ -44,82 +45,82 @@ export default function MyProcurementsPage() {
     <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
       {/* Header */}
-      <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <h1 className="text-3xl font-bold text-text-main mb-2 font-heading tracking-tight">
-            My Procurements
+          <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+            [ MY_PROCUREMENTS ]
           </h1>
-          <p className="text-text-muted text-sm md:text-base">
-            Track the status of the solicitations you have posted and review incoming bids.
+          <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+            Track solicitation status and review incoming bids.
           </p>
         </div>
         
         {/* Create New CTA */}
         <Link 
           href="/dashboard/requestor/new"
-          className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white hover:bg-primary-hover rounded-xl font-bold transition-all shadow-md shadow-blue-500/20"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white hover:bg-primary rounded-md font-mono text-xs font-bold uppercase tracking-widest transition-colors shadow-sm"
         >
-          <PlusCircleIcon className="w-5 h-5 stroke-2" />
-          Create Request
+          <PlusCircleIcon className="w-4 h-4 stroke-2" />
+          CREATE_REQUEST
         </Link>
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="bg-surface rounded-2xl p-6 border border-border shadow-sm flex flex-col">
-          <span className="text-sm font-semibold text-slate-500 mb-1">Total Requests</span>
-          <span className="text-3xl font-black text-text-main">3</span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+          <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">TOTAL_REQUESTS</span>
+          <span className="text-3xl font-mono font-bold text-text-main">03</span>
         </div>
-        <div className="bg-surface rounded-2xl p-6 border border-border shadow-sm flex flex-col">
-          <span className="text-sm font-semibold text-slate-500 mb-1">Total Bids Received</span>
-          <span className="text-3xl font-black text-primary">23</span>
+        <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+          <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">BIDS_RECEIVED</span>
+          <span className="text-3xl font-mono font-bold text-primary">23</span>
         </div>
-        <div className="bg-surface rounded-2xl p-6 border border-border shadow-sm flex flex-col">
-          <span className="text-sm font-semibold text-slate-500 mb-1">Successfully Awarded</span>
-          <span className="text-3xl font-black text-secondary">1</span>
+        <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+          <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">SUCCESSFULLY_AWARDED</span>
+          <span className="text-3xl font-mono font-bold text-emerald-500">01</span>
         </div>
       </div>
 
       {/* List of Procurements */}
-      <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">
-        <div className="px-6 py-4 border-b border-border bg-slate-50/50">
-          <h3 className="font-bold text-slate-700">Recent Solicitations</h3>
+      <div className="bg-surface border border-border rounded-md overflow-hidden">
+        <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center">
+          <h3 className="text-xs font-mono font-bold tracking-widest text-text-main uppercase">[ RECENT_SOLICITATIONS ]</h3>
         </div>
         
         <div className="divide-y divide-border">
           {MY_PROCUREMENTS.length === 0 ? (
             <div className="p-10 text-center">
-              <FolderOpenIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500 font-medium">You haven't created any procurement requests yet.</p>
+              <FolderOpenIcon className="w-10 h-10 text-text-muted mx-auto mb-3 stroke-1" />
+              <p className="text-text-muted font-mono text-xs tracking-widest uppercase">Zero records found.</p>
             </div>
           ) : (
             MY_PROCUREMENTS.map((req) => (
-              <div key={req.id} className="p-6 hover:bg-slate-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div key={req.id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-6 group">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">{req.id}</span>
-                    <span className="text-xs font-medium text-slate-400">Created {req.createdAt}</span>
+                    <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{req.id}</span>
+                    <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">| INIT: {req.createdAt}</span>
                   </div>
-                  <h4 className="font-bold text-text-main text-lg mb-2">
+                  <h4 className="font-bold text-text-main text-lg font-heading tracking-tight mb-3 group-hover:text-primary transition-colors">
                     {req.title}
                   </h4>
-                  <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs font-bold ${req.statusColor}`}>
-                      <req.icon className="w-3.5 h-3.5 stroke-2" />
+                  <div className="flex items-center gap-3">
+                    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-[10px] font-mono font-bold tracking-widest uppercase ${req.statusColor}`}>
+                      <req.icon className="w-3 h-3 stroke-2" />
                       {req.status}
                     </span>
-                    <span className="text-sm font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">
-                      {req.bidsCount} Bids Received
+                    <span className="text-[10px] font-mono font-bold tracking-widest text-text-main uppercase bg-gray-100 border border-border px-2 py-1 rounded-md">
+                      BIDS: {req.bidsCount.toString().padStart(2, '0')}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex sm:flex-col gap-3">
                   <Link 
-                    href={`/dashboard/procurements/${req.id}/evaluate`} // Example future route
-                    className="px-5 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-bold rounded-lg hover:bg-slate-50 transition-colors text-center shadow-sm whitespace-nowrap"
+                    href={`/dashboard/procurements/${req.id}/evaluate`} 
+                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
                   >
-                    View Bids
+                    VIEW_BIDS <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
                   </Link>
                 </div>
               </div>

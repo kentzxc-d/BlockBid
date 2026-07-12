@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-
 import Link from "next/link";
 import { 
   DocumentTextIcon, 
@@ -10,7 +9,8 @@ import {
   XCircleIcon,
   MagnifyingGlassIcon,
   FunnelIcon,
-  EyeIcon
+  EyeIcon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
 
 const SUBMITTED_BIDS = [
@@ -18,55 +18,55 @@ const SUBMITTED_BIDS = [
     id: "BID-2026-0092",
     procurementTitle: "Supply of 500 Desktop Computers",
     procurementId: "SOL-2026-001",
-    submittedAt: "Oct 10, 2026",
+    submittedAt: "OCT_10_2026",
     amount: "₱ 14,850,000",
-    status: "Pending",
+    status: "PENDING",
     statusIcon: ClockIcon,
-    statusColor: "text-amber-600",
-    statusBg: "bg-amber-50",
-    statusBorder: "border-amber-200"
+    statusColor: "text-amber-500",
+    statusBg: "bg-amber-500/10",
+    statusBorder: "border-amber-500/20"
   },
   {
     id: "BID-2026-0041",
     procurementTitle: "Medical Grade Face Masks (100k pcs)",
     procurementId: "SOL-2026-002",
-    submittedAt: "Oct 05, 2026",
+    submittedAt: "OCT_05_2026",
     amount: "₱ 2,400,000",
-    status: "Awarded",
+    status: "AWARDED",
     statusIcon: CheckCircleIcon,
-    statusColor: "text-emerald-600",
-    statusBg: "bg-emerald-50",
-    statusBorder: "border-emerald-200"
+    statusColor: "text-emerald-500",
+    statusBg: "bg-emerald-500/10",
+    statusBorder: "border-emerald-500/20"
   },
   {
     id: "BID-2026-0018",
     procurementTitle: "Campus Wi-Fi Infrastructure Upgrade",
     procurementId: "SOL-2026-004",
-    submittedAt: "Sep 28, 2026",
+    submittedAt: "SEP_28_2026",
     amount: "₱ 8,150,000",
-    status: "Rejected",
+    status: "REJECTED",
     statusIcon: XCircleIcon,
-    statusColor: "text-red-600",
-    statusBg: "bg-red-50",
-    statusBorder: "border-red-200"
+    statusColor: "text-red-500",
+    statusBg: "bg-red-500/10",
+    statusBorder: "border-red-500/20"
   },
   {
     id: "BID-2026-0005",
     procurementTitle: "Freelance Software Development Services",
     procurementId: "SOL-2026-003",
-    submittedAt: "Sep 15, 2026",
+    submittedAt: "SEP_15_2026",
     amount: "₱ 480,000",
-    status: "Awarded",
+    status: "AWARDED",
     statusIcon: CheckCircleIcon,
-    statusColor: "text-emerald-600",
-    statusBg: "bg-emerald-50",
-    statusBorder: "border-emerald-200"
+    statusColor: "text-emerald-500",
+    statusBg: "bg-emerald-500/10",
+    statusBorder: "border-emerald-500/20"
   }
 ];
 
 export default function MyBidsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("All Bids");
+  const [activeTab, setActiveTab] = useState("ALL_BIDS");
   const [viewingBid, setViewingBid] = useState<typeof SUBMITTED_BIDS[0] | null>(null);
 
   const filteredBids = useMemo(() => {
@@ -75,9 +75,9 @@ export default function MyBidsPage() {
                             bid.id.toLowerCase().includes(searchQuery.toLowerCase());
       
       let matchesTab = true;
-      if (activeTab === "Pending") matchesTab = bid.status === "Pending";
-      if (activeTab === "Awarded") matchesTab = bid.status === "Awarded";
-      if (activeTab === "Rejected") matchesTab = bid.status === "Rejected";
+      if (activeTab === "PENDING") matchesTab = bid.status === "PENDING";
+      if (activeTab === "AWARDED") matchesTab = bid.status === "AWARDED";
+      if (activeTab === "REJECTED") matchesTab = bid.status === "REJECTED";
 
       return matchesSearch && matchesTab;
     });
@@ -85,40 +85,40 @@ export default function MyBidsPage() {
 
   const counts = {
     all: SUBMITTED_BIDS.length,
-    pending: SUBMITTED_BIDS.filter(b => b.status === "Pending").length,
-    awarded: SUBMITTED_BIDS.filter(b => b.status === "Awarded").length,
-    rejected: SUBMITTED_BIDS.filter(b => b.status === "Rejected").length,
+    pending: SUBMITTED_BIDS.filter(b => b.status === "PENDING").length,
+    awarded: SUBMITTED_BIDS.filter(b => b.status === "AWARDED").length,
+    rejected: SUBMITTED_BIDS.filter(b => b.status === "REJECTED").length,
   };
 
   return (
     <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
       {/* Header */}
-      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <h1 className="text-3xl font-bold text-text-main mb-2 font-heading tracking-tight">
-            My Bids
+          <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+            [ MY_BIDS ]
           </h1>
-          <p className="text-text-muted text-sm md:text-base">
-            Track the status of all your submitted proposals.
+          <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+            Track execution status of all submitted proposals.
           </p>
         </div>
         
         {/* Search & Filter */}
         <div className="flex items-center gap-3">
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted stroke-2" />
             <input 
               type="text" 
-              placeholder="Search by ID or Title..." 
+              placeholder="SEARCH_BIDS..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2.5 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm font-medium w-full md:w-64"
+              className="pl-10 pr-4 py-2.5 rounded-md border border-border focus:border-text-main outline-none transition-colors text-xs font-mono font-bold tracking-widest w-full md:w-64 placeholder:text-text-muted uppercase"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-xl text-sm font-bold text-text-main hover:bg-slate-50 transition-colors shadow-sm">
-            <FunnelIcon className="w-5 h-5 stroke-2 text-slate-500" />
-            Filter
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-md text-xs font-mono font-bold tracking-widest text-text-main hover:bg-gray-50 transition-colors uppercase">
+            <FunnelIcon className="w-4 h-4 stroke-2 text-text-main" />
+            FILTER
           </button>
         </div>
       </div>
@@ -126,80 +126,80 @@ export default function MyBidsPage() {
       {/* Tabs */}
       <div className="flex items-center gap-6 mb-8 border-b border-border overflow-x-auto">
         <button 
-          onClick={() => setActiveTab("All Bids")}
-          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "All Bids" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+          onClick={() => setActiveTab("ALL_BIDS")}
+          className={`pb-3 text-xs font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors ${activeTab === "ALL_BIDS" ? "text-primary border-b-2 border-primary" : "text-text-muted hover:text-text-main border-b-2 border-transparent"}`}
         >
-          All Bids ({counts.all})
+          ALL_BIDS [{counts.all.toString().padStart(2, '0')}]
         </button>
         <button 
-          onClick={() => setActiveTab("Pending")}
-          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "Pending" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+          onClick={() => setActiveTab("PENDING")}
+          className={`pb-3 text-xs font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors ${activeTab === "PENDING" ? "text-primary border-b-2 border-primary" : "text-text-muted hover:text-text-main border-b-2 border-transparent"}`}
         >
-          Pending ({counts.pending})
+          PENDING [{counts.pending.toString().padStart(2, '0')}]
         </button>
         <button 
-          onClick={() => setActiveTab("Awarded")}
-          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "Awarded" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+          onClick={() => setActiveTab("AWARDED")}
+          className={`pb-3 text-xs font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors ${activeTab === "AWARDED" ? "text-primary border-b-2 border-primary" : "text-text-muted hover:text-text-main border-b-2 border-transparent"}`}
         >
-          Awarded ({counts.awarded})
+          AWARDED [{counts.awarded.toString().padStart(2, '0')}]
         </button>
         <button 
-          onClick={() => setActiveTab("Rejected")}
-          className={`pb-3 text-sm font-bold whitespace-nowrap ${activeTab === "Rejected" ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-700 transition-colors"}`}
+          onClick={() => setActiveTab("REJECTED")}
+          className={`pb-3 text-xs font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors ${activeTab === "REJECTED" ? "text-primary border-b-2 border-primary" : "text-text-muted hover:text-text-main border-b-2 border-transparent"}`}
         >
-          Rejected ({counts.rejected})
+          REJECTED [{counts.rejected.toString().padStart(2, '0')}]
         </button>
       </div>
 
       {/* Bids List */}
-      <div className="grid gap-5">
+      <div className="grid gap-4">
         {filteredBids.length === 0 ? (
-          <div className="bg-surface rounded-2xl p-10 border border-border text-center">
-            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
-              <MagnifyingGlassIcon className="w-8 h-8 text-slate-300" />
+          <div className="bg-surface rounded-md p-10 border border-border text-center">
+            <div className="w-12 h-12 bg-gray-50 rounded-md flex items-center justify-center mx-auto mb-4 border border-border">
+              <MagnifyingGlassIcon className="w-6 h-6 text-text-muted stroke-1" />
             </div>
-            <h3 className="font-bold text-slate-700 text-lg mb-1">No bids found</h3>
-            <p className="text-slate-500 text-sm">Try adjusting your search or tab filter.</p>
+            <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">No records found</h3>
+            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">Query returned zero matching bids.</p>
           </div>
         ) : (
           filteredBids.map((bid) => (
-          <div key={bid.id} className="bg-surface rounded-2xl p-6 border border-border shadow-sm hover:shadow-md transition-all group flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div key={bid.id} className="bg-surface rounded-md p-6 border border-border hover:border-text-main transition-colors group flex flex-col md:flex-row md:items-center justify-between gap-6">
             
             <div className="flex items-start gap-5 flex-1">
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                <DocumentTextIcon className="w-8 h-8 text-slate-400" />
+              <div className="p-3 bg-gray-50 rounded-md border border-border group-hover:bg-primary/10 transition-colors">
+                <DocumentTextIcon className="w-6 h-6 text-text-main group-hover:text-primary transition-colors" />
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-1">
-                  <span className="text-xs font-bold text-slate-400 tracking-wider">{bid.id}</span>
-                  <span className="text-xs font-bold text-slate-300">•</span>
-                  <span className="text-xs font-bold text-primary tracking-wider">{bid.procurementId}</span>
+                  <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{bid.id}</span>
+                  <span className="text-[10px] font-mono font-bold text-text-muted">|</span>
+                  <span className="text-[10px] font-mono font-bold text-primary tracking-widest uppercase">{bid.procurementId}</span>
                 </div>
-                <h3 className="font-bold text-text-main text-xl group-hover:text-primary transition-colors">
+                <h3 className="font-bold text-text-main text-lg font-heading group-hover:text-primary transition-colors tracking-tight">
                   {bid.procurementTitle}
                 </h3>
-                <div className="flex flex-wrap items-center gap-4 mt-2.5 text-sm font-medium">
-                  <span className="text-slate-500">
-                    Submitted: {bid.submittedAt}
+                <div className="flex flex-wrap items-center gap-4 mt-2 font-mono text-xs tracking-widest uppercase">
+                  <span className="text-text-muted">
+                    SUBMITTED: {bid.submittedAt}
                   </span>
-                  <span className="text-slate-300">|</span>
+                  <span className="text-text-muted">|</span>
                   <span className="font-bold text-text-main">
-                    Bid Amount: {bid.amount}
+                    EST: {bid.amount}
                   </span>
                 </div>
               </div>
             </div>
             
-            <div className="flex items-center justify-between md:flex-col md:items-end gap-4 border-t md:border-t-0 pt-5 md:pt-0 border-border">
-              <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold border ${bid.statusBg} ${bid.statusColor} ${bid.statusBorder}`}>
-                <bid.statusIcon className="w-4 h-4 stroke-2" />
+            <div className="flex items-center justify-between md:flex-col md:items-end gap-3 border-t md:border-t-0 pt-5 md:pt-0 border-border">
+              <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-mono font-bold tracking-widest uppercase border ${bid.statusBg} ${bid.statusColor} ${bid.statusBorder}`}>
+                <bid.statusIcon className="w-3 h-3 stroke-2" />
                 {bid.status}
               </div>
               <button 
                 onClick={() => setViewingBid(bid)}
-                className="px-5 py-2.5 bg-slate-50 text-slate-600 text-sm font-bold rounded-lg hover:bg-slate-100 hover:text-primary border border-slate-200 transition-colors shadow-sm flex items-center gap-2"
+                className="flex items-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
               >
-                <EyeIcon className="w-4 h-4 stroke-2" /> View Details
+                <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_DETAILS
               </button>
             </div>
 
@@ -209,53 +209,53 @@ export default function MyBidsPage() {
 
       {/* View Details Modal */}
       {viewingBid && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center p-6 border-b border-border">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
+          <div className="bg-surface rounded-md w-full max-w-lg shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-6 border-b border-border bg-gray-50">
               <div>
-                <h2 className="text-xl font-bold font-heading">Bid Details</h2>
-                <p className="text-sm font-medium text-slate-500">{viewingBid.id}</p>
+                <h2 className="text-lg font-bold font-heading uppercase text-text-main tracking-tight">[ BID_DETAILS ]</h2>
+                <p className="text-[10px] font-mono font-bold text-text-muted tracking-widest mt-1 uppercase">{viewingBid.id}</p>
               </div>
               <button 
                 onClick={() => setViewingBid(null)} 
-                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                className="p-2 text-text-muted hover:text-text-main border border-transparent hover:border-border rounded-md transition-colors"
               >
-                <XCircleIcon className="w-6 h-6" />
+                <XMarkIcon className="w-5 h-5 stroke-2" />
               </button>
             </div>
             
             <div className="p-6">
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
-                <p className="text-xs font-bold text-slate-400 mb-1 uppercase tracking-widest">Procurement</p>
-                <p className="font-bold text-slate-700">{viewingBid.procurementTitle}</p>
-                <p className="text-sm font-medium text-slate-500 mt-1">{viewingBid.procurementId}</p>
+              <div className="bg-surface p-4 rounded-md border border-border mb-6 hover:border-text-main transition-colors">
+                <p className="text-[10px] font-mono font-bold text-text-muted mb-2 uppercase tracking-widest">TARGET_PROCUREMENT</p>
+                <p className="font-heading font-bold text-text-main text-lg leading-tight uppercase">{viewingBid.procurementTitle}</p>
+                <p className="text-[10px] font-mono font-bold text-primary mt-2 tracking-widest uppercase">{viewingBid.procurementId}</p>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex justify-between pb-4 border-b border-slate-100">
-                  <span className="text-slate-500 font-medium">Submitted On</span>
-                  <span className="font-bold text-slate-700">{viewingBid.submittedAt}</span>
+              <div className="space-y-4 font-mono text-xs tracking-widest uppercase">
+                <div className="flex justify-between items-center pb-4 border-b border-border">
+                  <span className="text-text-muted font-bold">SUBMITTED_ON</span>
+                  <span className="font-bold text-text-main">{viewingBid.submittedAt}</span>
                 </div>
-                <div className="flex justify-between pb-4 border-b border-slate-100">
-                  <span className="text-slate-500 font-medium">Bid Amount</span>
-                  <span className="font-bold text-primary text-lg">{viewingBid.amount}</span>
+                <div className="flex justify-between items-center pb-4 border-b border-border">
+                  <span className="text-text-muted font-bold">PROPOSED_AMOUNT</span>
+                  <span className="font-bold text-primary bg-primary/10 px-3 py-1.5 border border-primary/20 rounded-md">{viewingBid.amount}</span>
                 </div>
                 <div className="flex justify-between items-center pb-2">
-                  <span className="text-slate-500 font-medium">Current Status</span>
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-bold border ${viewingBid.statusBg} ${viewingBid.statusColor} ${viewingBid.statusBorder}`}>
-                    <viewingBid.statusIcon className="w-4 h-4 stroke-2" />
+                  <span className="text-text-muted font-bold">CURRENT_STATUS</span>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-[10px] font-bold ${viewingBid.statusBg} ${viewingBid.statusColor} ${viewingBid.statusBorder}`}>
+                    <viewingBid.statusIcon className="w-3.5 h-3.5 stroke-2" />
                     {viewingBid.status}
                   </span>
                 </div>
               </div>
             </div>
             
-            <div className="p-4 border-t border-border bg-slate-50 text-center">
+            <div className="p-4 border-t border-border flex justify-end bg-gray-50">
               <button 
                 onClick={() => setViewingBid(null)}
-                className="px-6 py-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                className="px-8 py-2.5 bg-text-main text-white border border-transparent rounded-md font-mono text-xs font-bold tracking-widest hover:bg-primary transition-colors uppercase"
               >
-                Close
+                CLOSE_MODAL
               </button>
             </div>
           </div>
