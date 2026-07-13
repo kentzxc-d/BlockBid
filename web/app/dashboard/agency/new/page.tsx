@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { usePrivy } from "@privy-io/react-auth";
 import { 
   ArrowLeftIcon, 
   TrashIcon, 
@@ -20,6 +22,10 @@ export default function CreateProcurementPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const { user } = usePrivy();
   
   // Dynamic Criteria State
   const [criteria, setCriteria] = useState([
@@ -30,7 +36,7 @@ export default function CreateProcurementPage() {
   ]);
 
   const totalWeight = criteria.reduce((sum, item) => sum + item.weight, 0);
-  const isValid = totalWeight === 100 && title.trim().length > 0;
+  const isValid = totalWeight === 100 && title.trim().length > 0 && deadline.trim().length > 0;
 
   const handleAddCriteria = () => {
     setCriteria([...criteria, { id: Date.now(), name: "", weight: 0 }]);
@@ -58,6 +64,44 @@ export default function CreateProcurementPage() {
       return { ...c, weight };
     });
     setCriteria(newCriteria);
+  };
+
+  const handleSubmit = async () => {
+    if (!isValid || !user) return;
+    setIsSubmitting(true);
+
+    try {
+      // Create deadline as ISO string (end of the selected day)
+      const deadlineDate = new Date(deadline);
+      deadlineDate.setHours(23, 59, 59, 999);
+
+      const payload = {
+        requestor_id: user.id,
+        title,
+        description,
+        deadline: deadlineDate.toISOString(),
+        criteria: criteria.map(c => ({ name: c.name, weight: c.weight }))
+      };
+
+      const res = await fetch("/api/procurements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to publish");
+      }
+
+      // Success
+      router.push("/dashboard/agency");
+    } catch (err) {
+      console.error(err);
+      alert("Error publishing procurement. Check console.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -113,18 +157,31 @@ export default function CreateProcurementPage() {
             </div>
 
             {/* Budget */}
-            <div>
-              <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Estimated Budget (Optional)</label>
-              <div className="relative max-w-sm">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span className="text-text-muted font-mono font-bold text-sm tracking-widest">₱</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Estimated Budget (Optional)</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span className="text-text-muted font-mono font-bold text-sm tracking-widest">₱</span>
+                  </div>
+                  <input 
+                    type="number" 
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    placeholder="5000000"
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider placeholder:text-text-muted/50"
+                  />
                 </div>
+              </div>
+
+              {/* Deadline */}
+              <div>
+                <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Submission Deadline</label>
                 <input 
-                  type="number" 
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                  placeholder="5000000"
-                  className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider placeholder:text-text-muted/50"
+                  type="date" 
+                  value={deadline}
+                  onChange={(e) => setDeadline(e.target.value)}
+                  className="w-full px-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider uppercase"
                 />
               </div>
             </div>
@@ -250,15 +307,22 @@ export default function CreateProcurementPage() {
         {/* Publish Action */}
         <div className="pt-4">
           <button 
+            onClick={handleSubmit}
+            disabled={!isValid || isSubmitting}
             className={`w-full py-5 text-sm font-mono font-bold tracking-widest uppercase shadow-md transition-all flex items-center justify-center gap-3 ${
-              isValid 
+              isValid && !isSubmitting
                 ? "bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 border border-primary shadow-primary/20" 
                 : "bg-surface text-text-muted border border-border cursor-not-allowed opacity-50"
             }`}
-            disabled={!isValid}
           >
-            {isValid ? <CheckCircleIcon className="w-5 h-5 stroke-2" /> : null}
-            [ PUBLISH_PROCUREMENT_REQUEST ]
+            {isSubmitting ? (
+              <span className="animate-pulse">[ PUBLISHING... ]</span>
+            ) : (
+              <>
+                <CheckCircleIcon className="w-5 h-5 stroke-2" />
+                [ PUBLISH_PROCUREMENT_REQUEST ]
+              </>
+            )}
           </button>
           {!isValid && (
             <p className="text-center text-[10px] font-mono font-bold text-danger tracking-widest uppercase mt-4">
