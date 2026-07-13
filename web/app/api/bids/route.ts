@@ -62,3 +62,37 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message || "Failed to submit bid" }, { status: 500 });
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const supplier_id = searchParams.get("supplier_id");
+    
+    if (!supplier_id) {
+      return NextResponse.json({ error: "Missing supplier_id" }, { status: 400 });
+    }
+    
+    const { data: bids, error } = await supabase
+      .from("bids")
+      .select(`
+        id,
+        project_id,
+        status,
+        created_at,
+        projects (
+          title
+        )
+      `)
+      .eq("supplier_id", supplier_id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json({ success: true, bids }, { status: 200 });
+  } catch (err: any) {
+    console.error("Bids API Error:", err);
+    return NextResponse.json({ error: err.message || "Failed to fetch bids" }, { status: 500 });
+  }
+}

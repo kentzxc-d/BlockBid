@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { usePrivy } from "@privy-io/react-auth";
 import { 
   DocumentTextIcon, 
   CheckCircleIcon, 
@@ -13,64 +14,42 @@ import {
   XMarkIcon
 } from "@heroicons/react/24/outline";
 
-const SUBMITTED_BIDS = [
-  {
-    id: "BID-2026-0092",
-    procurementTitle: "Supply of 500 Desktop Computers",
-    procurementId: "SOL-2026-001",
-    submittedAt: "OCT_10_2026",
-    amount: "₱ 14,850,000",
-    status: "PENDING",
-    statusIcon: ClockIcon,
-    statusColor: "text-amber-500",
-    statusBg: "bg-amber-500/10",
-    statusBorder: "border-amber-500/20"
-  },
-  {
-    id: "BID-2026-0041",
-    procurementTitle: "Medical Grade Face Masks (100k pcs)",
-    procurementId: "SOL-2026-002",
-    submittedAt: "OCT_05_2026",
-    amount: "₱ 2,400,000",
-    status: "AWARDED",
-    statusIcon: CheckCircleIcon,
-    statusColor: "text-emerald-500",
-    statusBg: "bg-emerald-500/10",
-    statusBorder: "border-emerald-500/20"
-  },
-  {
-    id: "BID-2026-0018",
-    procurementTitle: "Campus Wi-Fi Infrastructure Upgrade",
-    procurementId: "SOL-2026-004",
-    submittedAt: "SEP_28_2026",
-    amount: "₱ 8,150,000",
-    status: "REJECTED",
-    statusIcon: XCircleIcon,
-    statusColor: "text-red-500",
-    statusBg: "bg-red-500/10",
-    statusBorder: "border-red-500/20"
-  },
-  {
-    id: "BID-2026-0005",
-    procurementTitle: "Freelance Software Development Services",
-    procurementId: "SOL-2026-003",
-    submittedAt: "SEP_15_2026",
-    amount: "₱ 480,000",
-    status: "AWARDED",
-    statusIcon: CheckCircleIcon,
-    statusColor: "text-emerald-500",
-    statusBg: "bg-emerald-500/10",
-    statusBorder: "border-emerald-500/20"
-  }
-];
-
 export default function MyBidsPage() {
+  const { user } = usePrivy();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("ALL_BIDS");
-  const [viewingBid, setViewingBid] = useState<typeof SUBMITTED_BIDS[0] | null>(null);
+  const [viewingBid, setViewingBid] = useState<any | null>(null);
+  const [bids, setBids] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    fetch(`/api/bids?supplier_id=${user.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.bids) {
+          const mappedBids = data.bids.map((b: any) => ({
+            id: b.id,
+            procurementTitle: b.projects?.title || "Unknown Project",
+            procurementId: b.project_id,
+            submittedAt: new Date(b.created_at).toLocaleDateString(),
+            amount: "N/A", // In a real app, calculate from bid_values
+            status: b.status.toUpperCase(),
+            statusIcon: b.status === "submitted" ? ClockIcon : (b.status === "won" ? CheckCircleIcon : XCircleIcon),
+            statusColor: b.status === "submitted" ? "text-amber-500" : (b.status === "won" ? "text-emerald-500" : "text-red-500"),
+            statusBg: b.status === "submitted" ? "bg-amber-500/10" : (b.status === "won" ? "bg-emerald-500/10" : "bg-red-500/10"),
+            statusBorder: b.status === "submitted" ? "border-amber-500/20" : (b.status === "won" ? "border-emerald-500/20" : "border-red-500/20")
+          }));
+          setBids(mappedBids);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, [user]);
+
 
   const filteredBids = useMemo(() => {
-    return SUBMITTED_BIDS.filter(bid => {
+    return bids.filter(bid => {
       const matchesSearch = bid.procurementTitle.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             bid.id.toLowerCase().includes(searchQuery.toLowerCase());
       
@@ -84,10 +63,10 @@ export default function MyBidsPage() {
   }, [searchQuery, activeTab]);
 
   const counts = {
-    all: SUBMITTED_BIDS.length,
-    pending: SUBMITTED_BIDS.filter(b => b.status === "PENDING").length,
-    awarded: SUBMITTED_BIDS.filter(b => b.status === "AWARDED").length,
-    rejected: SUBMITTED_BIDS.filter(b => b.status === "REJECTED").length,
+    all: bids.length,
+    pending: bids.filter(b => b.status === "SUBMITTED").length,
+    awarded: bids.filter(b => b.status === "WON").length,
+    rejected: bids.filter(b => b.status === "LOST").length,
   };
 
   return (

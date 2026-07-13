@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import Link from "next/link";
 import { 
@@ -9,66 +9,35 @@ import {
   UserGroupIcon, 
   FunnelIcon,
   MagnifyingGlassIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  DocumentTextIcon
 } from "@heroicons/react/24/outline";
-
-// Extended Mock Data for Active Solicitations
-const ACTIVE_SOLICITATIONS = [
-  {
-    id: "SOL-2026-001",
-    title: "Supply of 500 Desktop Computers",
-    sector: "Education",
-    budget: "₱ 15,000,000",
-    deadline: "3 Days",
-    icon: AcademicCapIcon,
-  },
-  {
-    id: "SOL-2026-002",
-    title: "Medical Grade Face Masks (100k pcs)",
-    sector: "Institution",
-    budget: "₱ 2,500,000",
-    deadline: "12 Days",
-    icon: BuildingOfficeIcon,
-  },
-  {
-    id: "SOL-2026-003",
-    title: "Freelance Software Development Services",
-    sector: "Individual",
-    budget: "₱ 500,000",
-    deadline: "5 Days",
-    icon: UserGroupIcon,
-  },
-  {
-    id: "SOL-2026-004",
-    title: "Campus Wi-Fi Infrastructure Upgrade",
-    sector: "Education",
-    budget: "₱ 8,200,000",
-    deadline: "15 Days",
-    icon: AcademicCapIcon,
-  },
-  {
-    id: "SOL-2026-005",
-    title: "Heavy Machinery for Road Construction",
-    sector: "Institution",
-    budget: "₱ 45,000,000",
-    deadline: "21 Days",
-    icon: BuildingOfficeIcon,
-  }
-];
 
 export default function ActiveSolicitationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSector, setSelectedSector] = useState("All");
+  const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/procurements?filter=open')
+      .then(res => res.json())
+      .then(data => {
+        if (data.projects) {
+          setActiveSolicitations(data.projects);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, []);
 
   const filteredSolicitations = useMemo(() => {
-    return ACTIVE_SOLICITATIONS.filter(solicitation => {
+    return activeSolicitations.filter(solicitation => {
       const matchesSearch = solicitation.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             solicitation.id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesSector = selectedSector === "All" || solicitation.sector === selectedSector;
-      
-      return matchesSearch && matchesSector;
+      return matchesSearch; // Ignoring sector filter for now since it's not in our schema
     });
-  }, [searchQuery, selectedSector]);
+  }, [searchQuery, activeSolicitations]);
 
   return (
     <div className="py-10 px-8 max-w-6xl mx-auto w-full">
@@ -137,7 +106,7 @@ export default function ActiveSolicitationsPage() {
             <div key={solicitation.id} className="bg-surface rounded-md p-6 border border-border hover:border-text-main transition-colors group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div className="flex items-start gap-5">
                 <div className="p-3 border border-border bg-gray-50 rounded-md group-hover:bg-primary/10 transition-colors">
-                  <solicitation.icon className="w-6 h-6 text-text-main group-hover:text-primary transition-colors" />
+                  <DocumentTextIcon className="w-6 h-6 text-text-main group-hover:text-primary transition-colors" />
                 </div>
                 <div>
                   <div className="flex items-center gap-3 mb-1">
@@ -148,26 +117,19 @@ export default function ActiveSolicitationsPage() {
                   </h3>
                   <div className="flex flex-wrap items-center gap-4 mt-2 text-xs font-mono text-text-muted uppercase tracking-wider">
                     <span className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-md bg-text-muted"></span>
-                      {solicitation.sector}
+                      <AcademicCapIcon className="w-3.5 h-3.5" />
+                      General
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-md bg-primary"></span>
-                      EST: {solicitation.budget}
+                      • DEADLINE: {new Date(solicitation.deadline).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
               </div>
               
               <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 border-t sm:border-t-0 pt-5 sm:pt-0 border-border">
-                <span className="font-mono text-xs font-bold text-text-main uppercase tracking-widest">
-                  T-{solicitation.deadline}
-                </span>
-                <Link 
-                  href={`/dashboard/procurements/${solicitation.id}/bid`} 
-                  className="px-6 py-2 bg-text-main text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase flex items-center gap-2"
-                >
-                  Submit_Bid <ArrowRightIcon className="w-4 h-4 stroke-2" />
+                <Link href={`/dashboard/procurements/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase w-full sm:w-auto mt-2">
+                  SUBMIT_BID <ArrowRightIcon className="w-4 h-4 stroke-2" />
                 </Link>
               </div>
             </div>

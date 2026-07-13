@@ -17,59 +17,16 @@ import TopBidsCarousel from "@/components/TopBidsCarousel";
 import LocationModal from "@/components/LocationModal";
 import RoleGuard from "@/components/RoleGuard";
 
-// Mock Data for Active Solicitations (Item Procurements)
-const ACTIVE_SOLICITATIONS = [
-  {
-    id: "SOL-2026-001",
-    title: "Supply of 500 Desktop Computers",
-    sector: "Education",
-    budget: "₱ 15,000,000",
-    deadline: "3 Days",
-    icon: AcademicCapIcon,
-  },
-  {
-    id: "SOL-2026-002",
-    title: "Medical Grade Face Masks (100k pcs)",
-    sector: "Institution",
-    budget: "₱ 2,500,000",
-    deadline: "12 Days",
-    icon: BuildingOfficeIcon,
-  },
-  {
-    id: "SOL-2026-003",
-    title: "Freelance Software Development Services",
-    sector: "Individual",
-    budget: "₱ 500,000",
-    deadline: "5 Days",
-    icon: UserGroupIcon,
-  }
-];
-
-// Mock Data for User's Bids
-const MY_BIDS = [
-  {
-    id: "BID-0092",
-    solicitationTitle: "Supply of 500 Desktop Computers",
-    submittedAt: "2 Days Ago",
-    status: "UNDER EVALUATION",
-    statusIcon: ClockIcon,
-  },
-  {
-    id: "BID-0041",
-    solicitationTitle: "Office Chairs (Ergonomic)",
-    submittedAt: "1 Month Ago",
-    status: "AWARDED",
-    statusIcon: CheckCircleIcon,
-  }
-];
-
 export default function UserDashboard() {
   const { user, ready } = usePrivy();
   const [location, setLocation] = useState<string | null>(null);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
+  const [myBids, setMyBids] = useState<any[]>([]);
 
   useEffect(() => {
     if (ready && user) {
+      // Fetch user profile
       fetch(`/api/user/profile?id=${user.id}`)
         .then(res => res.json())
         .then(data => {
@@ -78,6 +35,20 @@ export default function UserDashboard() {
           }
         })
         .catch(err => console.error("Failed to fetch location", err));
+
+      // Fetch open solicitations
+      fetch('/api/procurements?filter=open')
+        .then(res => res.json())
+        .then(data => {
+          if (data.projects) setActiveSolicitations(data.projects.slice(0, 3));
+        });
+
+      // Fetch user's bids
+      fetch(`/api/bids?supplier_id=${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.bids) setMyBids(data.bids.slice(0, 3));
+        });
     }
   }, [user, ready]);
 
@@ -116,7 +87,7 @@ export default function UserDashboard() {
           </div>
           <div>
             <h3 className="text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-1">Total Bids</h3>
-            <p className="text-3xl font-heading font-bold text-text-main">12</p>
+            <p className="text-3xl font-heading font-bold text-text-main">{myBids.length > 0 ? myBids.length : '0'}</p>
           </div>
         </div>
         <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
@@ -125,7 +96,7 @@ export default function UserDashboard() {
           </div>
           <div>
             <h3 className="text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-1">Won Contracts</h3>
-            <p className="text-3xl font-heading font-bold text-text-main">3</p>
+            <p className="text-3xl font-heading font-bold text-text-main">{myBids.filter(b => b.status === 'won').length}</p>
           </div>
         </div>
         <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
@@ -134,7 +105,7 @@ export default function UserDashboard() {
           </div>
           <div>
             <h3 className="text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-1">Pending Eval</h3>
-            <p className="text-3xl font-heading font-bold text-text-main">4</p>
+            <p className="text-3xl font-heading font-bold text-text-main">{myBids.filter(b => b.status === 'submitted').length}</p>
           </div>
         </div>
       </div>
@@ -151,37 +122,33 @@ export default function UserDashboard() {
           </div>
           
           <div className="grid gap-4">
-            {ACTIVE_SOLICITATIONS.map((solicitation) => (
-              <div key={solicitation.id} className="bg-surface rounded-md p-6 border border-border hover:border-text-main transition-colors group flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                <div className="flex items-start gap-5">
-                  <div className="p-3 border border-border bg-gray-50 rounded-md group-hover:bg-primary/10 transition-colors">
-                    <solicitation.icon className="w-6 h-6 text-text-main group-hover:text-primary transition-colors" />
+            {activeSolicitations.map((solicitation) => (
+              <div key={solicitation.id} className="bg-surface rounded-md p-5 border border-border flex items-center justify-between group hover:border-text-main transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 border border-border bg-gray-50 rounded-md group-hover:bg-primary/10 transition-colors">
+                    <DocumentChartBarIcon className="w-5 h-5 text-text-main group-hover:text-primary transition-colors" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-text-main text-lg font-heading group-hover:text-primary transition-colors tracking-tight">
+                    <h3 className="font-bold text-text-main font-heading group-hover:text-primary transition-colors tracking-tight text-sm">
                       {solicitation.title}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-4 mt-2 text-xs font-mono text-text-muted uppercase tracking-wider">
-                      <span className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-md bg-text-muted"></span>
-                        {solicitation.sector}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-md bg-primary"></span>
-                        EST: {solicitation.budget}
+                    <div className="flex items-center gap-3 mt-1 text-[10px] font-mono text-text-muted uppercase tracking-wider">
+                      <span className="flex items-center gap-1">
+                        <AcademicCapIcon className="w-3 h-3" />
+                        General
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 border-t sm:border-t-0 pt-5 sm:pt-0 border-border">
-                  <span className="font-mono text-xs font-bold text-text-main">
-                    T-{solicitation.deadline}
-                  </span>
+                <div className="text-right">
+                  <p className="font-mono text-xs font-bold text-text-main mb-1 uppercase tracking-widest">
+                    Due: {new Date(solicitation.deadline).toLocaleDateString()}
+                  </p>
                   <Link 
-                    href={`/dashboard/procurements/${solicitation.id}/bid`} 
-                    className="px-6 py-2 bg-text-main text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase flex items-center gap-2"
+                    href={`/dashboard/procurements/${solicitation.id}/bid`}
+                    className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
                   >
-                    Submit_Bid <ArrowRightIcon className="w-4 h-4 stroke-2" />
+                    SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
                   </Link>
                 </div>
               </div>
@@ -196,24 +163,41 @@ export default function UserDashboard() {
           </div>
           
           <div className="bg-surface rounded-md border border-border flex flex-col overflow-hidden">
-            <div className="divide-y divide-border flex-1">
-              {MY_BIDS.map((bid) => (
-                <div key={bid.id} className="p-5 hover:bg-gray-50 transition-colors border-l-4 border-l-primary group">
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-sm font-mono font-bold text-text-main tracking-widest uppercase">{bid.id}</span>
-                    <span className="inline-flex items-center gap-1.5 px-2 py-1 border border-border bg-white rounded-md text-[10px] font-mono font-bold tracking-widest text-text-main uppercase group-hover:border-text-main transition-colors">
-                      <bid.statusIcon className="w-3 h-3 stroke-2" />
-                      {bid.status}
+            <div className="space-y-4">
+            {myBids.map((bid) => (
+              <div key={bid.id} className="bg-surface rounded-md p-5 border border-border">
+                <div className="flex items-start justify-between mb-3 border-b border-border pb-3">
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase block mb-1">
+                      {bid.id.substring(0, 8)}
                     </span>
+                    <h3 className="font-bold text-text-main text-sm font-heading tracking-tight leading-tight">
+                      {bid.projects?.title || "Unknown Project"}
+                    </h3>
                   </div>
-                  <h4 className="font-semibold text-text-main text-sm mb-2 leading-snug font-heading">
-                    {bid.solicitationTitle}
-                  </h4>
-                  <p className="text-[10px] font-mono text-text-muted font-bold tracking-widest uppercase flex items-center gap-1.5">
-                    <ClockIcon className="w-3 h-3" /> T-minus {bid.submittedAt}
-                  </p>
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-widest uppercase border ${
+                    bid.status === "submitted" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
+                    (bid.status === "won" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-red-500/10 text-red-500 border-red-500/20")
+                  }`}>
+                    {bid.status === "submitted" && <ClockIcon className="w-3 h-3 stroke-2" />}
+                    {bid.status === "won" && <CheckCircleIcon className="w-3 h-3 stroke-2" />}
+                    {bid.status}
+                  </span>
                 </div>
-              ))}
+                <div className="flex items-center justify-between mt-2">
+                  <p className="font-mono text-[10px] text-text-muted uppercase tracking-widest flex items-center gap-1.5">
+                    <ClockIcon className="w-3 h-3" />
+                    {new Date(bid.created_at).toLocaleDateString()}
+                  </p>
+                  <Link 
+                    href="/dashboard/my-bids"
+                    className="text-[10px] font-mono font-bold text-primary hover:text-text-main tracking-widest uppercase transition-colors"
+                  >
+                    VIEW_LEDGER →
+                  </Link>
+                </div>
+              </div>
+            ))}
             </div>
             <div className="p-4 border-t border-border bg-gray-50 text-center mt-auto">
               <Link href="/dashboard/my-bids" className="text-xs font-mono font-bold tracking-widest text-text-main hover:text-primary transition-colors flex items-center justify-center gap-2 uppercase">
@@ -223,7 +207,7 @@ export default function UserDashboard() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
     </RoleGuard>
   );
 }

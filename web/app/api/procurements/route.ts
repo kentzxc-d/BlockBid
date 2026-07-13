@@ -60,3 +60,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message || "Failed to create procurement" }, { status: 500 });
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const filter = searchParams.get("filter") || "all";
+    
+    let query = supabase.from("projects").select(`
+      id,
+      title,
+      description,
+      status,
+      deadline,
+      created_at
+    `);
+    
+    if (filter === "open") {
+      query = query.eq("status", "open");
+    }
+
+    const { data: projects, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json({ success: true, projects }, { status: 200 });
+  } catch (err: any) {
+    console.error("Procurement API Error:", err);
+    return NextResponse.json({ error: err.message || "Failed to fetch procurements" }, { status: 500 });
+  }
+}
