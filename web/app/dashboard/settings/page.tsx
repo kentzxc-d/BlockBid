@@ -3,8 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
 import Avatar from "boring-avatars";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { KeyIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, PencilIcon } from "@heroicons/react/24/solid";
 
 export default function SettingsPage() {
   const { user, ready, exportWallet } = usePrivy();
@@ -69,8 +68,8 @@ export default function SettingsPage() {
 
   if (!ready || !user) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="animate-pulse font-mono text-sm tracking-widest text-primary">LOADING_SETTINGS...</div>
+      <div className="flex-1 flex items-center justify-center py-10 px-8">
+        <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">[ INITIALIZING_SETTINGS ]</div>
       </div>
     );
   }
@@ -78,39 +77,43 @@ export default function SettingsPage() {
   const walletAddress = user.wallet?.address || "No wallet connected";
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-8">
+    <div className="py-10 px-8 max-w-7xl mx-auto w-full space-y-8">
       
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">Account Settings</h1>
-        <p className="text-text-muted">Manage your profile identity, role, and security keys.</p>
+        <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Manage_Identity_&_Keys</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Profile Settings Section (Left 2 cols) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center gap-3 border-b border-border pb-4">
-            <UserCircleIcon className="w-6 h-6 text-text-main" />
-            <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">Profile Identity</h2>
+          <div className="flex items-center justify-between border-b border-border pb-4">
+            <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">[ PROFILE_IDENTITY ]</h2>
           </div>
           
-          <div className="bg-surface rounded-md p-8 border border-border space-y-8">
+          <div className="bg-surface rounded-md p-6 sm:p-8 border border-border space-y-8 hover:border-text-main transition-colors">
             
             {/* Avatar Section */}
             <div className="flex items-start sm:items-center gap-6 flex-col sm:flex-row">
-              <div className="p-1 border border-border bg-gray-50 rounded-md">
-                <Avatar
-                  size={72}
-                  name={walletAddress}
-                  variant="beam"
-                  colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
-                />
+              <div className="relative group cursor-pointer" onClick={() => alert("Custom avatar uploads will be enabled in a future update. For now, your avatar is cryptographically sealed to your wallet address!")}>
+                <div className="p-1 border border-border bg-gray-50 rounded-md transition-colors group-hover:border-primary">
+                  <Avatar
+                    size={72}
+                    name={walletAddress}
+                    variant="beam"
+                    colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
+                  />
+                </div>
+                <div className="absolute -bottom-2 -right-2 bg-text-main border-2 border-surface text-white p-1.5 rounded-full shadow-lg group-hover:bg-primary transition-colors">
+                  <PencilIcon className="w-3.5 h-3.5" />
+                </div>
               </div>
               <div>
-                <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-1">Web3 Avatar</h3>
-                <p className="text-text-muted text-sm max-w-md">
-                  Your avatar is cryptographically seeded by your wallet address. It is unique to your identity on the network.
+                <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-1">WEB3_AVATAR</h3>
+                <p className="text-text-muted text-[11px] font-mono font-bold tracking-wider uppercase max-w-md leading-relaxed">
+                  Cryptographically seeded by wallet. Unique to your network identity.
                 </p>
               </div>
             </div>
@@ -123,7 +126,7 @@ export default function SettingsPage() {
                   type="text"
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
-                  className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main focus:outline-none focus:border-primary transition-colors"
+                  className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors"
                   required
                 />
               </div>
@@ -134,13 +137,13 @@ export default function SettingsPage() {
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main focus:outline-none focus:border-primary transition-colors appearance-none"
+                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none"
                     required
                   >
-                    <option value="" disabled>Select Role...</option>
+                    <option value="" disabled>Select_Role</option>
                     <option value="requestor">Requestor</option>
                     <option value="supplier">Supplier</option>
-                    <option value="both">Both (Hybrid)</option>
+                    <option value="both">Hybrid_Node</option>
                   </select>
                 </div>
 
@@ -149,15 +152,15 @@ export default function SettingsPage() {
                   <select
                     value={entityType}
                     onChange={(e) => setEntityType(e.target.value)}
-                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main focus:outline-none focus:border-primary transition-colors appearance-none"
+                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none"
                     required
                   >
-                    <option value="" disabled>Select Entity...</option>
-                    <option value="individual">Individual / Freelancer</option>
-                    <option value="company">Registered Company</option>
-                    <option value="institution">Academic Institution</option>
-                    <option value="government">Government Body</option>
-                    <option value="ngo">NGO / Non-Profit</option>
+                    <option value="" disabled>Select_Entity</option>
+                    <option value="individual">Individual_Node</option>
+                    <option value="company">Registered_Corp</option>
+                    <option value="institution">Academic_Inst</option>
+                    <option value="government">Gov_Entity</option>
+                    <option value="ngo">Non_Profit</option>
                   </select>
                 </div>
               </div>
@@ -165,8 +168,8 @@ export default function SettingsPage() {
               <div className="pt-6 flex items-center justify-between">
                 {saveSuccess ? (
                   <span className="flex items-center text-green-600 font-mono text-xs font-bold tracking-widest uppercase">
-                    <CheckCircleIcon className="w-5 h-5 mr-2" />
-                    Identity Updated
+                    <CheckCircleIcon className="w-4 h-4 mr-1.5" />
+                    Identity_Sealed
                   </span>
                 ) : (
                   <span />
@@ -174,9 +177,9 @@ export default function SettingsPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="bg-primary hover:bg-primary-hover text-white font-heading font-bold tracking-wide uppercase py-3 px-8 rounded-md transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
                 >
-                  {isSaving ? "Sealing..." : "Save Changes"}
+                  {isSaving ? "Sealing..." : "Save_Changes"}
                 </button>
               </div>
             </form>
@@ -185,29 +188,28 @@ export default function SettingsPage() {
 
         {/* Security & Wallet Section (Right 1 col) */}
         <div className="space-y-6">
-          <div className="flex items-center gap-3 border-b border-border pb-4">
-            <KeyIcon className="w-6 h-6 text-text-main" />
-            <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">Security</h2>
+          <div className="border-b border-border pb-4">
+            <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">[ SECURITY_KEYS ]</h2>
           </div>
 
-          <div className="bg-surface rounded-md p-6 border border-border space-y-6">
-            <div>
-              <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Connected Wallet</label>
-              <div className="bg-background border border-border rounded-md p-4 font-mono text-xs text-text-muted break-all">
+          <div className="bg-surface rounded-md border border-border flex flex-col overflow-hidden hover:border-text-main transition-colors">
+            <div className="p-5 border-l-4 border-l-primary">
+              <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Connected_Wallet</label>
+              <div className="bg-background border border-border rounded-md p-3 font-mono text-xs font-bold text-text-main tracking-widest break-all">
                 {walletAddress}
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border">
-              <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Recovery Phrase</label>
-              <p className="text-text-muted text-sm mb-6 leading-relaxed">
-                Your wallet is non-custodial. We cannot access your funds or secret phrase. Export it to a secure, offline location.
+            <div className="p-5 border-t border-border">
+              <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Recovery_Phrase</label>
+              <p className="text-[11px] font-mono text-text-muted font-bold tracking-widest uppercase mb-4 leading-relaxed">
+                Wallet is non-custodial. Export your secret phrase to a secure offline location.
               </p>
               <button
                 onClick={() => exportWallet()}
-                className="w-full bg-background hover:bg-gray-50 border border-primary text-primary font-heading font-bold tracking-wide uppercase py-3 px-4 rounded-md transition-colors"
+                className="w-full px-4 py-2.5 bg-text-main text-white text-[10px] font-mono font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
               >
-                Export Secret Phrase
+                Export_Secret_Phrase
               </button>
             </div>
           </div>
