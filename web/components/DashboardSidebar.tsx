@@ -16,6 +16,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function DashboardSidebar() {
+  const [role, setRole] = useState("both"); // default to handle legacy safely
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [upgradeMessage, setUpgradeMessage] = useState("");
   const pathname = usePathname();
   const router = useRouter();
   const { user, ready } = usePrivy();
@@ -49,18 +52,16 @@ export default function DashboardSidebar() {
   const handlePostProcurementClick = (e: React.MouseEvent) => {
     if (role === "supplier") {
       e.preventDefault();
-      if (confirm("Want to post procurement projects? Upgrade your network role to Dual/Hybrid in Settings. Go there now?")) {
-        router.push("/dashboard/settings");
-      }
+      setUpgradeMessage("Want to post procurement projects? Upgrade your network role to Dual/Hybrid in Settings.");
+      setUpgradeModalOpen(true);
     }
   };
 
   const handleSubmitBidsClick = (e: React.MouseEvent) => {
     if (role === "requestor") {
       e.preventDefault();
-      if (confirm("Want to submit bids? Upgrade your network role to Dual/Hybrid in Settings. Go there now?")) {
-        router.push("/dashboard/settings");
-      }
+      setUpgradeMessage("Want to submit bids? Upgrade your network role to Dual/Hybrid in Settings.");
+      setUpgradeModalOpen(true);
     }
   };
 
@@ -185,6 +186,38 @@ export default function DashboardSidebar() {
           </p>
         </div>
       </div>
+
+      {/* Brutalist Upgrade Modal */}
+      {upgradeModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <div className="bg-secondary border-2 border-primary p-8 max-w-md w-full shadow-[8px_8px_0_0_theme(colors.primary)] animate-in fade-in zoom-in duration-200">
+            <h3 className="font-heading text-xl font-black text-primary uppercase tracking-widest mb-4">
+              [ ROLE_UPGRADE_REQUIRED ]
+            </h3>
+            <div className="w-full h-px bg-border-inverse/30 mb-6"></div>
+            <p className="font-mono text-sm text-text-inverse-muted mb-8 leading-relaxed">
+              {upgradeMessage}
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setUpgradeModalOpen(false)}
+                className="flex-1 py-3 px-4 font-mono text-xs font-bold text-text-inverse-muted bg-surface-inverse hover:text-white transition-colors uppercase tracking-widest text-center"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setUpgradeModalOpen(false);
+                  router.push("/dashboard/settings");
+                }}
+                className="flex-1 py-3 px-4 font-mono text-xs font-bold text-background bg-primary hover:bg-primary-light transition-colors uppercase tracking-widest text-center"
+              >
+                Go to Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
