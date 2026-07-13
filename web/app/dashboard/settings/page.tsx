@@ -141,9 +141,9 @@ export default function SettingsPage() {
                     required
                   >
                     <option value="" disabled>Select_Role</option>
-                    <option value="requestor">Requestor</option>
-                    <option value="supplier">Supplier</option>
-                    <option value="both">Hybrid_Node</option>
+                    <option value="requestor">Procuring Agency</option>
+                    <option value="supplier">Supplier / Bidder</option>
+                    <option value="both">Dual / Undefined</option>
                   </select>
                 </div>
 
@@ -156,11 +156,11 @@ export default function SettingsPage() {
                     required
                   >
                     <option value="" disabled>Select_Entity</option>
-                    <option value="individual">Individual_Node</option>
-                    <option value="company">Registered_Corp</option>
-                    <option value="institution">Academic_Inst</option>
-                    <option value="government">Gov_Entity</option>
-                    <option value="ngo">Non_Profit</option>
+                    <option value="individual">Individual / Freelancer</option>
+                    <option value="company">Private Company</option>
+                    <option value="institution">Academic / Institution</option>
+                    <option value="government">Government Agency</option>
+                    <option value="ngo">NGO / Non-Profit</option>
                   </select>
                 </div>
               </div>
