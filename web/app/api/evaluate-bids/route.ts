@@ -2,6 +2,11 @@ import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Define the expected output structure using Zod
 const evaluationSchema = z.object({
@@ -57,6 +62,26 @@ export async function POST(req: Request) {
       schema: evaluationSchema,
       prompt: prompt,
     });
+
+    // Save the evaluations back to Supabase
+    const updatePromises = object.evaluations.map(async (evaluation) => {
+      // Find the bid in the DB by id. 
+      // The frontend should pass the bid.id as the bidId.
+      const { error } = await supabase
+        .from('bids')
+        .update({
+          ai_score: evaluation.totalScore,
+          ai_reasoning: JSON.stringify(evaluation),
+          status: 'evaluated'
+        })
+        .eq('id', evaluation.bidId);
+      
+      if (error) {
+        console.error(`Failed to update bid ${evaluation.bidId}:`, error);
+      }
+    });
+
+    await Promise.all(updatePromises);
 
     return NextResponse.json(object);
   } catch (error: any) {
