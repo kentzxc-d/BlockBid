@@ -89,7 +89,7 @@ export default function OnboardingPage() {
 
         <div className="relative z-10">
           <h1 className="flex items-center gap-3 text-3xl font-heading font-bold text-primary mb-2 uppercase tracking-wide">
-            <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={40} height={40} className="object-contain" />
+            <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={56} height={56} className="object-contain" />
             BlockBid
           </h1>
           <p className="text-text-inverse-muted font-medium text-sm max-w-xs">

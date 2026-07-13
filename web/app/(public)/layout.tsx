@@ -12,7 +12,7 @@ export default function PublicLayout({
       <header className="app-header">
         <div className="container header-container">
           <Link href="/" className="logo flex items-center gap-2">
-            <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={32} height={32} className="object-contain" />
+            <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={40} height={40} className="object-contain" />
             BlockBid
           </Link>
           

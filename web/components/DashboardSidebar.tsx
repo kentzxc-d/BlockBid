@@ -47,7 +47,7 @@ export default function DashboardSidebar() {
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-border-inverse">
         <Link href="/" className="flex items-center gap-3 font-heading font-bold text-2xl text-primary tracking-wide uppercase">
-          <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={32} height={32} className="object-contain" />
+          <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={40} height={40} className="object-contain" />
           BlockBid
         </Link>
       </div>
