@@ -137,7 +137,7 @@ export default function SettingsPage() {
       
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">Account Settings</h1>
+        <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ ACCOUNT_SETTINGS ]</h1>
         <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Manage_Identity_&_Keys</p>
       </div>
 
