@@ -121,7 +121,7 @@ export default function DashboardSidebar() {
               }}
               className="w-full flex items-center justify-between px-3 py-2 bg-secondary text-white font-mono text-xs font-bold tracking-widest uppercase rounded border border-border-inverse hover:border-primary transition-colors"
             >
-              <span>{activeMode}</span>
+              <span>{activeMode === "agency" ? "PROCURING AGENT" : "SUPPLIER"}</span>
               <ArrowsRightLeftIcon className="w-4 h-4 text-primary" />
             </button>
           </div>
