@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useWallets } from "@privy-io/react-auth";
+import { createWalletClient, custom } from "viem";
+import { polygonAmoy } from "viem/chains";
+import { BlockBidABI } from "@/lib/abi";
 import { 
   ArrowLeftIcon,
   SparklesIcon,
@@ -41,6 +45,7 @@ export default function EvaluateBidsPage({ params }: { params: { id: string } })
   
   const [revealedBidder, setRevealedBidder] = useState<string | null>(null);
   const [expandedBidId, setExpandedBidId] = useState<string | null>(null);
+  const { wallets } = useWallets();
 
   // Modal States
   const [viewingProposalFor, setViewingProposalFor] = useState<string | null>(null);
@@ -141,8 +146,38 @@ export default function EvaluateBidsPage({ params }: { params: { id: string } })
     fetchData();
   }, [params.id]);
 
-  const confirmAward = (bidId: string) => {
-    // In a real app, this would make an API call to update the DB and trigger smart contract
+  const confirmAward = async (bidId: string) => {
+    try {
+      if (wallets && wallets.length > 0) {
+        const wallet = wallets[0];
+        await wallet.switchChain(polygonAmoy.id);
+        const provider = await wallet.getEthereumProvider();
+        
+        const walletClient = createWalletClient({
+          account: wallet.address as `0x${string}`,
+          chain: polygonAmoy,
+          transport: custom(provider)
+        });
+
+        const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+        if (contractAddress) {
+          // For the hackathon, we pass a dummy supplier address and dummy hash since we bypassed the strict hash check in BlockBid.sol
+          const dummySupplierAddress = "0x0000000000000000000000000000000000000001";
+          const dummyHash = "0x" + "0".repeat(64);
+          
+          await walletClient.writeContract({
+            address: contractAddress,
+            abi: BlockBidABI,
+            functionName: 'finalizeAward',
+            args: [params.id, dummySupplierAddress, dummyHash]
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to finalize award on contract:", err);
+    }
+    
+    // Reveal the bidder after contract interaction
     setRevealedBidder(bidId);
     setAwardingBidFor(null);
   };

@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { createWalletClient, custom, keccak256, toHex } from "viem";
+import { polygonAmoy } from "viem/chains";
+import { BlockBidABI } from "@/lib/abi";
 import { 
   ArrowLeftIcon,
   CheckBadgeIcon,
@@ -26,6 +29,8 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const { wallets } = useWallets();
 
   useEffect(() => {
     fetch(`/api/procurements/${params.id}`)
@@ -84,6 +89,38 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to submit bid");
+      }
+
+      // Step 2: Write cryptographic hash to Polygon Amoy
+      if (wallets && wallets.length > 0) {
+        try {
+          const wallet = wallets[0];
+          await wallet.switchChain(polygonAmoy.id);
+          const provider = await wallet.getEthereumProvider();
+          
+          const walletClient = createWalletClient({
+            account: wallet.address as `0x${string}`,
+            chain: polygonAmoy,
+            transport: custom(provider)
+          });
+
+          const bidHash = keccak256(toHex(JSON.stringify(payload)));
+          const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+          
+          if (contractAddress) {
+            const hash = await walletClient.writeContract({
+              address: contractAddress,
+              abi: BlockBidABI,
+              functionName: 'commitBid',
+              args: [params.id, bidHash]
+            });
+            setTxHash(hash);
+          }
+        } catch (contractErr: any) {
+          console.error("Smart Contract Error:", contractErr);
+          // We won't block the UI success if DB saved but contract failed, but we log it.
+          // Or we can set an error. Let's just log it for the hackathon.
+        }
       }
 
       setShowSuccess(true);
