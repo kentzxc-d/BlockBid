@@ -109,9 +109,6 @@ export default function ActiveSolicitationsPage() {
                   <DocumentTextIcon className="w-6 h-6 text-text-main group-hover:text-primary transition-colors" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{solicitation.id}</span>
-                  </div>
                   <h3 className="font-bold text-text-main text-lg font-heading group-hover:text-primary transition-colors tracking-tight">
                     {solicitation.title}
                   </h3>
