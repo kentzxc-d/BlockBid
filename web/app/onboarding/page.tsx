@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -87,7 +88,8 @@ export default function OnboardingPage() {
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent mix-blend-overlay pointer-events-none"></div>
 
         <div className="relative z-10">
-          <h1 className="text-3xl font-heading font-bold text-primary mb-2 uppercase tracking-wide">
+          <h1 className="flex items-center gap-3 text-3xl font-heading font-bold text-primary mb-2 uppercase tracking-wide">
+            <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={40} height={40} className="object-contain" />
             BlockBid
           </h1>
           <p className="text-text-inverse-muted font-medium text-sm max-w-xs">

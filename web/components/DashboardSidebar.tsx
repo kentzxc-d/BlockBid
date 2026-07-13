@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
@@ -46,10 +47,7 @@ export default function DashboardSidebar() {
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-border-inverse">
         <Link href="/" className="flex items-center gap-3 font-heading font-bold text-2xl text-primary tracking-wide uppercase">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="18" height="18" rx="0" stroke="currentColor" strokeWidth="2"/>
-            <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="square"/>
-          </svg>
+          <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={32} height={32} className="object-contain" />
           BlockBid
         </Link>
       </div>
