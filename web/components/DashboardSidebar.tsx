@@ -16,7 +16,6 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function DashboardSidebar() {
-  const [role, setRole] = useState("both"); // default to handle legacy safely
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [upgradeMessage, setUpgradeMessage] = useState("");
   const pathname = usePathname();
