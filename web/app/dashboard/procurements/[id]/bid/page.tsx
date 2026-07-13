@@ -1,80 +1,122 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { usePrivy } from "@privy-io/react-auth";
 import { 
   ArrowLeftIcon,
-  PlusIcon,
-  TrashIcon,
   CheckBadgeIcon,
   DocumentTextIcon
 } from "@heroicons/react/24/outline";
 
-const MOCK_PROCUREMENT = {
-  id: "REQ-2026-081",
-  title: "100 Laptops for New Department",
-  description: "Require 100 high-performance laptops. Minimum specs: 16GB RAM, 512GB SSD, Intel i7 or equivalent. Must include 3-year warranty.",
-  budget: "₱ 8,000,000",
-  criteria: [
-    { name: "Price", weight: 40, type: "number" },
-    { name: "Technical Specs", weight: 30, type: "textarea" },
-    { name: "Warranty & Support", weight: 20, type: "textarea" },
-    { name: "Delivery Time", weight: 10, type: "text" }
-  ]
-};
-
 type FieldData = {
-  id: string;
+  id: string; // matches project_criteria.id
   label: string;
   value: string;
-  isCustom: boolean;
 };
 
 export default function SubmitBidPage({ params }: { params: { id: string } }) {
-  // Initialize fields based on criteria
-  const [fields, setFields] = useState<FieldData[]>(
-    MOCK_PROCUREMENT.criteria.map((c, i) => ({
-      id: `criteria-${i}`,
-      label: c.name,
-      value: "",
-      isCustom: false
-    }))
-  );
+  const { user } = usePrivy();
+  const router = useRouter();
 
+  const [project, setProject] = useState<any>(null);
+  const [fields, setFields] = useState<FieldData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch(`/api/procurements/${params.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.project) {
+          setProject(data.project);
+          setFields(data.project.criteria.map((c: any) => ({
+            id: c.id,
+            label: c.name,
+            value: ""
+          })));
+        } else {
+          setError(data.error || "Project not found");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        setError("Failed to load project details.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [params.id]);
 
   const handleFieldChange = (id: string, value: string) => {
     setFields(fields.map(f => f.id === id ? { ...f, value } : f));
   };
 
-  const addCustomField = () => {
-    setFields([...fields, {
-      id: `custom-${Date.now()}`,
-      label: "",
-      value: "",
-      isCustom: true
-    }]);
-  };
-
-  const updateCustomLabel = (id: string, newLabel: string) => {
-    setFields(fields.map(f => f.id === id ? { ...f, label: newLabel } : f));
-  };
-
-  const removeField = (id: string) => {
-    setFields(fields.filter(f => f.id !== id));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     setIsSubmitting(true);
+    setError("");
     
-    // Simulate API call and formatting
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Generate a random alias for blind bidding
+      const anonymous_alias = `Supplier-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+      
+      const payload = {
+        project_id: params.id,
+        supplier_id: user.id,
+        anonymous_alias,
+        bid_values: fields.map(f => ({
+          criteria_id: f.id,
+          value: f.value
+        }))
+      };
+
+      const res = await fetch("/api/bids", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to submit bid");
+      }
+
       setShowSuccess(true);
-    }, 1500);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to submit bid");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
+        <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">
+          [ LOADING_PROCUREMENT_DATA ]
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !project) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center py-20 px-8 w-full">
+        <div className="font-mono text-sm font-bold tracking-widest text-danger uppercase mb-4">
+          [ ERROR: {error} ]
+        </div>
+        <Link href="/dashboard/procurements" className="text-primary hover:underline font-mono text-xs uppercase tracking-widest">
+          Return to Solicitations
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="py-10 px-6 max-w-4xl mx-auto w-full">
@@ -87,54 +129,44 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> Back to Solicitations
         </Link>
         <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
-          [ SUBMIT_PROPOSAL: <span className="text-primary">{params.id || MOCK_PROCUREMENT.id}</span> ]
+          [ SUBMIT_PROPOSAL: <span className="text-primary">{project.title}</span> ]
         </h1>
         <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
           Enter structured bid data. System will auto-format payload for ledger execution.
         </p>
       </div>
 
+      {error && (
+        <div className="mb-6 p-4 bg-danger/10 border border-danger text-danger font-mono text-xs font-bold tracking-widest uppercase">
+          ERR: {error}
+        </div>
+      )}
+
       <div className="bg-surface rounded-md p-6 md:p-8 border border-border shadow-sm mb-8">
         
         <div className="mb-8 p-5 bg-gray-50 rounded-md border border-border">
-          <h3 className="font-heading font-bold text-text-main text-lg mb-2 uppercase">{MOCK_PROCUREMENT.title}</h3>
-          <p className="font-mono text-xs text-text-muted leading-relaxed mb-4">{MOCK_PROCUREMENT.description}</p>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md shadow-sm">
-            EST_BUDGET: {MOCK_PROCUREMENT.budget}
+          <h3 className="font-heading font-bold text-text-main text-lg mb-2 uppercase">{project.title}</h3>
+          <p className="font-mono text-xs text-text-muted leading-relaxed mb-4">{project.description}</p>
+          <div className="flex flex-wrap gap-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md shadow-sm">
+              DEADLINE: {new Date(project.deadline).toLocaleDateString()}
+            </div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md shadow-sm">
+              STATUS: {project.status}
+            </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <h2 className="text-lg font-bold text-text-main font-heading uppercase tracking-tight border-b border-border pb-3">
-            Payload Details
+            Evaluation Matrix Payload
           </h2>
           
-          {fields.map((field, index) => (
+          {fields.map((field) => (
             <div key={field.id} className="relative bg-surface p-5 rounded-md border border-border group transition-colors focus-within:border-text-main hover:border-text-muted">
-              {field.isCustom ? (
-                <div className="flex items-center gap-3 mb-3">
-                  <input
-                    type="text"
-                    placeholder="ENTER_FIELD_KEY"
-                    value={field.label}
-                    onChange={(e) => updateCustomLabel(field.id, e.target.value)}
-                    className="flex-1 bg-surface border border-border rounded-md px-3 py-2 text-xs font-mono font-bold tracking-widest text-text-main uppercase focus:outline-none focus:border-text-main transition-all placeholder:text-slate-300"
-                    required
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => removeField(field.id)}
-                    className="p-2 text-text-muted hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 rounded-md transition-colors"
-                    title="Remove field"
-                  >
-                    <TrashIcon className="w-4 h-4 stroke-2" />
-                  </button>
-                </div>
-              ) : (
-                <label className="block text-xs font-mono font-bold tracking-widest text-text-main uppercase mb-2">
-                  {field.label} <span className="text-primary">*</span>
-                </label>
-              )}
+              <label className="block text-xs font-mono font-bold tracking-widest text-text-main uppercase mb-2">
+                {field.label} <span className="text-primary">*</span>
+              </label>
               
               <textarea
                 value={field.value}
@@ -146,18 +178,10 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
             </div>
           ))}
 
-          <button
-            type="button"
-            onClick={addCustomField}
-            className="w-full py-4 rounded-md border-2 border-dashed border-border text-text-muted font-mono text-xs font-bold tracking-widest uppercase hover:border-text-main hover:text-text-main hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-          >
-            <PlusIcon className="w-4 h-4 stroke-2" /> Add_Custom_Field
-          </button>
-
           <div className="pt-6 border-t border-border flex justify-end">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || fields.some(f => !f.value.trim())}
               className="px-8 py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-70 disabled:hover:bg-text-main shadow-sm"
             >
               {isSubmitting ? (
@@ -185,20 +209,19 @@ export default function SubmitBidPage({ params }: { params: { id: string } }) {
               </div>
               <h3 className="font-heading font-bold text-2xl text-text-main mb-2 uppercase tracking-tight">TRANSACTION_SUCCESS</h3>
               <p className="font-mono text-xs text-text-muted mb-8 leading-relaxed uppercase tracking-widest">
-                Payload formatted and transmitted anonymously to procurement ledger.
+                Payload formatted and transmitted to procurement ledger.
               </p>
               
               <Link 
-                href="/dashboard/procurements" 
+                href="/dashboard/my-bids" 
                 className="inline-flex w-full justify-center py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors shadow-sm"
               >
-                RETURN_TO_LEDGER
+                VIEW_MY_BIDS
               </Link>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
