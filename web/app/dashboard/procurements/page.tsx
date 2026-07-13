@@ -128,7 +128,10 @@ export default function ActiveSolicitationsPage() {
               </div>
               
               <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 border-t sm:border-t-0 pt-5 sm:pt-0 border-border">
-                <Link href={`/dashboard/procurements/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase w-full sm:w-auto mt-2">
+                <p className="font-mono text-[10px] font-bold text-text-muted uppercase tracking-widest">
+                  T-{Math.max(0, Math.ceil((new Date(solicitation.deadline).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))} DAYS
+                </p>
+                <Link href={`/dashboard/procurements/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase w-full sm:w-auto">
                   SUBMIT_BID <ArrowRightIcon className="w-4 h-4 stroke-2" />
                 </Link>
               </div>

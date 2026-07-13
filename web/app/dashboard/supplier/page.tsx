@@ -65,7 +65,7 @@ export default function UserDashboard() {
 
   return (
     <RoleGuard allowedRoles={["supplier"]}>
-      <div className="py-10 px-8 max-w-7xl mx-auto w-full">
+      <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
       {/* Top Bids Carousel */}
       <TopBidsCarousel 

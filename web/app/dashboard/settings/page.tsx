@@ -137,7 +137,7 @@ export default function SettingsPage() {
   const walletAddress = user.wallet?.address || "No wallet connected";
 
   return (
-    <div className="py-10 px-8 max-w-7xl mx-auto w-full space-y-8">
+    <div className="py-10 px-8 max-w-6xl mx-auto w-full space-y-8">
       
       {/* Page Header */}
       <div>

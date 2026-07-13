@@ -45,7 +45,7 @@ export default function AgencyDashboard() {
 
   return (
     <RoleGuard allowedRoles={["requestor"]}>
-      <div className="py-10 px-8 max-w-7xl mx-auto w-full space-y-8">
+      <div className="py-10 px-8 max-w-6xl mx-auto w-full space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ PROCURING_AGENT_WORKSPACE ]</h1>
           <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Procurement_&_Evaluation_Hub</p>
