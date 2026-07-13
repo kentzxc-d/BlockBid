@@ -59,7 +59,11 @@ export default function SettingsPage() {
 
       if (response.ok) {
         setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 3000);
+        // Force a reload so the Sidebar and Route Guards pick up the new role immediately
+        setTimeout(() => {
+          setSaveSuccess(false);
+          window.location.reload();
+        }, 1500);
       } else {
         const error = await response.json();
         alert(`Failed to save profile: ${error.error}`);

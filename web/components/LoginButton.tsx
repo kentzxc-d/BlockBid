@@ -12,8 +12,8 @@ export default function LoginButton() {
   const { login } = useLogin({
     onComplete: () => {
       // If logging in from the landing page, go to dashboard
-      if (pathname === "/") {
-        router.push("/dashboard/user");
+      if (ready && authenticated) {
+        router.push("/dashboard");
       }
     }
   });

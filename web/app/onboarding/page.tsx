@@ -50,7 +50,7 @@ export default function OnboardingPage() {
       });
 
       if (response.ok) {
-        router.push("/dashboard/user");
+        router.push("/dashboard");
       } else {
         const error = await response.json();
         alert(`Failed to save profile: ${error.error}`);

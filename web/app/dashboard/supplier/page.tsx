@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import TopBidsCarousel from "@/components/TopBidsCarousel";
 import LocationModal from "@/components/LocationModal";
+import RoleGuard from "@/components/RoleGuard";
 
 // Mock Data for Active Solicitations (Item Procurements)
 const ACTIVE_SOLICITATIONS = [
@@ -92,7 +93,8 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="py-10 px-8 max-w-7xl mx-auto w-full">
+    <RoleGuard allowedRoles={["supplier"]}>
+      <div className="py-10 px-8 max-w-7xl mx-auto w-full">
       
       {/* Top Bids Carousel */}
       <TopBidsCarousel 
@@ -220,8 +222,8 @@ export default function UserDashboard() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
+    </RoleGuard>
   );
 }

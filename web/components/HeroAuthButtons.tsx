@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function HeroAuthButtons() {
   const router = useRouter();
   const { authenticated, ready } = usePrivy();
-  const [targetRoute, setTargetRoute] = useState<string>("/dashboard/user");
+  const [targetRoute, setTargetRoute] = useState<string>("/dashboard");
 
   const { login } = useLogin({
     onComplete: () => {
@@ -28,9 +28,9 @@ export default function HeroAuthButtons() {
   const handleSupplier = () => {
     if (!ready) return;
     if (authenticated) {
-      router.push("/dashboard/user");
+      router.push("/dashboard");
     } else {
-      setTargetRoute("/dashboard/user");
+      setTargetRoute("/dashboard");
       login();
     }
   };
