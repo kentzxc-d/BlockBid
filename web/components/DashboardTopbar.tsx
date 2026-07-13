@@ -3,8 +3,10 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect, useRef } from "react";
 import { DocumentDuplicateIcon, ArrowRightOnRectangleIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/solid";
 import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 export default function DashboardTopbar() {
   const { user, ready, logout } = usePrivy();
@@ -12,6 +14,10 @@ export default function DashboardTopbar() {
   const [copied, setCopied] = useState(false);
   const [identifier, setIdentifier] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Animation state: 'greeting' | 'wallet'
   const [displayMode, setDisplayMode] = useState<'greeting' | 'wallet'>('greeting');
@@ -45,6 +51,9 @@ export default function DashboardTopbar() {
             if (data.profile?.nickname) {
               setNickname(data.profile.nickname);
             }
+            if (data.profile?.avatar_url) {
+              setAvatarUrl(data.profile.avatar_url);
+            }
           }
         } catch (error) {
           console.error("Failed to fetch profile", error);
@@ -65,6 +74,56 @@ export default function DashboardTopbar() {
   const handleLogout = async () => {
     await logout();
     router.push('/');
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    setIsUploading(true);
+    const supabase = createClient();
+    
+    try {
+      // 1. Upload to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        throw new Error(`Upload failed: ${uploadError.message}`);
+      }
+
+      // 2. Get Public URL
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      const publicUrl = data.publicUrl;
+
+      // 3. Save to Profile API
+      const response = await fetch("/api/user/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: user.id,
+          avatar_url: publicUrl,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update database with new avatar");
+
+      // 4. Update UI state globally in this component
+      setAvatarUrl(publicUrl);
+    } catch (error: any) {
+      console.error("Avatar upload error:", error);
+      alert(error.message || "Failed to upload avatar.");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -115,21 +174,37 @@ export default function DashboardTopbar() {
 
         {/* Profile and Disconnect */}
         <div className="flex items-center gap-4">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            className="hidden" 
+            accept="image/*"
+            onChange={handleAvatarUpload}
+          />
           <div 
-            className="relative p-0.5 rounded-md bg-surface border border-border cursor-pointer group w-10 h-10 flex items-center justify-center overflow-hidden hover:border-text-main transition-colors"
-            onClick={() => router.push('/dashboard/settings')}
-            title="Account Settings"
+            className={`relative group cursor-pointer ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
+            onClick={() => fileInputRef.current?.click()}
+            title="Upload custom avatar"
           >
-            {identifier ? (
-              <Avatar
-                size={34}
-                name={identifier}
-                variant="beam"
-                colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 animate-pulse rounded-sm"></div>
-            )}
+            <div className="p-0.5 rounded-md bg-surface border border-border w-10 h-10 flex items-center justify-center overflow-hidden hover:border-primary transition-colors">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-sm" />
+              ) : identifier ? (
+                <Avatar
+                  size={34}
+                  name={identifier}
+                  variant="beam"
+                  colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 animate-pulse rounded-sm"></div>
+              )}
+            </div>
+            
+            {/* Pencil Overlay */}
+            <div className="absolute -bottom-1 -right-1 bg-text-main border border-surface text-white p-0.5 rounded-full shadow-lg group-hover:bg-primary transition-colors">
+              <PencilIcon className="w-2.5 h-2.5" />
+            </div>
           </div>
           <button 
             onClick={handleLogout}

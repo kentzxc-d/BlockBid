@@ -1,9 +1,10 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Avatar from "boring-avatars";
 import { CheckCircleIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SettingsPage() {
   const { user, ready, exportWallet } = usePrivy();
@@ -12,9 +13,13 @@ export default function SettingsPage() {
   const [nickname, setNickname] = useState("");
   const [role, setRole] = useState("");
   const [entityType, setEntityType] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (ready && user) {
@@ -26,6 +31,7 @@ export default function SettingsPage() {
             setNickname(data.profile.nickname || "");
             setRole(data.profile.role || "");
             setEntityType(data.profile.entity_type || "");
+            setAvatarUrl(data.profile.avatar_url || null);
           }
         })
         .catch(console.error);
@@ -66,6 +72,56 @@ export default function SettingsPage() {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    setIsUploading(true);
+    const supabase = createClient();
+    
+    try {
+      // 1. Upload to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        throw new Error(`Upload failed: ${uploadError.message}`);
+      }
+
+      // 2. Get Public URL
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      const publicUrl = data.publicUrl;
+
+      // 3. Save to Profile API
+      const response = await fetch("/api/user/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: user.id,
+          avatar_url: publicUrl,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update database with new avatar");
+
+      // 4. Update UI state
+      setAvatarUrl(publicUrl);
+    } catch (error: any) {
+      console.error("Avatar upload error:", error);
+      alert(error.message || "Failed to upload avatar. Ensure the bucket exists and RLS allows inserts.");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   if (!ready || !user) {
     return (
       <div className="flex-1 flex items-center justify-center py-10 px-8">
@@ -97,23 +153,40 @@ export default function SettingsPage() {
             
             {/* Avatar Section */}
             <div className="flex items-start sm:items-center gap-6 flex-col sm:flex-row">
-              <div className="relative group cursor-pointer" onClick={() => alert("Custom avatar uploads will be enabled in a future update. For now, your avatar is cryptographically sealed to your wallet address!")}>
-                <div className="p-1 border border-border bg-gray-50 rounded-md transition-colors group-hover:border-primary">
-                  <Avatar
-                    size={72}
-                    name={walletAddress}
-                    variant="beam"
-                    colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
-                  />
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                accept="image/*"
+                onChange={handleAvatarUpload}
+              />
+              <div 
+                className={`relative group cursor-pointer ${isUploading ? 'opacity-50 pointer-events-none' : ''}`} 
+                onClick={() => fileInputRef.current?.click()}
+                title="Upload custom avatar"
+              >
+                <div className="p-1 border border-border bg-gray-50 rounded-md transition-colors group-hover:border-primary w-[82px] h-[82px] overflow-hidden">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-sm" />
+                  ) : (
+                    <Avatar
+                      size={72}
+                      name={walletAddress}
+                      variant="beam"
+                      colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
+                    />
+                  )}
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-text-main border-2 border-surface text-white p-1.5 rounded-full shadow-lg group-hover:bg-primary transition-colors">
                   <PencilIcon className="w-3.5 h-3.5" />
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-1">WEB3_AVATAR</h3>
+                <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-1">
+                  {isUploading ? "UPLOADING..." : "WEB3_AVATAR"}
+                </h3>
                 <p className="text-text-muted text-[11px] font-mono font-bold tracking-wider uppercase max-w-md leading-relaxed">
-                  Cryptographically seeded by wallet. Unique to your network identity.
+                  Cryptographically seeded by wallet, or click to upload a custom identity file.
                 </p>
               </div>
             </div>

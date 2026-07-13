@@ -76,3 +76,9 @@
   create policy "Requestors can view bids for their projects" on bids for select using (
     exists (select 1 from projects where id = bids.project_id and requestor_id = auth.uid()::text)
   );
+
+  -- 6. Storage Buckets & Policies
+  insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true);
+  create policy "Avatar images are publicly accessible." on storage.objects for select using ( bucket_id = 'avatars' );
+  create policy "Users can upload their own avatars." on storage.objects for insert with check ( bucket_id = 'avatars' );
+  create policy "Users can update their own avatars." on storage.objects for update using ( bucket_id = 'avatars' );
