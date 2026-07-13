@@ -65,6 +65,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const filter = searchParams.get("filter") || "all";
+    const requestor_id = searchParams.get("requestor_id");
     
     let query = supabase.from("projects").select(`
       id,
@@ -72,11 +73,15 @@ export async function GET(request: Request) {
       description,
       status,
       deadline,
-      created_at
+      created_at,
+      bids ( count )
     `);
     
     if (filter === "open") {
       query = query.eq("status", "open");
+    }
+    if (requestor_id) {
+      query = query.eq("requestor_id", requestor_id);
     }
 
     const { data: projects, error } = await query.order('created_at', { ascending: false });

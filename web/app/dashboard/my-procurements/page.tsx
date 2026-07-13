@@ -9,38 +9,36 @@ import {
   ArrowRightIcon
 } from "@heroicons/react/24/outline";
 
-// Mock Data for "My Procurements" (Requests the user has created)
-const MY_PROCUREMENTS = [
-  {
-    id: "REQ-2026-081",
-    title: "100 Laptops for New Department",
-    createdAt: "OCT_24_2026",
-    status: "OPEN_FOR_BIDS",
-    bidsCount: 4,
-    statusColor: "text-primary bg-primary/10 border-primary/20",
-    icon: ClockIcon
-  },
-  {
-    id: "REQ-2026-055",
-    title: "Office Furniture (Ergonomic Chairs)",
-    createdAt: "SEP_15_2026",
-    status: "EVALUATING",
-    bidsCount: 12,
-    statusColor: "text-amber-500 bg-amber-500/10 border-amber-500/20",
-    icon: FolderOpenIcon
-  },
-  {
-    id: "REQ-2026-012",
-    title: "Marketing Campaign Video Production",
-    createdAt: "AUG_02_2026",
-    status: "AWARDED",
-    bidsCount: 7,
-    statusColor: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    icon: CheckBadgeIcon
-  }
-];
+import { useState, useEffect } from "react";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function MyProcurementsPage() {
+  const { user } = usePrivy();
+  const [procurements, setProcurements] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    fetch(`/api/procurements?requestor_id=${user.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.projects) {
+          const mappedProjects = data.projects.map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            createdAt: new Date(p.created_at).toLocaleDateString(),
+            status: p.status.toUpperCase(),
+            bidsCount: p.bids?.[0]?.count || 0,
+            statusColor: p.status === 'open' ? "text-primary bg-primary/10 border-primary/20" : 
+                         (p.status === 'awarded' ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" : "text-amber-500 bg-amber-500/10 border-amber-500/20"),
+            icon: p.status === 'open' ? ClockIcon : (p.status === 'awarded' ? CheckBadgeIcon : FolderOpenIcon)
+          }));
+          setProcurements(mappedProjects);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, [user]);
   return (
     <div className="py-10 px-8 max-w-6xl mx-auto w-full">
       
@@ -69,15 +67,19 @@ export default function MyProcurementsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">TOTAL_REQUESTS</span>
-          <span className="text-3xl font-mono font-bold text-text-main">03</span>
+          <span className="text-3xl font-mono font-bold text-text-main">{procurements.length.toString().padStart(2, '0')}</span>
         </div>
         <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">BIDS_RECEIVED</span>
-          <span className="text-3xl font-mono font-bold text-primary">23</span>
+          <span className="text-3xl font-mono font-bold text-primary">
+            {procurements.reduce((acc, p) => acc + p.bidsCount, 0).toString().padStart(2, '0')}
+          </span>
         </div>
         <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">SUCCESSFULLY_AWARDED</span>
-          <span className="text-3xl font-mono font-bold text-emerald-500">01</span>
+          <span className="text-3xl font-mono font-bold text-emerald-500">
+            {procurements.filter(p => p.status === 'AWARDED').length.toString().padStart(2, '0')}
+          </span>
         </div>
       </div>
 
@@ -88,13 +90,13 @@ export default function MyProcurementsPage() {
         </div>
         
         <div className="divide-y divide-border">
-          {MY_PROCUREMENTS.length === 0 ? (
+          {procurements.length === 0 ? (
             <div className="p-10 text-center">
               <FolderOpenIcon className="w-10 h-10 text-text-muted mx-auto mb-3 stroke-1" />
               <p className="text-text-muted font-mono text-xs tracking-widest uppercase">Zero records found.</p>
             </div>
           ) : (
-            MY_PROCUREMENTS.map((req) => (
+            procurements.map((req) => (
               <div key={req.id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-6 group">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
