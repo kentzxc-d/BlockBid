@@ -28,8 +28,11 @@ export default function RoleGuard({
         .then(data => {
           if (data.profile) {
             const userRole = data.profile.role;
-            // 'both' is always authorized if the role expects supplier or requestor
-            if (allowedRoles.includes(userRole) || userRole === 'both') {
+            // 'both' is authorized if the role expects supplier or requestor, but NOT if it strictly expects 'admin'
+            if (
+              allowedRoles.includes(userRole) || 
+              (userRole === 'both' && (allowedRoles.includes('supplier') || allowedRoles.includes('requestor')))
+            ) {
               setAuthorized(true);
             } else {
               // Unauthorized! Redirect to the smart redirector to push them to their correct role page

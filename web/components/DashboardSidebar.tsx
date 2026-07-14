@@ -13,6 +13,7 @@ import {
   Cog6ToothIcon,
   FolderOpenIcon,
   ArrowsRightLeftIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 
 export default function DashboardSidebar() {
@@ -27,7 +28,7 @@ export default function DashboardSidebar() {
   
   // For hybrid users, this toggle lets them flip their sidebar between agency/supplier mode.
   // Defaults to whatever role they have, or 'supplier' if they are 'both'.
-  const [activeMode, setActiveMode] = useState<"supplier" | "agency">("supplier");
+  const [activeMode, setActiveMode] = useState<"supplier" | "agency" | "admin">("supplier");
 
   useEffect(() => {
     if (ready && user) {
@@ -39,6 +40,8 @@ export default function DashboardSidebar() {
             setRole(data.profile.role);
             if (data.profile.role === "requestor") {
               setActiveMode("agency");
+            } else if (data.profile.role === "admin") {
+              setActiveMode("admin");
             } else {
               setActiveMode("supplier");
             }
@@ -91,6 +94,12 @@ export default function DashboardSidebar() {
     }
   }
 
+  // If in admin mode
+  if (activeMode === "admin") {
+    navItems.unshift({ name: "Platform Overview", href: "/dashboard/admin", icon: HomeIcon, onClick: undefined });
+    navItems.push({ name: "User Management", href: "/dashboard/admin/users", icon: UserGroupIcon, onClick: undefined });
+  }
+
   // Always at bottom
   navItems.push({ name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon, onClick: undefined });
 
@@ -127,20 +136,22 @@ export default function DashboardSidebar() {
           </div>
         )}
 
-        <div className="mb-8">
-          <Link
-            href={activeMode === "agency" ? "/dashboard/agency/new" : "#"}
-            onClick={activeMode === "supplier" ? handlePostProcurementClick : undefined}
-            className={`flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md ${
-              activeMode === "agency" 
-                ? "bg-primary text-white hover:bg-primary-hover shadow-primary/20" 
-                : "bg-surface-inverse text-text-inverse-muted border border-border-inverse hover:border-primary hover:text-primary"
-            }`}
-          >
-            <PlusCircleIcon className="w-5 h-5 stroke-2" />
-            New Request
-          </Link>
-        </div>
+        {activeMode !== "admin" && (
+          <div className="mb-8">
+            <Link
+              href={activeMode === "agency" ? "/dashboard/agency/new" : "#"}
+              onClick={activeMode === "supplier" ? handlePostProcurementClick : undefined}
+              className={`flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md ${
+                activeMode === "agency" 
+                  ? "bg-primary text-white hover:bg-primary-hover shadow-primary/20" 
+                  : "bg-surface-inverse text-text-inverse-muted border border-border-inverse hover:border-primary hover:text-primary"
+              }`}
+            >
+              <PlusCircleIcon className="w-5 h-5 stroke-2" />
+              New Request
+            </Link>
+          </div>
+        )}
 
         <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
           [ NAVIGATION ]

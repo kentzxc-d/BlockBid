@@ -21,7 +21,9 @@ export default function DashboardRedirector() {
         .then((data) => {
           if (data.profile) {
             const role = data.profile.role;
-            if (role === "requestor") {
+            if (role === "admin") {
+              router.replace("/dashboard/admin");
+            } else if (role === "requestor") {
               router.replace("/dashboard/agency");
             } else if (role === "supplier" || role === "both") {
               router.replace("/dashboard/supplier");
