@@ -35,7 +35,7 @@ export async function GET(request: Request) {
       { count: wonBidsCount }
     ] = await Promise.all([
       supabase.from("profiles").select("*", { count: 'exact', head: true }),
-      supabase.from("projects").select("*", { count: 'exact', head: true }),
+      supabase.from("procurements").select("*", { count: 'exact', head: true }),
       supabase.from("bids").select("*", { count: 'exact', head: true }),
       supabase.from("bids").select("*", { count: 'exact', head: true }).eq('status', 'won')
     ]);

@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     }
 
     const { data: projects, error } = await supabase
-      .from("projects")
+      .from("procurements")
       .select("*")
       .eq("status", "pending_approval")
       .order("created_at", { ascending: false });
