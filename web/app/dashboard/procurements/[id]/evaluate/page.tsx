@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useWallets } from "@privy-io/react-auth";
 import { createWalletClient, custom } from "viem";
@@ -34,7 +34,8 @@ type BidEvaluation = {
   aiSummary: string;
 };
 
-export default function EvaluateBidsPage({ params }: { params: { id: string } }) {
+export default function EvaluateBidsPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const [project, setProject] = useState<any>(null);
   const [bids, setBids] = useState<any[]>([]);
   const [evaluations, setEvaluations] = useState<BidEvaluation[]>([]);

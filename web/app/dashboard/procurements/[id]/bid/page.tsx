@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
@@ -19,7 +19,8 @@ type FieldData = {
   value: string;
 };
 
-export default function SubmitBidPage({ params }: { params: { id: string } }) {
+export default function SubmitBidPage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const { user } = usePrivy();
   const router = useRouter();
 
