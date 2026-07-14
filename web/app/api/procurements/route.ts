@@ -69,6 +69,7 @@ export async function GET(request: Request) {
     
     let query = supabase.from("projects").select(`
       id,
+      requestor_id,
       title,
       description,
       status,

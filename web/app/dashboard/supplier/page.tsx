@@ -144,12 +144,18 @@ export default function UserDashboard() {
                   <p className="font-mono text-xs font-bold text-text-main mb-1 uppercase tracking-widest">
                     Due: {new Date(solicitation.deadline).toLocaleDateString()}
                   </p>
-                  <Link 
-                    href={`/dashboard/procurements/${solicitation.id}/bid`}
-                    className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
-                  >
-                    SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
-                  </Link>
+                  {solicitation.requestor_id === user?.id ? (
+                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
+                      YOUR_PROCUREMENT
+                    </span>
+                  ) : (
+                    <Link 
+                      href={`/dashboard/procurements/${solicitation.id}/bid`}
+                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
+                    >
+                      SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
