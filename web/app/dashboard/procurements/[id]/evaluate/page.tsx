@@ -283,7 +283,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                   onClick={() => setExpandedBidId(isExpanded ? null : evaluation.bidId)}
                 >
                   <div className="flex items-center gap-4 mb-4 sm:mb-0">
-                    <div className="flex flex-col items-center justify-center w-14 h-14 bg-background border border-border shrink-0">
+                    <div className="flex flex-col items-center justify-center w-14 h-14 bg-background border border-border rounded-md shrink-0">
                       <span className="text-xl font-heading font-black text-text-main">{evaluation.totalScore}</span>
                       <span className="text-[8px] font-mono font-bold text-text-muted uppercase tracking-widest">Score</span>
                     </div>
@@ -294,12 +294,12 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                           {isRevealed ? "SUPPLIER_IDENTITY_REVEALED" : alias}
                         </h3>
                         {isWinner && (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-mono font-bold uppercase tracking-widest border border-primary/20">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-mono font-bold uppercase tracking-widest border border-primary/20 rounded-md">
                             <TrophyIcon className="w-3 h-3 stroke-2" /> Top Match
                           </span>
                         )}
                         {isRevealed && (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-mono font-bold uppercase tracking-widest border border-secondary/20">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-mono font-bold uppercase tracking-widest border border-secondary/20 rounded-md">
                             <EyeIcon className="w-3 h-3 stroke-2" /> Identity Decrypted
                           </span>
                         )}
@@ -312,7 +312,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                   
                   <div className="flex items-center gap-3">
                     <button 
-                      className="p-2 text-text-muted hover:text-text-main hover:bg-background border border-transparent hover:border-border transition-colors"
+                      className="p-2 text-text-muted hover:text-text-main hover:bg-background border border-transparent hover:border-border rounded-md transition-colors"
                       title={isExpanded ? "Collapse Details" : "Expand Details"}
                     >
                       <ChevronDownIcon className={`w-5 h-5 stroke-2 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -333,7 +333,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                           </h4>
                           <div className="grid gap-3">
                             {evaluation.scores && evaluation.scores.length > 0 ? evaluation.scores.map((score, i) => (
-                              <div key={i} className="p-4 bg-surface border border-border">
+                              <div key={i} className="p-4 bg-surface border border-border rounded-md">
                                 <div className="flex justify-between items-start mb-2">
                                   <span className="font-mono text-xs font-bold text-text-main tracking-widest uppercase">{score.criterionName}</span>
                                   <span className="font-mono text-xs font-bold text-primary tracking-widest">
@@ -341,7 +341,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                                   </span>
                                 </div>
                                 {/* Progress Bar */}
-                                <div className="h-1.5 w-full bg-background mb-3 flex">
+                                <div className="h-1.5 w-full bg-background mb-3 flex rounded-full overflow-hidden">
                                   <div 
                                     className="h-full bg-primary transition-all duration-500" 
                                     style={{ width: `${(score.scoreAchieved / score.maxWeight) * 100}%` }}
@@ -352,7 +352,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                                 </p>
                               </div>
                             )) : (
-                              <div className="p-4 bg-surface border border-border text-xs text-text-muted font-mono font-bold uppercase tracking-widest">
+                              <div className="p-4 bg-surface border border-border rounded-md text-xs text-text-muted font-mono font-bold uppercase tracking-widest">
                                 NO_DETAILED_SCORES_AVAILABLE
                               </div>
                             )}
@@ -364,14 +364,14 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                       <div className="space-y-4">
                         <button 
                           onClick={() => setViewingProposalFor(evaluation.bidId)}
-                          className="w-full py-3 px-4 bg-surface border border-border hover:border-text-main transition-colors text-xs font-mono font-bold text-text-main tracking-widest uppercase flex items-center justify-center gap-2"
+                          className="w-full py-3 px-4 bg-surface border border-border rounded-md hover:border-text-main transition-colors text-xs font-mono font-bold text-text-main tracking-widest uppercase flex items-center justify-center gap-2"
                         >
                           <DocumentTextIcon className="w-4 h-4 stroke-2" /> View Raw Proposal
                         </button>
                         
                         <div className="pt-4 border-t border-border mt-4">
                           {isRevealed ? (
-                            <div className="p-4 bg-primary/5 border border-primary text-center">
+                            <div className="p-4 bg-primary/5 border border-primary rounded-md text-center">
                               <CheckBadgeIcon className="w-8 h-8 text-primary mx-auto mb-2 stroke-2" />
                               <p className="font-mono text-xs font-bold text-primary tracking-widest uppercase">
                                 CONTRACT_AWARDED
@@ -384,14 +384,14 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
                             <div className="space-y-3">
                               <button 
                                 onClick={() => setAwardingBidFor(evaluation.bidId)}
-                                className="w-full py-4 bg-text-main text-white hover:bg-primary transition-colors text-xs font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-2"
+                                className="w-full py-4 bg-text-main text-white rounded-md hover:bg-primary transition-colors text-xs font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-2"
                               >
                                 <TrophyIcon className="w-4 h-4 stroke-2" /> Award Contract
                               </button>
                               
                               <button 
                                 onClick={() => setRejectingBidFor(evaluation.bidId)}
-                                className="w-full py-3 bg-surface border border-danger/30 text-danger hover:bg-danger/5 transition-colors text-xs font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-2"
+                                className="w-full py-3 bg-surface border border-danger/30 rounded-md text-danger hover:bg-danger/5 transition-colors text-xs font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-2"
                               >
                                 <NoSymbolIcon className="w-4 h-4 stroke-2" /> Disqualify Bid
                               </button>
@@ -434,7 +434,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       {awardingBidFor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
           <div className="bg-surface w-full max-w-md border border-primary rounded-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-center">
-            <div className="w-16 h-16 bg-primary/10 flex items-center justify-center mx-auto mb-6 border border-primary/20">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-primary/20">
               <EyeIcon className="w-8 h-8 text-primary stroke-2" />
             </div>
             <h3 className="font-heading font-bold text-xl text-text-main mb-2 tracking-tight uppercase">DECRYPT_IDENTITY_&_AWARD</h3>
@@ -445,13 +445,13 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
             <div className="flex gap-3">
               <button 
                 onClick={() => setAwardingBidFor(null)}
-                className="flex-1 py-3 bg-background border border-border text-text-muted hover:text-text-main hover:bg-surface font-mono text-xs font-bold tracking-widest uppercase transition-colors"
+                className="flex-1 py-3 bg-background border border-border rounded-md text-text-muted hover:text-text-main hover:bg-surface font-mono text-xs font-bold tracking-widest uppercase transition-colors"
               >
                 CANCEL
               </button>
               <button 
                 onClick={() => confirmAward(awardingBidFor)}
-                className="flex-1 py-3 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-hover transition-colors shadow-sm"
+                className="flex-1 py-3 bg-primary text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-hover transition-colors shadow-sm"
               >
                 CONFIRM_AWARD
               </button>
@@ -464,7 +464,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       {rejectingBidFor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
           <div className="bg-surface w-full max-w-md border border-danger rounded-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-center">
-            <div className="w-16 h-16 bg-danger/10 flex items-center justify-center mx-auto mb-6 border border-danger/20">
+            <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-danger/20">
               <ExclamationCircleIcon className="w-8 h-8 text-danger stroke-2" />
             </div>
             <h3 className="font-heading font-bold text-xl text-text-main mb-2 tracking-tight uppercase">DISQUALIFY_BID</h3>
@@ -476,21 +476,21 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="E.g. Proposal does not meet minimum technical specifications..."
-              className="w-full bg-background border border-border p-3 text-sm font-mono text-text-main focus:outline-none focus:border-danger transition-colors mb-6 resize-none placeholder:text-text-muted/50"
+              className="w-full bg-background border border-border rounded-md p-3 text-sm font-mono text-text-main focus:outline-none focus:border-danger transition-colors mb-6 resize-none placeholder:text-text-muted/50"
               rows={3}
             />
 
             <div className="flex gap-3">
               <button 
                 onClick={() => { setRejectingBidFor(null); setRejectReason(""); }}
-                className="flex-1 py-3 bg-background border border-border text-text-muted hover:text-text-main font-mono text-xs font-bold tracking-widest uppercase transition-colors"
+                className="flex-1 py-3 bg-background border border-border rounded-md text-text-muted hover:text-text-main font-mono text-xs font-bold tracking-widest uppercase transition-colors"
               >
                 CANCEL
               </button>
               <button 
                 onClick={() => confirmReject(rejectingBidFor!)}
                 disabled={!rejectReason.trim()}
-                className="flex-1 py-3 bg-danger text-white font-mono text-xs font-bold tracking-widest uppercase hover:bg-danger/90 transition-colors disabled:opacity-50"
+                className="flex-1 py-3 bg-danger text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-danger/90 transition-colors disabled:opacity-50"
               >
                 DISQUALIFY
               </button>
