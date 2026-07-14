@@ -246,10 +246,10 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
 
       {isEvaluating ? (
         // Loading State
-        <div className="bg-surface rounded-none p-12 border border-border shadow-sm flex flex-col items-center justify-center text-center">
+        <div className="bg-surface rounded-md p-12 border border-border shadow-sm flex flex-col items-center justify-center text-center">
           <div className="relative w-16 h-16 mb-6">
-            <div className="absolute inset-0 border-4 border-slate-100 rounded-none"></div>
-            <div className="absolute inset-0 border-4 border-primary rounded-none border-t-transparent animate-spin"></div>
+            <div className="absolute inset-0 border-4 border-slate-100 rounded-md"></div>
+            <div className="absolute inset-0 border-4 border-primary rounded-md border-t-transparent animate-spin"></div>
             <SparklesIcon className="absolute inset-0 m-auto w-6 h-6 text-primary animate-pulse stroke-2" />
           </div>
           <h2 className="text-xl font-bold text-text-main mb-2 font-heading tracking-tight uppercase">AI is evaluating proposals...</h2>
@@ -258,7 +258,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
           </p>
         </div>
       ) : evaluations.length === 0 ? (
-        <div className="bg-surface border border-border p-8 text-center text-text-muted font-mono text-xs font-bold uppercase tracking-widest">
+        <div className="bg-surface border border-border rounded-md p-8 text-center text-text-muted font-mono text-xs font-bold uppercase tracking-widest">
           NO_BIDS_FOUND_FOR_THIS_PROJECT
         </div>
       ) : (
@@ -273,7 +273,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
             return (
               <div 
                 key={evaluation.bidId} 
-                className={`bg-surface border transition-colors ${
+                className={`bg-surface border rounded-md overflow-hidden transition-colors ${
                   isWinner ? 'border-primary shadow-sm' : 'border-border'
                 }`}
               >
@@ -414,7 +414,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       {/* View Proposal Modal */}
       {viewingProposalFor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-surface w-full max-w-2xl border border-border shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-surface w-full max-w-2xl border border-border rounded-md overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
             <div className="p-5 border-b border-border flex justify-between items-center bg-background">
               <h3 className="font-mono text-sm font-bold tracking-widest text-text-main uppercase">
                 [ PROPOSAL_DATA: {getAliasForBidId(viewingProposalFor)} ]
@@ -433,7 +433,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       {/* Award Confirmation Modal */}
       {awardingBidFor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-surface w-full max-w-md border border-primary shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-center">
+          <div className="bg-surface w-full max-w-md border border-primary rounded-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-center">
             <div className="w-16 h-16 bg-primary/10 flex items-center justify-center mx-auto mb-6 border border-primary/20">
               <EyeIcon className="w-8 h-8 text-primary stroke-2" />
             </div>
@@ -463,7 +463,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       {/* Reject Confirmation Modal */}
       {rejectingBidFor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-surface w-full max-w-md border border-danger shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-center">
+          <div className="bg-surface w-full max-w-md border border-danger rounded-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-center">
             <div className="w-16 h-16 bg-danger/10 flex items-center justify-center mx-auto mb-6 border border-danger/20">
               <ExclamationCircleIcon className="w-8 h-8 text-danger stroke-2" />
             </div>
