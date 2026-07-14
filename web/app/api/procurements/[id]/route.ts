@@ -15,7 +15,7 @@ export async function GET(
 
     // 1. Fetch project details
     const { data: project, error: projectError } = await supabase
-      .from("procurements")
+      .from("projects")
       .select("*")
       .eq("id", id)
       .single();

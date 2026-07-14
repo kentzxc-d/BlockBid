@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
     const [profilesRes, projectsRes, bidsRes] = await Promise.all([
       supabase.from('profiles').select('created_at').gte('created_at', dateString),
-      supabase.from('procurements').select('created_at').gte('created_at', dateString),
+      supabase.from('projects').select('created_at').gte('created_at', dateString),
       supabase.from('bids').select('created_at').gte('created_at', dateString)
     ]);
 

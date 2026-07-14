@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     // 1. Anti-Spam: Check active projects limit
     const { count: activeCount, error: countError } = await supabase
-      .from("procurements")
+      .from("projects")
       .select("*", { count: 'exact', head: true })
       .eq("requestor_id", requestor_id)
       .in("status", ["open", "pending_approval"]);
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
     // 3. Insert Project into the database
     const { data: projectData, error: projectError } = await supabase
-      .from("procurements")
+      .from("projects")
       .insert([
         {
           requestor_id,
@@ -120,7 +120,7 @@ export async function GET(request: Request) {
     const filter = searchParams.get("filter") || "all";
     const requestor_id = searchParams.get("requestor_id");
     
-    let query = supabase.from("procurements").select(`
+    let query = supabase.from("projects").select(`
       id,
       requestor_id,
       title,

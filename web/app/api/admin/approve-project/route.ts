@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
     // Update project status
     const { error: updateError } = await supabase
-      .from("procurements")
+      .from("projects")
       .update({ status: newStatus })
       .eq("id", project_id);
 
