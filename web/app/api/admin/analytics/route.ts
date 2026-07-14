@@ -31,14 +31,14 @@ export async function GET(request: Request) {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const dateString = thirtyDaysAgo.toISOString();
 
-    const [profilesRes, procurementsRes, bidsRes] = await Promise.all([
+    const [profilesRes, projectsRes, bidsRes] = await Promise.all([
       supabase.from('profiles').select('created_at').gte('created_at', dateString),
-      supabase.from('procurements').select('created_at').gte('created_at', dateString),
+      supabase.from('projects').select('created_at').gte('created_at', dateString),
       supabase.from('bids').select('created_at').gte('created_at', dateString)
     ]);
 
     if (profilesRes.error) throw profilesRes.error;
-    if (procurementsRes.error) throw procurementsRes.error;
+    if (projectsRes.error) throw projectsRes.error;
     if (bidsRes.error) throw bidsRes.error;
 
     // Helper to format date "Jul 14"
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
       if (dataMap[d]) dataMap[d].users++;
     });
 
-    procurementsRes.data.forEach(p => {
+    projectsRes.data.forEach(p => {
       const d = formatDate(p.created_at);
       if (dataMap[d]) dataMap[d].procurements++;
     });
