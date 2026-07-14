@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { google } from '@ai-sdk/google';
+import { generateObject } from 'ai';
+import { z } from 'zod';
+
+export const runtime = 'edge';
 
 // Initialize Supabase client with the Service Role Key to bypass RLS
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -15,7 +20,46 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // 1. Insert Project into the database
+    // 1. Anti-Spam: Check active projects limit
+    const { count: activeCount, error: countError } = await supabase
+      .from("projects")
+      .select("*", { count: 'exact', head: true })
+      .eq("requestor_id", requestor_id)
+      .in("status", ["open", "pending_approval"]);
+
+    if (countError) throw countError;
+    if (activeCount !== null && activeCount >= 5) {
+      return NextResponse.json({ error: "Limit reached: You can only have up to 5 active or pending projects at a time." }, { status: 400 });
+    }
+
+    // 2. AI Auto-Moderation
+    const moderationSchema = z.object({
+      qualityScore: z.number().describe("Score from 0 to 100 representing clarity, professionalism, and detail."),
+      isSpam: z.boolean().describe("True if spam, gibberish, or test data."),
+      reasoning: z.string().describe("Brief reason for the score.")
+    });
+
+    const prompt = `
+      Evaluate the quality and legitimacy of this new procurement request.
+      Title: "${title}"
+      Description: "${description}"
+      Criteria: ${JSON.stringify(criteria)}
+      
+      Score it from 0 to 100 based on detail, professionalism, and clarity. Flag as spam if it is gibberish, offensive, or clearly a test.
+    `;
+
+    const { object } = await generateObject({
+      model: google('gemini-3.5-flash'),
+      schema: moderationSchema,
+      prompt: prompt,
+    });
+
+    let projectStatus = "open";
+    if (object.qualityScore < 90 || object.isSpam) {
+      projectStatus = "pending_approval";
+    }
+
+    // 3. Insert Project into the database
     const { data: projectData, error: projectError } = await supabase
       .from("projects")
       .insert([
@@ -24,7 +68,8 @@ export async function POST(request: Request) {
           title,
           description,
           deadline,
-          status: "open"
+          status: projectStatus,
+          // Optional: we could save the reasoning, but let's just save the status
         }
       ])
       .select()
@@ -36,7 +81,7 @@ export async function POST(request: Request) {
 
     const projectId = projectData.id;
 
-    // 2. Format and insert Criteria
+    // 4. Format and insert Criteria
     const criteriaToInsert = criteria.map((c: any) => ({
       project_id: projectId,
       name: c.name,
@@ -53,7 +98,15 @@ export async function POST(request: Request) {
       throw criteriaError;
     }
 
-    return NextResponse.json({ success: true, project: projectData }, { status: 201 });
+    return NextResponse.json({ 
+      success: true, 
+      project: projectData,
+      moderation: {
+        score: object.qualityScore,
+        status: projectStatus,
+        reasoning: object.reasoning
+      }
+    }, { status: 201 });
     
   } catch (err: any) {
     console.error("Procurement API Error:", err);

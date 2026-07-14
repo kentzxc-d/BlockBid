@@ -19,6 +19,7 @@ export default function ActiveSolicitationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSector, setSelectedSector] = useState("All");
   const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
+  const [allMyBidProjectIds, setAllMyBidProjectIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +32,18 @@ export default function ActiveSolicitationsPage() {
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
-  }, []);
+
+    if (user) {
+      fetch(`/api/bids?supplier_id=${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.bids) {
+            setAllMyBidProjectIds(data.bids.map((b: any) => b.project_id));
+          }
+        })
+        .catch(console.error);
+    }
+  }, [user]);
 
   const filteredSolicitations = useMemo(() => {
     return activeSolicitations.filter(solicitation => {
@@ -133,6 +145,10 @@ export default function ActiveSolicitationsPage() {
                 {solicitation.requestor_id === user?.id ? (
                   <span className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-background border border-border text-text-muted font-mono text-xs font-bold tracking-widest rounded-md uppercase cursor-not-allowed w-full sm:w-auto">
                     YOUR_PROCUREMENT
+                  </span>
+                ) : allMyBidProjectIds.includes(solicitation.id) ? (
+                  <span className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-background border border-border text-text-muted font-mono text-xs font-bold tracking-widest rounded-md uppercase cursor-not-allowed w-full sm:w-auto">
+                    ALREADY_BID
                   </span>
                 ) : (
                   <Link href={`/dashboard/procurements/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase w-full sm:w-auto">

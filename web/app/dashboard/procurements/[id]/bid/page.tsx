@@ -31,6 +31,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [enhancingFieldId, setEnhancingFieldId] = useState<string | null>(null);
   const { wallets } = useWallets();
 
   useEffect(() => {
@@ -59,6 +60,27 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
 
   const handleFieldChange = (id: string, value: string) => {
     setFields(fields.map(f => f.id === id ? { ...f, value } : f));
+  };
+
+  const handleEnhanceField = async (id: string, currentValue: string) => {
+    if (!currentValue.trim()) return;
+    setEnhancingFieldId(id);
+    try {
+      const res = await fetch("/api/ai/enhance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: currentValue, type: "bid" })
+      });
+      const data = await res.json();
+      if (data.enhancedText) {
+        handleFieldChange(id, data.enhancedText);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to enhance text.");
+    } finally {
+      setEnhancingFieldId(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -202,9 +224,19 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
           
           {fields.map((field) => (
             <div key={field.id} className="relative bg-surface p-5 rounded-md border border-border group transition-colors focus-within:border-text-main hover:border-text-muted">
-              <label className="block text-xs font-mono font-bold tracking-widest text-text-main uppercase mb-2">
-                {field.label} <span className="text-primary">*</span>
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-xs font-mono font-bold tracking-widest text-text-main uppercase">
+                  {field.label} <span className="text-primary">*</span>
+                </label>
+                <button 
+                  type="button"
+                  onClick={() => handleEnhanceField(field.id, field.value)}
+                  disabled={enhancingFieldId === field.id || !field.value.trim()}
+                  className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary hover:bg-primary hover:text-white border border-primary/20 rounded-md font-mono text-[10px] font-bold uppercase tracking-widest transition-colors disabled:opacity-50"
+                >
+                  ✨ {enhancingFieldId === field.id ? "ENHANCING..." : "ENHANCE"}
+                </button>
+              </div>
               
               <textarea
                 value={field.value}

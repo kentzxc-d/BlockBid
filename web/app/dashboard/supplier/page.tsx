@@ -23,6 +23,7 @@ export default function UserDashboard() {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
   const [myBids, setMyBids] = useState<any[]>([]);
+  const [allMyBidProjectIds, setAllMyBidProjectIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (ready && user) {
@@ -47,7 +48,10 @@ export default function UserDashboard() {
       fetch(`/api/bids?supplier_id=${user.id}`)
         .then(res => res.json())
         .then(data => {
-          if (data.bids) setMyBids(data.bids.slice(0, 3));
+          if (data.bids) {
+            setMyBids(data.bids.slice(0, 3));
+            setAllMyBidProjectIds(data.bids.map((b: any) => b.project_id));
+          }
         });
     }
   }, [user, ready]);
@@ -147,6 +151,10 @@ export default function UserDashboard() {
                   {solicitation.requestor_id === user?.id ? (
                     <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
                       YOUR_PROCUREMENT
+                    </span>
+                  ) : allMyBidProjectIds.includes(solicitation.id) ? (
+                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
+                      ALREADY_BID
                     </span>
                   ) : (
                     <Link 

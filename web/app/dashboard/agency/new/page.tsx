@@ -24,6 +24,7 @@ export default function CreateProcurementPage() {
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   const router = useRouter();
   const { user } = usePrivy();
   
@@ -64,6 +65,27 @@ export default function CreateProcurementPage() {
       return { ...c, weight };
     });
     setCriteria(newCriteria);
+  };
+
+  const handleEnhance = async () => {
+    if (!description.trim()) return;
+    setIsEnhancing(true);
+    try {
+      const res = await fetch("/api/ai/enhance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: description, type: "procurement" })
+      });
+      const data = await res.json();
+      if (data.enhancedText) {
+        setDescription(data.enhancedText.slice(0, 1000));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to enhance text.");
+    } finally {
+      setIsEnhancing(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -145,7 +167,17 @@ export default function CreateProcurementPage() {
             <div>
               <div className="flex justify-between items-baseline mb-2">
                 <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Description & Requirements</label>
-                <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{description.length}/1000</span>
+                <div className="flex items-center gap-4">
+                  <button 
+                    type="button"
+                    onClick={handleEnhance}
+                    disabled={isEnhancing || !description.trim()}
+                    className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary hover:bg-primary hover:text-white border border-primary/20 rounded-md font-mono text-[10px] font-bold uppercase tracking-widest transition-colors disabled:opacity-50"
+                  >
+                    ✨ {isEnhancing ? "ENHANCING..." : "ENHANCE_WITH_AI"}
+                  </button>
+                  <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{description.length}/1000</span>
+                </div>
               </div>
               <textarea 
                 value={description}
