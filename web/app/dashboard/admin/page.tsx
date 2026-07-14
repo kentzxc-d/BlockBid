@@ -14,6 +14,25 @@ import {
   ExclamationTriangleIcon
 } from "@heroicons/react/24/outline";
 
+const BrutalistTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-surface border-2 border-border p-4 font-mono shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)]">
+        <p className="text-text-main font-bold uppercase tracking-widest text-[10px] mb-3 pb-2 border-b border-border">
+          [ {label} ]
+        </p>
+        {payload.map((entry: any, index: number) => (
+          <div key={index} className="flex justify-between items-center gap-8 mb-1 last:mb-0 text-xs">
+            <span style={{ color: entry.color }} className="uppercase font-bold tracking-wider">{entry.name}:</span>
+            <span className="text-text-main font-bold">{entry.value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function AdminOverview() {
   const { user, ready } = usePrivy();
   const [stats, setStats] = useState<any>(null);
@@ -172,40 +191,68 @@ export default function AdminOverview() {
         {analytics.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
             {/* Line Chart: Users */}
-            <div className="bg-surface rounded-md p-6 border border-border">
-              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase">Entity Registrations</h3>
+            <div className="bg-surface rounded-md p-6 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.02)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.05)]">
+              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Entity_Registrations ]</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analytics}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                    <XAxis dataKey="date" stroke="#888" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#888" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333', color: '#fff', borderRadius: '6px' }}
-                      itemStyle={{ color: '#fff' }}
+                  <LineChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="#888" 
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
+                      tickLine={false} 
+                      axisLine={false} 
+                      tickMargin={10}
                     />
-                    <Line type="monotone" dataKey="users" name="New Entities" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                    <YAxis 
+                      stroke="#888" 
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
+                      tickLine={false} 
+                      axisLine={false} 
+                      allowDecimals={false}
+                    />
+                    <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#333', strokeWidth: 2, strokeDasharray: '4 4' }} />
+                    <Line 
+                      type="stepAfter" 
+                      dataKey="users" 
+                      name="New Entities" 
+                      stroke="#3b82f6" 
+                      strokeWidth={3} 
+                      dot={{ r: 0 }} 
+                      activeDot={{ r: 5, strokeWidth: 0, fill: '#3b82f6' }} 
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             {/* Bar Chart: Procurements vs Bids */}
-            <div className="bg-surface rounded-md p-6 border border-border">
-              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase">Platform Activity</h3>
+            <div className="bg-surface rounded-md p-6 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.02)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.05)]">
+              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Platform_Activity ]</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={analytics}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
-                    <XAxis dataKey="date" stroke="#888" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#888" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333', color: '#fff', borderRadius: '6px' }}
-                      cursor={{ fill: '#333', opacity: 0.4 }}
+                  <BarChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="#888" 
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
+                      tickLine={false} 
+                      axisLine={false} 
+                      tickMargin={10}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
-                    <Bar dataKey="procurements" name="RFPs Created" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="bids" name="Bids Submitted" fill="#10b981" radius={[4, 4, 0, 0]} />
+                    <YAxis 
+                      stroke="#888" 
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
+                      tickLine={false} 
+                      axisLine={false} 
+                      allowDecimals={false}
+                    />
+                    <Tooltip content={<BrutalistTooltip />} cursor={{ fill: '#333', opacity: 0.2 }} />
+                    <Legend wrapperStyle={{ paddingTop: '20px', fontFamily: 'monospace', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }} />
+                    <Bar dataKey="procurements" name="RFPs Created" fill="#8b5cf6" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="bids" name="Bids Submitted" fill="#10b981" radius={[0, 0, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
