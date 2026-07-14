@@ -227,7 +227,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
   }
 
   return (
-    <div className="py-10 px-6 max-w-5xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
       {/* Header */}
       <div className="mb-8">
         <Link 

@@ -54,7 +54,7 @@ export default function ActiveSolicitationsPage() {
   }, [searchQuery, activeSolicitations]);
 
   return (
-    <div className="py-10 px-8 max-w-6xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
       
       {/* Header */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">

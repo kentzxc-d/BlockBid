@@ -22,6 +22,7 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, ready } = usePrivy();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const [nickname, setNickname] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
@@ -50,6 +51,16 @@ export default function DashboardSidebar() {
         .catch(console.error);
     }
   }, [user, ready]);
+
+  useEffect(() => {
+    const handleToggle = () => setMobileMenuOpen(prev => !prev);
+    window.addEventListener("toggle-mobile-menu", handleToggle);
+    return () => window.removeEventListener("toggle-mobile-menu", handleToggle);
+  }, []);
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const handlePostProcurementClick = (e: React.MouseEvent) => {
     if (role === "supplier") {
@@ -106,7 +117,18 @@ export default function DashboardSidebar() {
   const displayName = nickname || (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "Unknown Entity");
 
   return (
-    <div className="w-[280px] bg-secondary border-r border-border-inverse h-screen sticky top-0 flex flex-col hidden md:flex shrink-0">
+    <>
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+      
+      <div className={`w-[280px] bg-secondary border-r border-border-inverse h-screen flex flex-col shrink-0 z-50 transition-transform duration-300 md:sticky md:top-0 md:translate-x-0 ${
+        mobileMenuOpen ? 'fixed inset-y-0 left-0 translate-x-0' : 'fixed inset-y-0 left-0 -translate-x-full'
+      }`}>
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-border-inverse">
         <Link href="/" className="flex items-center gap-3 font-heading font-bold text-2xl text-primary tracking-wide uppercase">
@@ -228,6 +250,7 @@ export default function DashboardSidebar() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

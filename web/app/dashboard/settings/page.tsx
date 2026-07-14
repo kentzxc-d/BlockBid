@@ -128,7 +128,7 @@ export default function SettingsPage() {
 
   if (!ready || !user) {
     return (
-      <div className="flex-1 flex items-center justify-center py-10 px-8">
+      <div className="flex-1 flex items-center justify-center py-6 px-4 md:py-10 md:px-8">
         <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">[ INITIALIZING_SETTINGS ]</div>
       </div>
     );
@@ -137,7 +137,7 @@ export default function SettingsPage() {
   const walletAddress = user.wallet?.address || "No wallet connected";
 
   return (
-    <div className="py-10 px-8 max-w-6xl mx-auto w-full space-y-8">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
       
       {/* Page Header */}
       <div>

@@ -127,7 +127,7 @@ export default function CreateProcurementPage() {
   };
 
   return (
-    <div className="py-10 px-8 max-w-5xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-5xl mx-auto w-full">
       {/* Header */}
       <div className="mb-10">
         <Link 

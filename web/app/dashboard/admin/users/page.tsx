@@ -5,7 +5,7 @@ import RoleGuard from "@/components/RoleGuard";
 export default function AdminUsersManagement() {
   return (
     <RoleGuard allowedRoles={["admin"]}>
-      <div className="py-10 px-8 max-w-6xl mx-auto w-full">
+      <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
         <div className="mb-10 border-b border-border pb-6">
           <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
             [ USER_MANAGEMENT ]

@@ -2,7 +2,7 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect, useRef } from "react";
-import { DocumentDuplicateIcon, ArrowRightOnRectangleIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon, ArrowRightOnRectangleIcon, CheckIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
@@ -127,10 +127,18 @@ export default function DashboardTopbar() {
   };
 
   return (
-    <div className="h-[72px] bg-surface border-b border-border flex items-center justify-end px-8 sticky top-0 z-10 shadow-sm">
+    <div className="h-[72px] bg-surface border-b border-border flex items-center justify-between md:justify-end px-4 md:px-8 sticky top-0 z-10 shadow-sm">
       
+      {/* Mobile Hamburger Menu */}
+      <button 
+        onClick={() => window.dispatchEvent(new Event('toggle-mobile-menu'))}
+        className="md:hidden p-2 -ml-2 text-text-main hover:bg-gray-50 rounded-md transition-colors"
+      >
+        <Bars3Icon className="w-6 h-6 stroke-2" />
+      </button>
+
       {/* User Actions */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 md:gap-6">
         
         {/* Alternating Wallet / Greeting Display */}
         {ready ? (
@@ -156,7 +164,7 @@ export default function DashboardTopbar() {
                 </span>
               </div>
             </div>
-            <div className="shrink-0">
+            <div className="shrink-0 hidden md:block">
               {identifier && (
                 copied ? (
                   <CheckIcon className="w-4 h-4 text-green-700" />
@@ -208,10 +216,10 @@ export default function DashboardTopbar() {
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-3 py-2 rounded-md transition-all uppercase"
+            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-2 md:px-3 py-2 rounded-md transition-all uppercase"
           >
             <ArrowRightOnRectangleIcon className="w-4 h-4 stroke-2" />
-            Sign Out
+            <span className="hidden sm:inline">Sign Out</span>
           </button>
         </div>
 

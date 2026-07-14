@@ -44,7 +44,7 @@ export default function DashboardRedirector() {
   }, [ready, user, router]);
 
   return (
-    <div className="flex-1 flex items-center justify-center py-10 px-8 h-screen w-full bg-background">
+    <div className="flex-1 flex items-center justify-center py-6 px-4 md:py-10 md:px-8 h-screen w-full bg-background">
       <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">
         [ AUTHORIZING_WORKSPACE_ACCESS ]
       </div>
