@@ -196,7 +196,13 @@ export default function AdminOverview() {
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} />
+                    <defs>
+                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.5}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} opacity={0.3} />
                     <XAxis 
                       dataKey="date" 
                       stroke="#888" 
@@ -204,6 +210,7 @@ export default function AdminOverview() {
                       tickLine={false} 
                       axisLine={false} 
                       tickMargin={10}
+                      minTickGap={20}
                     />
                     <YAxis 
                       stroke="#888" 
@@ -212,29 +219,39 @@ export default function AdminOverview() {
                       axisLine={false} 
                       allowDecimals={false}
                     />
-                    <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#333', strokeWidth: 2, strokeDasharray: '4 4' }} />
+                    <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#555', strokeWidth: 1, strokeDasharray: '4 4' }} />
                     <Area 
-                      type="stepAfter" 
+                      type="monotone" 
                       dataKey="users" 
                       name="New Entities" 
                       stroke="#3b82f6" 
                       strokeWidth={3}
-                      fill="#3b82f6"
                       fillOpacity={1}
-                      activeDot={{ r: 0 }} 
+                      fill="url(#colorUsers)"
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#3b82f6', style: { filter: 'drop-shadow(0px 0px 4px #3b82f6)' } }} 
                     />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            {/* Bar Chart: Procurements vs Bids */}
+            {/* Area Chart: Procurements vs Bids */}
             <div className="bg-surface rounded-md p-6 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.02)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.05)]">
               <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Platform_Activity ]</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} />
+                  <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorProcurements" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.5}/>
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorBids" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.5}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} opacity={0.3} />
                     <XAxis 
                       dataKey="date" 
                       stroke="#888" 
@@ -242,6 +259,7 @@ export default function AdminOverview() {
                       tickLine={false} 
                       axisLine={false} 
                       tickMargin={10}
+                      minTickGap={20}
                     />
                     <YAxis 
                       stroke="#888" 
@@ -250,11 +268,29 @@ export default function AdminOverview() {
                       axisLine={false} 
                       allowDecimals={false}
                     />
-                    <Tooltip content={<BrutalistTooltip />} cursor={{ fill: '#333', opacity: 0.2 }} />
+                    <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#555', strokeWidth: 1, strokeDasharray: '4 4' }} />
                     <Legend wrapperStyle={{ paddingTop: '20px', fontFamily: 'monospace', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }} />
-                    <Area type="stepAfter" dataKey="procurements" name="RFPs Created" fill="#8b5cf6" stroke="#8b5cf6" strokeWidth={2} fillOpacity={0.5} activeDot={{r: 0}} />
-                    <Bar dataKey="bids" name="Bids Submitted" fill="#10b981" radius={[0, 0, 0, 0]} barSize={20} />
-                  </ComposedChart>
+                    <Area 
+                      type="monotone" 
+                      dataKey="procurements" 
+                      name="RFPs Created" 
+                      fill="url(#colorProcurements)" 
+                      stroke="#8b5cf6" 
+                      strokeWidth={3} 
+                      fillOpacity={1} 
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#8b5cf6', style: { filter: 'drop-shadow(0px 0px 4px #8b5cf6)' } }} 
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="bids" 
+                      name="Bids Submitted" 
+                      fill="url(#colorBids)" 
+                      stroke="#10b981" 
+                      strokeWidth={3} 
+                      fillOpacity={1} 
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#10b981', style: { filter: 'drop-shadow(0px 0px 4px #10b981)' } }} 
+                    />
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
             </div>
