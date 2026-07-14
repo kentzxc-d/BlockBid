@@ -3,6 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
 import RoleGuard from "@/components/RoleGuard";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { 
   UsersIcon, 
   DocumentTextIcon, 
@@ -20,15 +21,17 @@ export default function AdminOverview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [analytics, setAnalytics] = useState<any[]>([]);
 
   useEffect(() => {
     if (ready && user) {
       setLoading(true);
       Promise.all([
         fetch(`/api/admin/stats?admin_id=${user.id}`).then(res => res.json()),
-        fetch(`/api/admin/pending-projects?admin_id=${user.id}`).then(res => res.json())
+        fetch(`/api/admin/pending-projects?admin_id=${user.id}`).then(res => res.json()),
+        fetch(`/api/admin/analytics?admin_id=${user.id}`).then(res => res.json())
       ])
-        .then(([statsData, pendingData]) => {
+        .then(([statsData, pendingData, analyticsData]) => {
           if (statsData.success) {
             setStats(statsData.stats);
           } else {
@@ -37,6 +40,10 @@ export default function AdminOverview() {
 
           if (pendingData.success) {
             setPendingProjects(pendingData.projects);
+          }
+
+          if (analyticsData && analyticsData.success) {
+            setAnalytics(analyticsData.data);
           }
         })
         .catch(err => {
@@ -149,6 +156,68 @@ export default function AdminOverview() {
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-md font-mono text-xs uppercase tracking-widest mb-12">
             ERROR: {error}
+          </div>
+        )}
+
+        {/* Analytics Section */}
+        <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+          <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">
+            [ ACTIVITY_ANALYTICS ]
+          </h2>
+          <span className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-md font-mono text-xs font-bold tracking-widest uppercase">
+            Last 30 Days
+          </span>
+        </div>
+
+        {analytics.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+            {/* Line Chart: Users */}
+            <div className="bg-surface rounded-md p-6 border border-border">
+              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase">Entity Registrations</h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={analytics}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                    <XAxis dataKey="date" stroke="#888" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#888" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333', color: '#fff', borderRadius: '6px' }}
+                      itemStyle={{ color: '#fff' }}
+                    />
+                    <Line type="monotone" dataKey="users" name="New Entities" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Bar Chart: Procurements vs Bids */}
+            <div className="bg-surface rounded-md p-6 border border-border">
+              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase">Platform Activity</h3>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={analytics}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" vertical={false} />
+                    <XAxis dataKey="date" stroke="#888" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#888" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#1a1a1a', borderColor: '#333', color: '#fff', borderRadius: '6px' }}
+                      cursor={{ fill: '#333', opacity: 0.4 }}
+                    />
+                    <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
+                    <Bar dataKey="procurements" name="RFPs Created" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="bids" name="Bids Submitted" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-12 h-[300px] bg-surface rounded-md border border-border flex items-center justify-center">
+            {loading ? (
+              <span className="animate-pulse text-text-muted font-mono text-xs uppercase tracking-widest">Loading Analytics...</span>
+            ) : (
+              <span className="text-text-muted font-mono text-xs uppercase tracking-widest">No analytics data available</span>
+            )}
           </div>
         )}
 
