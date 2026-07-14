@@ -3,7 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
 import RoleGuard from "@/components/RoleGuard";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { 
   UsersIcon, 
   DocumentTextIcon, 
@@ -195,7 +195,7 @@ export default function AdminOverview() {
               <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Entity_Registrations ]</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} />
                     <XAxis 
                       dataKey="date" 
@@ -213,16 +213,17 @@ export default function AdminOverview() {
                       allowDecimals={false}
                     />
                     <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#333', strokeWidth: 2, strokeDasharray: '4 4' }} />
-                    <Line 
+                    <Area 
                       type="stepAfter" 
                       dataKey="users" 
                       name="New Entities" 
                       stroke="#3b82f6" 
-                      strokeWidth={3} 
-                      dot={{ r: 0 }} 
-                      activeDot={{ r: 5, strokeWidth: 0, fill: '#3b82f6' }} 
+                      strokeWidth={3}
+                      fill="#3b82f6"
+                      fillOpacity={1}
+                      activeDot={{ r: 0 }} 
                     />
-                  </LineChart>
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
             </div>
@@ -232,7 +233,7 @@ export default function AdminOverview() {
               <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Platform_Activity ]</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <ComposedChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} />
                     <XAxis 
                       dataKey="date" 
@@ -251,9 +252,9 @@ export default function AdminOverview() {
                     />
                     <Tooltip content={<BrutalistTooltip />} cursor={{ fill: '#333', opacity: 0.2 }} />
                     <Legend wrapperStyle={{ paddingTop: '20px', fontFamily: 'monospace', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }} />
-                    <Bar dataKey="procurements" name="RFPs Created" fill="#8b5cf6" radius={[0, 0, 0, 0]} />
-                    <Bar dataKey="bids" name="Bids Submitted" fill="#10b981" radius={[0, 0, 0, 0]} />
-                  </BarChart>
+                    <Area type="stepAfter" dataKey="procurements" name="RFPs Created" fill="#8b5cf6" stroke="#8b5cf6" strokeWidth={2} fillOpacity={0.5} activeDot={{r: 0}} />
+                    <Bar dataKey="bids" name="Bids Submitted" fill="#10b981" radius={[0, 0, 0, 0]} barSize={20} />
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
             </div>
