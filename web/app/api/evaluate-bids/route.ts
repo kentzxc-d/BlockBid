@@ -56,9 +56,9 @@ export async function POST(req: Request) {
       Provide a brief reasoning for each score, and an overall summary for the bid.
     `;
 
-    // Use gemini-1.5-pro
+    // Use gemini-3.5-flash
     const { object } = await generateObject({
-      model: google('gemini-1.5-pro'),
+      model: google('gemini-3.5-flash'),
       schema: evaluationSchema,
       prompt: prompt,
     });
