@@ -74,8 +74,8 @@ export default function AdminUsersManagement() {
   return (
     <RoleGuard allowedRoles={["admin"]}>
       <div className="py-6 px-4 md:py-10 md:px-8 max-w-7xl mx-auto w-full">
-        <div className="mb-10 border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
+        <div className="mb-10 border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
               [ USER_MANAGEMENT ]
             </h1>
@@ -83,24 +83,25 @@ export default function AdminUsersManagement() {
               Manage platform entities and access control roles.
             </p>
           </div>
-          <div className="bg-primary/10 border border-primary/20 px-4 py-2 rounded-md">
-            <span className="text-primary font-mono text-xs font-bold uppercase tracking-widest">
-              Total Entities: {users.length}
-            </span>
-          </div>
-        </div>
-        
-        {/* Search Bar */}
-        <div className="mb-6">
-          <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted stroke-2" />
-            <input 
-              type="text" 
-              placeholder="SEARCH BY NICKNAME, WALLET, OR ROLE..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-3 bg-surface border border-border focus:border-text-main outline-none transition-colors text-xs font-mono font-bold tracking-widest w-full placeholder:text-text-muted uppercase rounded-md"
-            />
+          
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full md:w-auto">
+            {/* Search Bar */}
+            <div className="relative flex-1 sm:w-64">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted stroke-2" />
+              <input 
+                type="text" 
+                placeholder="SEARCH USERS..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2.5 bg-surface border border-border focus:border-text-main outline-none transition-colors text-xs font-mono font-bold tracking-widest w-full placeholder:text-text-muted uppercase rounded-md"
+              />
+            </div>
+
+            <div className="bg-primary/10 border border-primary/20 px-4 py-2.5 rounded-md flex items-center justify-center shrink-0">
+              <span className="text-primary font-mono text-xs font-bold uppercase tracking-widest">
+                Total: {users.length}
+              </span>
+            </div>
           </div>
         </div>
 
