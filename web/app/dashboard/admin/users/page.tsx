@@ -1,15 +1,16 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import RoleGuard from "@/components/RoleGuard";
-import { UserCircleIcon, IdentificationIcon, BuildingOfficeIcon, GlobeAltIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon, IdentificationIcon, BuildingOfficeIcon, GlobeAltIcon, ShieldCheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function AdminUsersManagement() {
   const { user, ready } = usePrivy();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (ready && user) {
@@ -58,6 +59,18 @@ export default function AdminUsersManagement() {
     }
   };
 
+  const filteredUsers = useMemo(() => {
+    return users.filter(u => {
+      const q = searchQuery.toLowerCase();
+      return (
+        (u.nickname && u.nickname.toLowerCase().includes(q)) ||
+        (u.wallet_address && u.wallet_address.toLowerCase().includes(q)) ||
+        (u.role && u.role.toLowerCase().includes(q)) ||
+        (u.entity_type && u.entity_type.toLowerCase().includes(q))
+      );
+    });
+  }, [users, searchQuery]);
+
   return (
     <RoleGuard allowedRoles={["admin"]}>
       <div className="py-6 px-4 md:py-10 md:px-8 max-w-7xl mx-auto w-full">
@@ -77,15 +90,35 @@ export default function AdminUsersManagement() {
           </div>
         </div>
         
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted stroke-2" />
+            <input 
+              type="text" 
+              placeholder="SEARCH BY NICKNAME, WALLET, OR ROLE..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-3 bg-surface border border-border focus:border-text-main outline-none transition-colors text-xs font-mono font-bold tracking-widest w-full placeholder:text-text-muted uppercase rounded-md"
+            />
+          </div>
+        </div>
+
         {loading ? (
           <div className="animate-pulse space-y-4">
             {[1,2,3].map(i => (
               <div key={i} className="h-24 bg-surface rounded-md border border-border"></div>
             ))}
           </div>
+        ) : filteredUsers.length === 0 ? (
+          <div className="bg-surface rounded-md p-10 border border-border text-center">
+            <MagnifyingGlassIcon className="w-12 h-12 text-text-muted mx-auto mb-4" />
+            <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">No users found</h3>
+            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">Try adjusting your search query.</p>
+          </div>
         ) : (
           <div className="grid gap-4">
-            {users.map((u) => (
+            {filteredUsers.map((u) => (
               <div key={u.id} className="bg-surface rounded-md p-6 border border-border hover:border-text-main transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 
                 {/* User Info */}
