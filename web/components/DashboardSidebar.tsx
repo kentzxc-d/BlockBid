@@ -26,6 +26,7 @@ export default function DashboardSidebar() {
   
   const [nickname, setNickname] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [loadingRole, setLoadingRole] = useState(true);
   
   // For hybrid users, this toggle lets them flip their sidebar between agency/supplier mode.
   // Defaults to whatever role they have, or 'supplier' if they are 'both'.
@@ -48,7 +49,10 @@ export default function DashboardSidebar() {
             }
           }
         })
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => setLoadingRole(false));
+    } else if (ready && !user) {
+      setLoadingRole(false);
     }
   }, [user, ready]);
 
@@ -138,74 +142,84 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 py-8 px-5 space-y-2 overflow-y-auto">
-        
-        {/* Mode Switcher for Hybrid Users */}
-        {role === "both" && (
-          <div className="mb-6 bg-surface-inverse border border-border-inverse p-3 rounded-md">
-            <p className="text-[10px] font-mono text-text-inverse-muted uppercase tracking-widest mb-2 text-center">[ NETWORK_MODE ]</p>
-            <button
-              onClick={() => {
-                const newMode = activeMode === "supplier" ? "agency" : "supplier";
-                setActiveMode(newMode);
-                router.push(newMode === "supplier" ? "/dashboard/supplier" : "/dashboard/agency");
-              }}
-              className="w-full flex items-center justify-between px-3 py-2 bg-secondary text-white font-mono text-xs font-bold tracking-widest uppercase rounded border border-border-inverse hover:border-primary transition-colors"
-            >
-              <span>{activeMode === "agency" ? "PROCURING AGENT" : "SUPPLIER"}</span>
-              <ArrowsRightLeftIcon className="w-4 h-4 text-primary" />
-            </button>
+      <div className="flex-1 py-8 px-5 flex flex-col overflow-y-auto">
+        {(!ready || loadingRole) ? (
+          <div className="flex-1 flex flex-col items-center justify-center opacity-70 animate-pulse">
+            <Cog6ToothIcon className="w-8 h-8 text-primary animate-[spin_3s_linear_infinite] mb-4 opacity-50" />
+            <p className="font-mono text-[10px] font-bold text-primary tracking-widest uppercase text-center">
+              [ VERIFYING<br/>CLEARANCE ]
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {/* Mode Switcher for Hybrid Users */}
+            {role === "both" && (
+              <div className="mb-6 bg-surface-inverse border border-border-inverse p-3 rounded-md">
+                <p className="text-[10px] font-mono text-text-inverse-muted uppercase tracking-widest mb-2 text-center">[ NETWORK_MODE ]</p>
+                <button
+                  onClick={() => {
+                    const newMode = activeMode === "supplier" ? "agency" : "supplier";
+                    setActiveMode(newMode);
+                    router.push(newMode === "supplier" ? "/dashboard/supplier" : "/dashboard/agency");
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 bg-secondary text-white font-mono text-xs font-bold tracking-widest uppercase rounded border border-border-inverse hover:border-primary transition-colors"
+                >
+                  <span>{activeMode === "agency" ? "PROCURING AGENT" : "SUPPLIER"}</span>
+                  <ArrowsRightLeftIcon className="w-4 h-4 text-primary" />
+                </button>
+              </div>
+            )}
+
+            {activeMode !== "admin" && (
+              <div className="mb-8">
+                <Link
+                  href={activeMode === "agency" ? "/dashboard/agency/new" : "#"}
+                  onClick={activeMode === "supplier" ? handlePostProcurementClick : undefined}
+                  className={`flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md ${
+                    activeMode === "agency" 
+                      ? "bg-primary text-white hover:bg-primary-hover shadow-primary/20" 
+                      : "bg-surface-inverse text-text-inverse-muted border border-border-inverse hover:border-primary hover:text-primary"
+                  }`}
+                >
+                  <PlusCircleIcon className="w-5 h-5 stroke-2" />
+                  New Request
+                </Link>
+              </div>
+            )}
+
+            <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4 mt-8">
+              [ NAVIGATION ]
+            </p>
+
+            <div className="space-y-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={item.onClick}
+                    className={`flex items-center gap-4 px-4 py-3 rounded-md font-heading font-semibold transition-all duration-200 border-l-4 ${
+                      isActive
+                        ? "bg-primary/10 text-primary border-primary"
+                        : "text-text-inverse-muted border-transparent hover:text-white hover:bg-surface-inverse hover:border-text-inverse-muted"
+                    }`}
+                  >
+                    <item.icon className={`w-5 h-5 ${isActive ? "text-primary stroke-2" : "text-text-inverse-muted"}`} />
+                    {item.name}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         )}
-
-        {activeMode !== "admin" && (
-          <div className="mb-8">
-            <Link
-              href={activeMode === "agency" ? "/dashboard/agency/new" : "#"}
-              onClick={activeMode === "supplier" ? handlePostProcurementClick : undefined}
-              className={`flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md ${
-                activeMode === "agency" 
-                  ? "bg-primary text-white hover:bg-primary-hover shadow-primary/20" 
-                  : "bg-surface-inverse text-text-inverse-muted border border-border-inverse hover:border-primary hover:text-primary"
-              }`}
-            >
-              <PlusCircleIcon className="w-5 h-5 stroke-2" />
-              New Request
-            </Link>
-          </div>
-        )}
-
-        <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
-          [ NAVIGATION ]
-        </p>
-
-        <div className="space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={item.onClick}
-                className={`flex items-center gap-4 px-4 py-3 rounded-md font-heading font-semibold transition-all duration-200 border-l-4 ${
-                  isActive
-                    ? "bg-primary/10 text-primary border-primary"
-                    : "text-text-inverse-muted border-transparent hover:text-white hover:bg-surface-inverse hover:border-text-inverse-muted"
-                }`}
-              >
-                <item.icon className={`w-5 h-5 ${isActive ? "text-primary stroke-2" : "text-text-inverse-muted"}`} />
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
       </div>
 
       {/* Footer Widget */}
       <div className="p-5 border-t border-border-inverse">
         <div className="mb-4">
           <p className="text-xs font-mono text-text-inverse-muted tracking-wider mb-1">[ ACTIVE_ENTITY ]</p>
-          <p className="text-sm font-heading font-bold text-white truncate">{ready ? displayName : "Authenticating..."}</p>
+          <p className="text-sm font-heading font-bold text-white truncate">{(!ready || loadingRole) ? "Authenticating..." : displayName}</p>
         </div>
 
         <div className="bg-surface-inverse p-4 border border-border-inverse rounded-none">
