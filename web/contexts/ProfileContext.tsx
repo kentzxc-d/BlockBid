@@ -11,6 +11,7 @@ export interface UserProfile {
   entity_type: string;
   wallet_address: string | null;
   avatar_url?: string | null;
+  location?: string | null;
 }
 
 interface ProfileContextType {
