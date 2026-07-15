@@ -3,9 +3,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function DashboardRedirector() {
   const { user, ready } = usePrivy();
+  const { profile, loadingProfile } = useProfile();
   const router = useRouter();
 
   useEffect(() => {
@@ -15,33 +17,24 @@ export default function DashboardRedirector() {
         return;
       }
 
-      // Fetch user profile to determine their role
-      fetch(`/api/user/profile?id=${user.id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.profile) {
-            const role = data.profile.role;
-            if (role === "admin") {
-              router.replace("/dashboard/admin");
-            } else if (role === "requestor") {
-              router.replace("/dashboard/agency");
-            } else if (role === "supplier" || role === "both") {
-              router.replace("/dashboard/supplier");
-            } else {
-              // Invalid, missing, or legacy role. Force them to settings to update it.
-              router.replace("/dashboard/settings");
-            }
+      if (!loadingProfile) {
+        if (profile) {
+          const role = profile.role;
+          if (role === "admin") {
+            router.replace("/dashboard/admin");
+          } else if (role === "requestor") {
+            router.replace("/dashboard/agency");
+          } else if (role === "supplier" || role === "both") {
+            router.replace("/dashboard/supplier");
           } else {
-            // No profile found
-            router.replace("/onboarding");
+            router.replace("/dashboard/settings");
           }
-        })
-        .catch((err) => {
-          console.error("Failed to fetch profile for redirection", err);
-          router.replace("/dashboard/supplier");
-        });
+        } else {
+          router.replace("/onboarding");
+        }
+      }
     }
-  }, [ready, user, router]);
+  }, [ready, user, loadingProfile, profile, router]);
 
   return (
     <div className="flex-1 flex items-center justify-center py-6 px-4 md:py-10 md:px-8 h-screen w-full bg-background">

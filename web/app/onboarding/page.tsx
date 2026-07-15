@@ -12,9 +12,11 @@ import {
   UsersIcon,
   CheckIcon
 } from "@heroicons/react/24/outline";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function OnboardingPage() {
   const { user, ready } = usePrivy();
+  const { refreshProfile } = useProfile();
   const router = useRouter();
 
   const [step, setStep] = useState(1);
@@ -50,6 +52,7 @@ export default function OnboardingPage() {
       });
 
       if (response.ok) {
+        await refreshProfile();
         router.push("/dashboard");
       } else {
         const error = await response.json();

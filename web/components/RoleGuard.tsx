@@ -3,6 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function RoleGuard({ 
   children, 
@@ -12,9 +13,9 @@ export default function RoleGuard({
   allowedRoles: string[] 
 }) {
   const { user, ready } = usePrivy();
+  const { profile, loadingProfile } = useProfile();
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (ready) {
@@ -23,36 +24,27 @@ export default function RoleGuard({
         return;
       }
 
-      fetch(`/api/user/profile?id=${user.id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.profile) {
-            const userRole = data.profile.role;
-            // 'both' is authorized if the role expects supplier or requestor, but NOT if it strictly expects 'admin'
-            if (
-              allowedRoles.includes(userRole) || 
-              (userRole === 'both' && (allowedRoles.includes('supplier') || allowedRoles.includes('requestor')))
-            ) {
-              setAuthorized(true);
-            } else {
-              // Unauthorized! Redirect to the smart redirector to push them to their correct role page
-              router.replace("/dashboard");
-            }
+      if (!loadingProfile) {
+        if (profile) {
+          const userRole = profile.role;
+          // 'both' is authorized if the role expects supplier or requestor, but NOT if it strictly expects 'admin'
+          if (
+            allowedRoles.includes(userRole) || 
+            (userRole === 'both' && (allowedRoles.includes('supplier') || allowedRoles.includes('requestor')))
+          ) {
+            setAuthorized(true);
           } else {
-            router.replace("/onboarding");
+            // Unauthorized! Redirect to the smart redirector to push them to their correct role page
+            router.replace("/dashboard");
           }
-        })
-        .catch(err => {
-          console.error("RoleGuard error:", err);
-          router.replace("/dashboard");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        } else {
+          router.replace("/onboarding");
+        }
+      }
     }
-  }, [ready, user, router, allowedRoles]);
+  }, [ready, user, loadingProfile, profile, router, allowedRoles]);
 
-  if (!ready || loading) {
+  if (!ready || loadingProfile) {
     return (
       <div className="flex-1 flex items-center justify-center py-10 px-8 h-screen w-full bg-background">
         <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">

@@ -5,10 +5,11 @@ import { useEffect, useState, useRef } from "react";
 import Avatar from "boring-avatars";
 import { CheckCircleIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { createClient } from "@/utils/supabase/client";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function SettingsPage() {
   const { user, ready, exportWallet } = usePrivy();
-  const [profile, setProfile] = useState<any>(null);
+  const { profile, loadingProfile, refreshProfile } = useProfile();
   
   const [nickname, setNickname] = useState("");
   const [role, setRole] = useState("");
@@ -22,21 +23,13 @@ export default function SettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (ready && user) {
-      fetch(`/api/user/profile?id=${user.id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.profile) {
-            setProfile(data.profile);
-            setNickname(data.profile.nickname || "");
-            setRole(data.profile.role || "");
-            setEntityType(data.profile.entity_type || "");
-            setAvatarUrl(data.profile.avatar_url || null);
-          }
-        })
-        .catch(console.error);
+    if (profile && !loadingProfile) {
+      setNickname(profile.nickname || "");
+      setRole(profile.role || "");
+      setEntityType(profile.entity_type || "");
+      setAvatarUrl(profile.avatar_url || null);
     }
-  }, [ready, user]);
+  }, [profile, loadingProfile]);
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,12 +51,11 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
+        await refreshProfile();
         setSaveSuccess(true);
-        // Force a reload so the Sidebar and Route Guards pick up the new role immediately
         setTimeout(() => {
           setSaveSuccess(false);
-          window.location.reload();
-        }, 1500);
+        }, 3000);
       } else {
         const error = await response.json();
         alert(`Failed to save profile: ${error.error}`);
@@ -116,7 +108,7 @@ export default function SettingsPage() {
       if (!response.ok) throw new Error("Failed to update database with new avatar");
 
       // 4. Update UI state
-      setAvatarUrl(publicUrl);
+      await refreshProfile();
     } catch (error: any) {
       console.error("Avatar upload error:", error);
       alert(error.message || "Failed to upload avatar. Ensure the bucket exists and RLS allows inserts.");

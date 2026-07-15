@@ -1,49 +1,24 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { SparklesIcon } from "@heroicons/react/24/outline";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function OnboardingGuard({ children }: { children: React.ReactNode }) {
-  const { user, ready, authenticated } = usePrivy();
+  const { ready, authenticated } = usePrivy();
+  const { profile, loadingProfile } = useProfile();
   const router = useRouter();
-  const pathname = usePathname();
-  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    async function checkProfile() {
-      // Don't run check if not authenticated yet
-      if (ready && !authenticated) {
-        setIsChecking(false);
-        return;
-      }
-
-      // Wait for user object
-      if (ready && authenticated && user) {
-        const privyId = user.id;
-
-        try {
-          const res = await fetch(`/api/user/profile?id=${privyId}`);
-
-          if (res.status === 404) {
-            // No profile found, redirect to onboarding
-            router.replace("/onboarding");
-          } else {
-            // Profile exists!
-            setIsChecking(false);
-          }
-        } catch (error) {
-          console.error("Failed to check profile", error);
-          setIsChecking(false);
-        }
-      }
+    if (ready && authenticated && !loadingProfile && !profile) {
+      // Authenticated but no profile found, redirect to onboarding
+      router.replace("/onboarding");
     }
+  }, [ready, authenticated, loadingProfile, profile, router]);
 
-    checkProfile();
-  }, [ready, authenticated, user, router, pathname]);
-
-  if (!ready || isChecking) {
+  if (!ready || (authenticated && loadingProfile)) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
         <div className="relative w-16 h-16 mb-6">
@@ -54,6 +29,11 @@ export default function OnboardingGuard({ children }: { children: React.ReactNod
         <h2 className="text-xl font-bold text-slate-800">Setting up your workspace...</h2>
       </div>
     );
+  }
+
+  // If authenticated but no profile, we are redirecting to onboarding
+  if (authenticated && !profile) {
+    return null; 
   }
 
   return <>{children}</>;

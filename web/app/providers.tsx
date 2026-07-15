@@ -2,6 +2,7 @@
 
 import { PrivyProvider } from "@privy-io/react-auth";
 import { polygonAmoy } from "viem/chains";
+import { ProfileProvider } from "@/contexts/ProfileContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID || "";
@@ -24,7 +25,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         supportedChains: [polygonAmoy],
       }}
     >
-      {children}
+      <ProfileProvider>
+        {children}
+      </ProfileProvider>
     </PrivyProvider>
   );
 }

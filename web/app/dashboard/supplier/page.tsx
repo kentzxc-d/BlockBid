@@ -16,9 +16,11 @@ import {
 import TopBidsCarousel from "@/components/TopBidsCarousel";
 import LocationModal from "@/components/LocationModal";
 import RoleGuard from "@/components/RoleGuard";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function UserDashboard() {
   const { user, ready } = usePrivy();
+  const { profile, loadingProfile, refreshProfile } = useProfile();
   const [location, setLocation] = useState<string | null>(null);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
@@ -26,16 +28,10 @@ export default function UserDashboard() {
   const [allMyBidProjectIds, setAllMyBidProjectIds] = useState<string[]>([]);
 
   useEffect(() => {
-    if (ready && user) {
-      // Fetch user profile
-      fetch(`/api/user/profile?id=${user.id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.profile?.location) {
-            setLocation(data.profile.location);
-          }
-        })
-        .catch(err => console.error("Failed to fetch location", err));
+    if (ready && user && !loadingProfile && profile) {
+      if (profile.location) {
+        setLocation(profile.location);
+      }
 
       // Fetch open solicitations
       fetch('/api/procurements?filter=open')
@@ -54,7 +50,7 @@ export default function UserDashboard() {
           }
         });
     }
-  }, [user, ready]);
+  }, [user, ready, loadingProfile, profile]);
 
   const handleSaveLocation = async (newLocation: string) => {
     setLocation(newLocation);
@@ -64,6 +60,7 @@ export default function UserDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: user.id, location: newLocation })
       });
+      await refreshProfile();
     }
   };
 

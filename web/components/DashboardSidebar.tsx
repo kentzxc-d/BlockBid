@@ -15,6 +15,7 @@ import {
   ArrowsRightLeftIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function DashboardSidebar() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
@@ -22,39 +23,24 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, ready } = usePrivy();
+  const { profile, loadingProfile } = useProfile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const [nickname, setNickname] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
-  const [loadingRole, setLoadingRole] = useState(true);
   
   // For hybrid users, this toggle lets them flip their sidebar between agency/supplier mode.
   // Defaults to whatever role they have, or 'supplier' if they are 'both'.
   const [activeMode, setActiveMode] = useState<"supplier" | "agency" | "admin">("supplier");
 
   useEffect(() => {
-    if (ready && user) {
-      fetch(`/api/user/profile?id=${user.id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.profile) {
-            setNickname(data.profile.nickname);
-            setRole(data.profile.role);
-            if (data.profile.role === "requestor") {
-              setActiveMode("agency");
-            } else if (data.profile.role === "admin") {
-              setActiveMode("admin");
-            } else {
-              setActiveMode("supplier");
-            }
-          }
-        })
-        .catch(console.error)
-        .finally(() => setLoadingRole(false));
-    } else if (ready && !user) {
-      setLoadingRole(false);
+    if (ready && profile) {
+      if (profile.role === "requestor") {
+        setActiveMode("agency");
+      } else if (profile.role === "admin") {
+        setActiveMode("admin");
+      } else {
+        setActiveMode("supplier");
+      }
     }
-  }, [user, ready]);
+  }, [profile, ready]);
 
   useEffect(() => {
     const handleToggle = () => setMobileMenuOpen(prev => !prev);
@@ -67,7 +53,7 @@ export default function DashboardSidebar() {
   }, [pathname]);
 
   const handlePostProcurementClick = (e: React.MouseEvent) => {
-    if (role === "supplier") {
+    if (profile?.role === "supplier") {
       e.preventDefault();
       setUpgradeMessage("Want to post procurement projects? Upgrade your network role to Dual/Hybrid in Settings.");
       setUpgradeModalOpen(true);
@@ -75,7 +61,7 @@ export default function DashboardSidebar() {
   };
 
   const handleSubmitBidsClick = (e: React.MouseEvent) => {
-    if (role === "requestor") {
+    if (profile?.role === "requestor") {
       e.preventDefault();
       setUpgradeMessage("Want to submit bids? Upgrade your network role to Dual/Hybrid in Settings.");
       setUpgradeModalOpen(true);
@@ -93,7 +79,7 @@ export default function DashboardSidebar() {
     navItems.push({ name: "My Bids", href: "/dashboard/my-bids", icon: ClipboardDocumentCheckIcon, onClick: undefined });
     
     // Add the upsell for pure suppliers
-    if (role === "supplier") {
+    if (profile?.role === "supplier") {
       navItems.push({ name: "My Procurements", href: "#", icon: FolderOpenIcon, onClick: handlePostProcurementClick });
     }
   }
@@ -104,7 +90,7 @@ export default function DashboardSidebar() {
     navItems.push({ name: "My Procurements", href: "/dashboard/my-procurements", icon: FolderOpenIcon, onClick: undefined });
     
     // Add the upsell for pure requestors
-    if (role === "requestor") {
+    if (profile?.role === "requestor") {
       navItems.push({ name: "My Bids", href: "#", icon: ClipboardDocumentCheckIcon, onClick: handleSubmitBidsClick });
     }
   }
@@ -118,7 +104,7 @@ export default function DashboardSidebar() {
   // Always at bottom
   navItems.push({ name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon, onClick: undefined });
 
-  const displayName = nickname || (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "Unknown Entity");
+  const displayName = profile?.nickname || (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "Unknown Entity");
 
   return (
     <>
@@ -143,7 +129,7 @@ export default function DashboardSidebar() {
 
       {/* Navigation */}
       <div className="flex-1 py-8 px-5 flex flex-col overflow-y-auto">
-        {(!ready || loadingRole) ? (
+        {(!ready || loadingProfile) ? (
           <div className="flex-1 flex flex-col items-center justify-center opacity-70 animate-pulse">
             <Cog6ToothIcon className="w-8 h-8 text-primary animate-[spin_3s_linear_infinite] mb-4 opacity-50" />
             <p className="font-mono text-[10px] font-bold text-primary tracking-widest uppercase text-center">
@@ -153,7 +139,7 @@ export default function DashboardSidebar() {
         ) : (
           <div className="space-y-2">
             {/* Mode Switcher for Hybrid Users */}
-            {role === "both" && (
+            {profile?.role === "both" && (
               <div className="mb-6 bg-surface-inverse border border-border-inverse p-3 rounded-md">
                 <p className="text-[10px] font-mono text-text-inverse-muted uppercase tracking-widest mb-2 text-center">[ NETWORK_MODE ]</p>
                 <button
@@ -219,7 +205,7 @@ export default function DashboardSidebar() {
       <div className="p-5 border-t border-border-inverse">
         <div className="mb-4">
           <p className="text-xs font-mono text-text-inverse-muted tracking-wider mb-1">[ ACTIVE_ENTITY ]</p>
-          <p className="text-sm font-heading font-bold text-white truncate">{(!ready || loadingRole) ? "Authenticating..." : displayName}</p>
+          <p className="text-sm font-heading font-bold text-white truncate">{(!ready || loadingProfile) ? "Authenticating..." : displayName}</p>
         </div>
 
         <div className="bg-surface-inverse p-4 border border-border-inverse rounded-none">

@@ -7,14 +7,14 @@ import { PencilIcon } from "@heroicons/react/24/solid";
 import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function DashboardTopbar() {
   const { user, ready, logout } = usePrivy();
+  const { profile, refreshProfile } = useProfile();
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [identifier, setIdentifier] = useState<string | null>(null);
-  const [nickname, setNickname] = useState<string | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,35 +32,17 @@ export default function DashboardTopbar() {
 
   // Safely extract an identifier for the user
   useEffect(() => {
-    async function fetchProfile() {
-      if (ready && user) {
-        let defaultId = "";
-        if (user.wallet?.address) {
-          defaultId = user.wallet.address;
-        } else if (user.email?.address) {
-          defaultId = user.email.address;
-        } else if (user.id) {
-          defaultId = user.id.replace('did:privy:', '');
-        }
-        setIdentifier(defaultId);
-
-        try {
-          const res = await fetch(`/api/user/profile?id=${user.id}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.profile?.nickname) {
-              setNickname(data.profile.nickname);
-            }
-            if (data.profile?.avatar_url) {
-              setAvatarUrl(data.profile.avatar_url);
-            }
-          }
-        } catch (error) {
-          console.error("Failed to fetch profile", error);
-        }
+    if (ready && user) {
+      let defaultId = "";
+      if (user.wallet?.address) {
+        defaultId = user.wallet.address;
+      } else if (user.email?.address) {
+        defaultId = user.email.address;
+      } else if (user.id) {
+        defaultId = user.id.replace('did:privy:', '');
       }
+      setIdentifier(defaultId);
     }
-    fetchProfile();
   }, [user, ready]);
 
   const handleCopy = () => {
@@ -116,7 +98,7 @@ export default function DashboardTopbar() {
       if (!response.ok) throw new Error("Failed to update database with new avatar");
 
       // 4. Update UI state globally in this component
-      setAvatarUrl(publicUrl);
+      await refreshProfile();
     } catch (error: any) {
       console.error("Avatar upload error:", error);
       alert(error.message || "Failed to upload avatar.");
@@ -154,7 +136,7 @@ export default function DashboardTopbar() {
             <div className="relative overflow-hidden">
               <div className={`transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
                 <span className="text-sm font-heading font-bold whitespace-nowrap">
-                  Welcome, {nickname || 'User'}
+                  Welcome, {profile?.nickname || 'User'}
                 </span>
               </div>
               <div className={`absolute inset-0 flex items-center gap-2 transition-all duration-500 transform ${displayMode === 'wallet' ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
@@ -195,8 +177,8 @@ export default function DashboardTopbar() {
             title="Upload custom avatar"
           >
             <div className="p-0.5 rounded-md bg-surface border border-border w-10 h-10 flex items-center justify-center overflow-hidden hover:border-primary transition-colors">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-sm" />
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover rounded-sm" />
               ) : identifier ? (
                 <Avatar
                   size={34}
