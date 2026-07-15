@@ -4,10 +4,10 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
 import RoleGuard from "@/components/RoleGuard";
 import { AreaChart, Area, ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { 
-  UsersIcon, 
-  DocumentTextIcon, 
-  ClipboardDocumentCheckIcon, 
+import {
+  UsersIcon,
+  DocumentTextIcon,
+  ClipboardDocumentCheckIcon,
   TrophyIcon,
   CheckCircleIcon,
   XCircleIcon,
@@ -116,7 +116,7 @@ export default function AdminOverview() {
 
         {/* Quick Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          
+
           {/* Total Users */}
           <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
             <div className="p-3 border border-border bg-gray-50 rounded-md">
@@ -170,7 +170,7 @@ export default function AdminOverview() {
           </div>
 
         </div>
-        
+
         {/* Error Handling */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-md font-mono text-xs uppercase tracking-widest mb-12">
@@ -198,37 +198,37 @@ export default function AdminOverview() {
                   <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.5}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.5} />
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                    <XAxis 
-                      dataKey="date" 
-                      stroke="#888" 
-                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
-                      tickLine={false} 
-                      axisLine={false} 
+                    <XAxis
+                      dataKey="date"
+                      stroke="#888"
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }}
+                      tickLine={false}
+                      axisLine={false}
                       tickMargin={10}
                       minTickGap={20}
                     />
-                    <YAxis 
-                      stroke="#888" 
-                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
-                      tickLine={false} 
-                      axisLine={false} 
+                    <YAxis
+                      stroke="#888"
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }}
+                      tickLine={false}
+                      axisLine={false}
                       allowDecimals={false}
                     />
                     <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#555', strokeWidth: 1, strokeDasharray: '4 4' }} />
-                    <Area 
-                      type="monotone" 
-                      dataKey="users" 
-                      name="New Entities" 
-                      stroke="#3b82f6" 
+                    <Area
+                      type="monotone"
+                      dataKey="users"
+                      name="New Entities"
+                      stroke="#3b82f6"
                       strokeWidth={3}
                       fillOpacity={1}
                       fill="url(#colorUsers)"
-                      activeDot={{ r: 6, strokeWidth: 0, fill: '#3b82f6', style: { filter: 'drop-shadow(0px 0px 4px #3b82f6)' } }} 
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#3b82f6', style: { filter: 'drop-shadow(0px 0px 4px #3b82f6)' } }}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -243,52 +243,52 @@ export default function AdminOverview() {
                   <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorProcurements" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.5}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.5} />
+                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="colorBids" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.5}/>
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.5} />
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="#333" strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                    <XAxis 
-                      dataKey="date" 
-                      stroke="#888" 
-                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
-                      tickLine={false} 
-                      axisLine={false} 
+                    <XAxis
+                      dataKey="date"
+                      stroke="#888"
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }}
+                      tickLine={false}
+                      axisLine={false}
                       tickMargin={10}
                       minTickGap={20}
                     />
-                    <YAxis 
-                      stroke="#888" 
-                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }} 
-                      tickLine={false} 
-                      axisLine={false} 
+                    <YAxis
+                      stroke="#888"
+                      tick={{ fontFamily: 'monospace', fontSize: 10, fill: '#888' }}
+                      tickLine={false}
+                      axisLine={false}
                       allowDecimals={false}
                     />
                     <Tooltip content={<BrutalistTooltip />} cursor={{ stroke: '#555', strokeWidth: 1, strokeDasharray: '4 4' }} />
                     <Legend wrapperStyle={{ paddingTop: '20px', fontFamily: 'monospace', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }} />
-                    <Area 
-                      type="monotone" 
-                      dataKey="procurements" 
-                      name="RFPs Created" 
-                      fill="url(#colorProcurements)" 
-                      stroke="#8b5cf6" 
-                      strokeWidth={3} 
-                      fillOpacity={1} 
-                      activeDot={{ r: 6, strokeWidth: 0, fill: '#8b5cf6', style: { filter: 'drop-shadow(0px 0px 4px #8b5cf6)' } }} 
+                    <Area
+                      type="monotone"
+                      dataKey="procurements"
+                      name="RFPs Created"
+                      fill="url(#colorProcurements)"
+                      stroke="#8b5cf6"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#8b5cf6', style: { filter: 'drop-shadow(0px 0px 4px #8b5cf6)' } }}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="bids" 
-                      name="Bids Submitted" 
-                      fill="url(#colorBids)" 
-                      stroke="#10b981" 
-                      strokeWidth={3} 
-                      fillOpacity={1} 
-                      activeDot={{ r: 6, strokeWidth: 0, fill: '#10b981', style: { filter: 'drop-shadow(0px 0px 4px #10b981)' } }} 
+                    <Area
+                      type="monotone"
+                      dataKey="bids"
+                      name="Bids Submitted"
+                      fill="url(#colorBids)"
+                      stroke="#10b981"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#10b981', style: { filter: 'drop-shadow(0px 0px 4px #10b981)' } }}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -335,7 +335,7 @@ export default function AdminOverview() {
                     Submitted: {new Date(project.created_at).toLocaleString()}
                   </p>
                 </div>
-                
+
                 <div className="flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => handleAction(project.id, 'reject')}
