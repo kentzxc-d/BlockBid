@@ -16,12 +16,14 @@ export interface UserProfile {
 
 interface ProfileContextType {
   profile: UserProfile | null;
+  adminData: any;
   loadingProfile: boolean;
   refreshProfile: () => Promise<void>;
 }
 
 const ProfileContext = createContext<ProfileContextType>({
   profile: null,
+  adminData: null,
   loadingProfile: true,
   refreshProfile: async () => {},
 });
@@ -31,11 +33,14 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
+  const [adminData, setAdminData] = useState<any>(null);
+
   const fetchProfile = useCallback(async () => {
     if (!ready) return;
     
     if (ready && (!authenticated || !user)) {
       setProfile(null);
+      setAdminData(null);
       setLoadingProfile(false);
       return;
     }
@@ -47,6 +52,30 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         const data = await res.json();
         if (data.profile) {
           setProfile(data.profile);
+          
+          // Pre-fetch admin data if user is an admin
+          if (data.profile.role === 'admin') {
+            try {
+              const [statsRes, projectsRes, analyticsRes] = await Promise.all([
+                fetch(`/api/admin/stats?admin_id=${user!.id}`),
+                fetch(`/api/admin/pending-projects?admin_id=${user!.id}`),
+                fetch(`/api/admin/analytics?admin_id=${user!.id}`)
+              ]);
+              
+              const statsData = await statsRes.json();
+              const pendingData = await projectsRes.json();
+              const analyticsData = await analyticsRes.json();
+              
+              setAdminData({
+                stats: statsData.success ? statsData.stats : null,
+                pendingProjects: pendingData.success ? pendingData.projects : [],
+                analytics: analyticsData.success ? analyticsData.data : []
+              });
+            } catch (adminErr) {
+              console.error("Failed to pre-fetch admin data", adminErr);
+              setAdminData({ stats: null, pendingProjects: [], analytics: [] });
+            }
+          }
         } else {
           setProfile(null);
         }
@@ -67,7 +96,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   }, [fetchProfile]);
 
   return (
-    <ProfileContext.Provider value={{ profile, loadingProfile, refreshProfile: fetchProfile }}>
+    <ProfileContext.Provider value={{ profile, adminData, loadingProfile, refreshProfile: fetchProfile }}>
       {children}
     </ProfileContext.Provider>
   );

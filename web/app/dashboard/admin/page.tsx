@@ -3,6 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
 import RoleGuard from "@/components/RoleGuard";
+import { useProfile } from "@/contexts/ProfileContext";
 import { AreaChart, Area, ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   UsersIcon,
@@ -34,46 +35,20 @@ const BrutalistTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function AdminOverview() {
-  const { user, ready } = usePrivy();
-  const [stats, setStats] = useState<any>(null);
+  const { user } = usePrivy();
+  const { adminData, loadingProfile } = useProfile();
+  
   const [pendingProjects, setPendingProjects] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [analytics, setAnalytics] = useState<any[]>([]);
 
   useEffect(() => {
-    if (ready && user) {
-      setLoading(true);
-      Promise.all([
-        fetch(`/api/admin/stats?admin_id=${user.id}`).then(res => res.json()),
-        fetch(`/api/admin/pending-projects?admin_id=${user.id}`).then(res => res.json()),
-        fetch(`/api/admin/analytics?admin_id=${user.id}`).then(res => res.json())
-      ])
-        .then(([statsData, pendingData, analyticsData]) => {
-          if (statsData.success) {
-            setStats(statsData.stats);
-          } else {
-            setError(statsData.error || "Failed to load stats");
-          }
-
-          if (pendingData.success) {
-            setPendingProjects(pendingData.projects);
-          }
-
-          if (analyticsData && analyticsData.success) {
-            setAnalytics(analyticsData.data);
-          }
-        })
-        .catch(err => {
-          console.error("Error fetching admin data:", err);
-          setError("Network error fetching admin data");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    if (adminData?.pendingProjects) {
+      setPendingProjects(adminData.pendingProjects);
     }
-  }, [user, ready]);
+  }, [adminData]);
+
+  const stats = adminData?.stats || { totalUsers: 0, totalProcurements: 0, totalBids: 0, totalWonContracts: 0 };
+  const analytics = adminData?.analytics || [];
 
   const handleAction = async (projectId: string, action: 'approve' | 'reject') => {
     if (!user) return;
@@ -98,6 +73,28 @@ export default function AdminOverview() {
       setProcessingId(null);
     }
   };
+
+  if (loadingProfile) {
+    return (
+      <RoleGuard allowedRoles={["admin"]}>
+        <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh]">
+          <div className="flex flex-col items-center gap-4 animate-pulse">
+            <h2 className="text-xl font-bold text-text-main font-heading tracking-widest uppercase">
+              [ ASSEMBLING_ADMIN_DASHBOARD ]
+            </h2>
+            <div className="flex items-center gap-3">
+              <span className="w-2 h-2 bg-primary rounded-full animate-bounce" />
+              <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <p className="text-text-muted font-mono text-[10px] uppercase tracking-widest mt-4">
+              Gathering global statistics and analytics...
+            </p>
+          </div>
+        </div>
+      </RoleGuard>
+    );
+  }
 
   return (
     <RoleGuard allowedRoles={["admin"]}>
@@ -125,7 +122,7 @@ export default function AdminOverview() {
             <div>
               <h3 className="text-text-muted font-mono text-[10px] font-bold tracking-widest uppercase mb-1">Total Entities</h3>
               <p className="text-3xl font-heading font-bold text-text-main">
-                {loading ? "..." : stats?.totalUsers || 0}
+                {stats?.totalUsers || 0}
               </p>
             </div>
           </div>
@@ -138,7 +135,7 @@ export default function AdminOverview() {
             <div>
               <h3 className="text-text-muted font-mono text-[10px] font-bold tracking-widest uppercase mb-1">Open RFPs</h3>
               <p className="text-3xl font-heading font-bold text-text-main">
-                {loading ? "..." : stats?.totalProcurements || 0}
+                {stats?.totalProcurements || 0}
               </p>
             </div>
           </div>
@@ -151,7 +148,7 @@ export default function AdminOverview() {
             <div>
               <h3 className="text-text-muted font-mono text-[10px] font-bold tracking-widest uppercase mb-1">Total Bids</h3>
               <p className="text-3xl font-heading font-bold text-text-main">
-                {loading ? "..." : stats?.totalBids || 0}
+                {stats?.totalBids || 0}
               </p>
             </div>
           </div>
@@ -164,19 +161,12 @@ export default function AdminOverview() {
             <div>
               <h3 className="text-text-muted font-mono text-[10px] font-bold tracking-widest uppercase mb-1">Awarded</h3>
               <p className="text-3xl font-heading font-bold text-text-main">
-                {loading ? "..." : stats?.totalWonContracts || 0}
+                {stats?.totalWonContracts || 0}
               </p>
             </div>
           </div>
 
         </div>
-
-        {/* Error Handling */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-md font-mono text-xs uppercase tracking-widest mb-12">
-            ERROR: {error}
-          </div>
-        )}
 
         {/* Analytics Section */}
         <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
@@ -297,11 +287,7 @@ export default function AdminOverview() {
           </div>
         ) : (
           <div className="mb-12 h-[300px] bg-surface rounded-md border border-border flex items-center justify-center">
-            {loading ? (
-              <span className="animate-pulse text-text-muted font-mono text-xs uppercase tracking-widest">Loading Analytics...</span>
-            ) : (
-              <span className="text-text-muted font-mono text-xs uppercase tracking-widest">No analytics data available</span>
-            )}
+            <span className="text-text-muted font-mono text-xs uppercase tracking-widest">No analytics data available</span>
           </div>
         )}
 
