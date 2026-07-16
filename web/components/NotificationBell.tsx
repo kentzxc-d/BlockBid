@@ -54,10 +54,30 @@ export default function NotificationBell() {
 
   useEffect(() => {
     fetchNotifications();
-    // In a real app with RLS enabled, we'd use Supabase Realtime here.
-    // For now, we poll every 15 seconds to simulate realtime
-    const interval = setInterval(fetchNotifications, 15000);
-    return () => clearInterval(interval);
+    
+    // Subscribe to realtime changes on the notifications table
+    if (!profile?.id) return;
+    
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `profile_id=eq.${profile.id}`
+        },
+        (payload) => {
+          // Instantly add the new notification to state
+          setNotifications(current => [payload.new as Notification, ...current]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [profile?.id]);
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
