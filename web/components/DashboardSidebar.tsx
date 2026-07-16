@@ -104,9 +104,6 @@ export default function DashboardSidebar() {
   }
 
   // Always at bottom
-  if (activeMode !== "admin") {
-    navItems.push({ name: "Get Verified", href: "/dashboard/verify", icon: CheckBadgeIcon, onClick: undefined });
-  }
   navItems.push({ name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon, onClick: undefined });
 
   const displayName = profile?.nickname || (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "Unknown Entity");
