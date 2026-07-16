@@ -113,7 +113,7 @@ export default function DashboardTopbar() {
       </button>
 
       {/* User Actions */}
-      <div className="flex items-center gap-3 md:gap-6">
+      <div className="flex items-center gap-3 md:gap-4">
         
         {ready ? (
           <div 
@@ -145,10 +145,10 @@ export default function DashboardTopbar() {
           <div className="h-10 w-40 bg-gray-100 rounded-md animate-pulse border border-gray-200"></div>
         )}
 
-        <div className="h-8 w-px bg-border"></div>
+        <div className="h-6 w-px bg-border/60 mx-1"></div>
 
         {/* Notifications, Profile and Disconnect */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <NotificationBell />
           <input 
             type="file" 
