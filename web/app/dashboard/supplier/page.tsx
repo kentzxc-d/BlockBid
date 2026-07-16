@@ -82,18 +82,21 @@ export default function UserDashboard() {
       />
 
       {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-amber-100 text-amber-600 rounded-full shrink-0 border border-amber-200">
+        <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
+          {/* Subtle Background Accent */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+          
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="p-3 bg-primary/10 text-primary rounded-full shrink-0 border border-primary/20">
               <CheckBadgeIcon className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="font-heading font-bold text-amber-800 uppercase tracking-tight text-lg mb-1">[ VERIFICATION_REQUIRED ]</h3>
-              <p className="text-amber-700/90 font-mono text-xs tracking-wide">Get verified to build reputation and increase your chances of winning bids.</p>
+              <h3 className="font-heading font-bold text-text-main text-lg mb-0.5">Identity Verification Required</h3>
+              <p className="text-text-muted font-body text-sm">Get verified to build reputation and increase your chances of winning bids.</p>
             </div>
           </div>
-          <Link href="/dashboard/verify" className="shrink-0 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-mono text-xs font-bold uppercase tracking-widest rounded-md transition-colors shadow-md">
-            GET_VERIFIED
+          <Link href="/dashboard/verify" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-md transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+            Verify Identity
           </Link>
         </div>
       )}
