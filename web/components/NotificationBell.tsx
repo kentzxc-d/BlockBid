@@ -5,6 +5,7 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { BellIcon as BellIconSolid } from "@heroicons/react/24/solid";
 import { createClient } from "@/utils/supabase/client";
 import { useProfile } from "@/contexts/ProfileContext";
+import { usePrivy } from "@privy-io/react-auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
