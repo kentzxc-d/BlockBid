@@ -35,6 +35,18 @@ export async function POST(
       return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
     
+    // 1.5 Update the winning bid's status to 'won'
+    const { error: bidUpdateError } = await supabase
+      .from('bids')
+      .update({ status: 'won' })
+      .eq('project_id', projectId)
+      .eq('supplier_id', supplier_id);
+
+    if (bidUpdateError) {
+      console.error("Failed to update winning bid status:", bidUpdateError);
+      // We log but don't fail, to ensure the notification logic still runs
+    }
+    
     // 2. Create a notification for the winning supplier
     const { error: notifError } = await supabase
       .from('notifications')
