@@ -6,7 +6,7 @@ import Image from "next/image";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import RoleGuard from "@/components/RoleGuard";
 import { useState, useEffect } from "react";
-import { ClockIcon, CheckBadgeIcon, FolderOpenIcon } from "@heroicons/react/24/outline";
+import { ClockIcon, CheckBadgeIcon, FolderOpenIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useProfile } from "@/contexts/ProfileContext";
 
 export default function AgencyDashboard() {
@@ -199,15 +199,15 @@ export default function AgencyDashboard() {
                       <>
                         <Link 
                           href={`/dashboard/procurements/${req.id}/workspace`} 
-                          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 transition-colors whitespace-nowrap shadow-sm"
+                          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 transition-colors whitespace-nowrap shadow-sm w-full"
                         >
-                          WORKSPACE <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
+                          WORKSPACE
                         </Link>
                         <Link 
                           href={`/dashboard/procurements/${req.id}/evaluate`} 
-                          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
+                          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
                         >
-                          VIEW_WINNER <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
+                          <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_WINNER
                         </Link>
                       </>
                     ) : (
