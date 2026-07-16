@@ -41,8 +41,7 @@ export default function NotificationBell() {
   // Fetch notifications
   const fetchNotifications = async () => {
     if (!profile?.id) return;
-    const token = await getAccessToken();
-    const supabase = createClient(token || undefined);
+    const supabase = createClient();
 
     const { data, error } = await supabase
       .from('notifications')
@@ -68,12 +67,7 @@ export default function NotificationBell() {
     let channel: any;
 
     const setupSubscription = async () => {
-      const token = await getAccessToken();
-      const supabase = createClient(token || undefined);
-      
-      if (token) {
-        supabase.realtime.setAuth(token);
-      }
+      const supabase = createClient();
       
       channel = supabase
         .channel('schema-db-changes')
@@ -112,8 +106,7 @@ export default function NotificationBell() {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
     
     // Update in DB via API (since RLS might block direct client updates depending on setup)
-    const token = await getAccessToken();
-    const supabase = createClient(token || undefined);
+    const supabase = createClient();
     await supabase.from('notifications').update({ is_read: true }).eq('id', id);
     
     if (link) {
@@ -130,8 +123,7 @@ export default function NotificationBell() {
     // Optimistic update
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
     
-    const token = await getAccessToken();
-    const supabase = createClient(token || undefined);
+    const supabase = createClient();
     await supabase.from('notifications').update({ is_read: true }).in('id', unreadIds);
   };
 
