@@ -9,9 +9,10 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const projectId = params.id;
     
     // Get Project Info
@@ -58,9 +59,10 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const { sender_id, content } = await req.json();
     const projectId = params.id;
     

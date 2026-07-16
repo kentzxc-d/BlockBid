@@ -1,7 +1,7 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import { ArrowLeftIcon, LockClosedIcon, DocumentArrowDownIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useProfile } from "@/contexts/ProfileContext";
@@ -22,7 +22,8 @@ type Profile = {
   location?: string;
 };
 
-export default function WorkspacePage({ params }: { params: { id: string } }) {
+export default function WorkspacePage(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
   const { user } = usePrivy();
   const { profile } = useProfile();
   const [project, setProject] = useState<any>(null);

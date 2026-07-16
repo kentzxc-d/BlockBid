@@ -10,9 +10,10 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const { supplier_id, project_title } = await req.json();
     const projectId = params.id;
     
