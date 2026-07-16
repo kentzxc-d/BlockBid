@@ -94,7 +94,7 @@ export default function AgencyDashboard() {
                       </div>
                     </Link>
                   )}
-                  {(profile?.nickname === 'DOH' || procurements.filter(p => p.status === 'closed').length >= 10) && (
+                  {(profile?.nickname?.trim().toUpperCase() === 'DOH' || procurements.filter(p => p.status === 'closed').length >= 10) && (
                     <Link href="/dashboard/agency" className="relative group ml-1 flex items-center justify-center cursor-pointer flex-shrink-0">
                       <Image src="/veteran-badge.png" alt="Top Agency" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
                       <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-blue-500/10 border border-blue-500 text-blue-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
