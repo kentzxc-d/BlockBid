@@ -20,10 +20,10 @@ type Notification = {
 
 export default function NotificationBell() {
   const { profile } = useProfile();
+  const { getAccessToken } = usePrivy();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
   const router = useRouter();
 
   // Close dropdown when clicking outside
@@ -40,6 +40,9 @@ export default function NotificationBell() {
   // Fetch notifications
   const fetchNotifications = async () => {
     if (!profile?.id) return;
+    const token = await getAccessToken();
+    const supabase = createClient(token || undefined);
+
     const { data, error } = await supabase
       .from('notifications')
       .select('*')
@@ -57,26 +60,38 @@ export default function NotificationBell() {
     
     // Subscribe to realtime changes on the notifications table
     if (!profile?.id) return;
-    
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `profile_id=eq.${profile.id}`
-        },
-        (payload) => {
-          // Instantly add the new notification to state
-          setNotifications(current => [payload.new as Notification, ...current]);
-        }
-      )
-      .subscribe();
+
+    let channel: any;
+
+    const setupSubscription = async () => {
+      const token = await getAccessToken();
+      const supabase = createClient(token || undefined);
+      
+      channel = supabase
+        .channel('schema-db-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'notifications',
+            filter: `profile_id=eq.${profile.id}`
+          },
+          (payload) => {
+            // Instantly add the new notification to state
+            setNotifications(current => [payload.new as Notification, ...current]);
+          }
+        )
+        .subscribe();
+    };
+
+    setupSubscription();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        const supabase = createClient();
+        supabase.removeChannel(channel);
+      }
     };
   }, [profile?.id]);
 
@@ -89,6 +104,8 @@ export default function NotificationBell() {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
     
     // Update in DB via API (since RLS might block direct client updates depending on setup)
+    const token = await getAccessToken();
+    const supabase = createClient(token || undefined);
     await supabase.from('notifications').update({ is_read: true }).eq('id', id);
     
     if (link) {
@@ -105,6 +122,8 @@ export default function NotificationBell() {
     // Optimistic update
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
     
+    const token = await getAccessToken();
+    const supabase = createClient(token || undefined);
     await supabase.from('notifications').update({ is_read: true }).in('id', unreadIds);
   };
 
