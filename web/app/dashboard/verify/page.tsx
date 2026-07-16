@@ -10,6 +10,7 @@ import {
   DocumentTextIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export default function VerifyPage() {
   const { profile } = useProfile();
@@ -103,8 +104,8 @@ export default function VerifyPage() {
 
       {status === "verified" && (
         <div className="bg-emerald-50 border border-emerald-200 rounded-md p-6 flex flex-col items-center justify-center text-center space-y-4 shadow-sm">
-          <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center border border-emerald-200">
-            <CheckBadgeIcon className="w-10 h-10 text-emerald-600" />
+          <div className="w-28 h-28 flex items-center justify-center">
+            <Image src="/verified-badge.png" alt="Verified Badge" width={112} height={112} className="object-contain drop-shadow-md" />
           </div>
           <div>
             <h2 className="text-xl font-heading font-bold text-emerald-800 mb-1 uppercase tracking-tight">You are Verified</h2>

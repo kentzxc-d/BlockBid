@@ -3,7 +3,8 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect, useRef } from "react";
 import { DocumentDuplicateIcon, ArrowRightOnRectangleIcon, CheckIcon, Bars3Icon } from "@heroicons/react/24/outline";
-import { PencilIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
+import { PencilIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -138,7 +139,7 @@ export default function DashboardTopbar() {
                 <span className="text-sm font-heading font-bold whitespace-nowrap flex items-center gap-1.5">
                   Welcome, {profile?.nickname || 'User'}
                   {profile?.verification_status === 'verified' && (
-                    <CheckBadgeIcon className="w-4 h-4 text-blue-500" title="Verified User" />
+                    <Image src="/verified-badge.png" alt="Verified" width={18} height={18} title="Verified Identity" className="ml-1" />
                   )}
                 </span>
               </div>
