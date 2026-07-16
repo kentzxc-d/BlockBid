@@ -54,9 +54,9 @@ export default function MyBidsPage() {
                             bid.id.toLowerCase().includes(searchQuery.toLowerCase());
       
       let matchesTab = true;
-      if (activeTab === "PENDING") matchesTab = bid.status === "PENDING";
-      if (activeTab === "AWARDED") matchesTab = bid.status === "AWARDED";
-      if (activeTab === "REJECTED") matchesTab = bid.status === "REJECTED";
+      if (activeTab === "PENDING") matchesTab = bid.status === "SUBMITTED" || bid.status === "EVALUATED";
+      if (activeTab === "AWARDED") matchesTab = bid.status === "WON";
+      if (activeTab === "REJECTED") matchesTab = bid.status === "LOST";
 
       return matchesSearch && matchesTab;
     });
@@ -174,12 +174,22 @@ export default function MyBidsPage() {
                 <bid.statusIcon className="w-3 h-3 stroke-2" />
                 {bid.status}
               </div>
-              <button 
-                onClick={() => setViewingBid(bid)}
-                className="flex items-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
-              >
-                <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_DETAILS
-              </button>
+              <div className="flex flex-col gap-2 w-full md:w-auto">
+                {bid.status === "WON" && (
+                  <Link 
+                    href={`/dashboard/procurements/${bid.procurementId}/workspace`}
+                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 border border-transparent text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-green-700 transition-colors whitespace-nowrap"
+                  >
+                    WORKSPACE
+                  </Link>
+                )}
+                <button 
+                  onClick={() => setViewingBid(bid)}
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
+                >
+                  <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_DETAILS
+                </button>
+              </div>
             </div>
 
           </div>
