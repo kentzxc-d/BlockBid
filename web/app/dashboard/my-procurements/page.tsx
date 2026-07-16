@@ -119,12 +119,20 @@ export default function MyProcurementsPage() {
 
                 <div className="flex sm:flex-col gap-3">
                   {req.status === 'AWARDED' ? (
-                    <Link 
-                      href={`/dashboard/procurements/${req.id}/workspace`} 
-                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 transition-colors whitespace-nowrap shadow-sm"
-                    >
-                      WORKSPACE <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
-                    </Link>
+                    <>
+                      <Link 
+                        href={`/dashboard/procurements/${req.id}/evaluate`} 
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
+                      >
+                        VIEW_WINNER <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
+                      </Link>
+                      <Link 
+                        href={`/dashboard/procurements/${req.id}/workspace`} 
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 transition-colors whitespace-nowrap shadow-sm"
+                      >
+                        WORKSPACE <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
+                      </Link>
+                    </>
                   ) : (
                     <Link 
                       href={`/dashboard/procurements/${req.id}/evaluate`} 

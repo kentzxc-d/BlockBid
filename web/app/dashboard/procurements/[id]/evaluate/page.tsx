@@ -125,15 +125,35 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
           }
 
           const aiData = await aiRes.json();
-          const combinedEvals = [...existingEvals, ...aiData.evaluations];
-          combinedEvals.sort((a, b) => b.totalScore - a.totalScore);
-          setEvaluations(combinedEvals);
-          if (combinedEvals.length > 0) setExpandedBidId(combinedEvals[0].bidId);
+          let finalEvals = [...existingEvals, ...aiData.evaluations];
+          finalEvals.sort((a, b) => b.totalScore - a.totalScore);
+          
+          if (projData.project.status === 'awarded') {
+            const winningBid = bidsData.bids.find((b: any) => b.status === 'won');
+            if (winningBid) {
+              finalEvals = finalEvals.filter(e => e.bidId === winningBid.id);
+              // Also automatically set it to revealed so it shows as awarded
+              setRevealedBidder(winningBid.id);
+            }
+          }
+          
+          setEvaluations(finalEvals);
+          if (finalEvals.length > 0) setExpandedBidId(finalEvals[0].bidId);
         } else {
           // All bids already evaluated
-          existingEvals.sort((a, b) => b.totalScore - a.totalScore);
-          setEvaluations(existingEvals);
-          if (existingEvals.length > 0) setExpandedBidId(existingEvals[0].bidId);
+          let finalEvals = existingEvals;
+          finalEvals.sort((a, b) => b.totalScore - a.totalScore);
+          
+          if (projData.project.status === 'awarded') {
+            const winningBid = bidsData.bids.find((b: any) => b.status === 'won');
+            if (winningBid) {
+              finalEvals = finalEvals.filter(e => e.bidId === winningBid.id);
+              setRevealedBidder(winningBid.id);
+            }
+          }
+          
+          setEvaluations(finalEvals);
+          if (finalEvals.length > 0) setExpandedBidId(finalEvals[0].bidId);
         }
 
       } catch (err: any) {
