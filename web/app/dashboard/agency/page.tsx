@@ -94,8 +94,7 @@ export default function AgencyDashboard() {
                       </div>
                     </Link>
                   )}
-                  {/* FOR TESTING ONLY: Force show badge */}
-                  {true && (
+                  {procurements.filter(p => p.status === 'closed').length >= 10 && (
                     <Link href="/dashboard/veteran" className="relative group ml-1 flex items-center justify-center cursor-pointer flex-shrink-0">
                       <Image src="/veteran-badge.png" alt="Top Performer" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
                       <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-purple-500/10 border border-purple-500 text-purple-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
