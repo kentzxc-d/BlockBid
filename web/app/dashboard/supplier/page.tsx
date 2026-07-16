@@ -28,6 +28,12 @@ export default function UserDashboard() {
   const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
   const [myBids, setMyBids] = useState<any[]>([]);
   const [allMyBidProjectIds, setAllMyBidProjectIds] = useState<string[]>([]);
+  const [greeting, setGreeting] = useState("WELCOME BACK");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    setGreeting(hour < 12 ? "GOOD MORNING" : hour < 18 ? "GOOD AFTERNOON" : "GOOD EVENING");
+  }, []);
 
   useEffect(() => {
     if (ready && user && !loadingProfile && profile) {
@@ -82,18 +88,37 @@ export default function UserDashboard() {
         onSave={handleSaveLocation} 
       />
 
-      <div className="mb-6 mt-4">
-        <h2 className="text-2xl font-heading font-bold text-text-main uppercase tracking-tight flex items-center gap-2">
-          [ Welcome Back, {profile?.nickname || 'Supplier'} ]
-          {profile?.verification_status === 'verified' && (
-            <Link href="/dashboard/verify" className="relative group ml-1 flex items-center justify-center cursor-pointer flex-shrink-0">
-              <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-green-500/10 border border-green-500 text-green-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
-                [ Verified ]
+      {/* Greeting Card */}
+      <div className="mb-8 mt-4 bg-surface relative overflow-hidden border border-border rounded-md p-6 shadow-sm">
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-px bg-gradient-to-r from-primary/30 to-transparent" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-heading font-bold uppercase tracking-tight flex items-center gap-2 mb-1.5">
+              <span className="text-primary/70">[</span> 
+              <span className="text-text-main">{greeting},</span>
+              <span className="text-primary">{profile?.nickname || 'SUPPLIER'}</span> 
+              <span className="text-primary/70">]</span>
+              {profile?.verification_status === 'verified' && (
+                <Link href="/dashboard/verify" className="relative group ml-2 flex items-center justify-center cursor-pointer flex-shrink-0">
+                  <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-green-500/10 border border-green-500 text-green-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
+                    [ Verified ]
+                  </div>
+                </Link>
+              )}
+            </h2>
+            <div className="flex items-center gap-3 text-text-muted font-mono text-xs uppercase tracking-widest">
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                System Ready
               </div>
-            </Link>
-          )}
-        </h2>
+              <span className="opacity-30">|</span>
+              <span>Authentication Active</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
