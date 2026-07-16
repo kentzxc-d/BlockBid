@@ -102,7 +102,7 @@ export default function DashboardTopbar() {
   };
 
   return (
-    <div className="h-[72px] bg-surface border-b border-border flex items-center justify-between md:justify-end px-4 md:px-8 sticky top-0 z-10 shadow-sm">
+    <div className="h-[72px] bg-surface border-b border-border flex items-center justify-between md:justify-end px-4 md:px-8 sticky top-0 z-50 shadow-sm">
       
       {/* Mobile Hamburger Menu */}
       <button 
