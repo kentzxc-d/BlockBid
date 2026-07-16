@@ -51,6 +51,9 @@ export default function NotificationBell() {
       .order('created_at', { ascending: false })
       .limit(10);
       
+    console.log("FETCH NOTIFICATIONS - ERROR:", error);
+    console.log("FETCH NOTIFICATIONS - DATA:", data);
+
     if (!error && data) {
       setNotifications(data);
     }
