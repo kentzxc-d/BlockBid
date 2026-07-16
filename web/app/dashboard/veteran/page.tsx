@@ -27,16 +27,16 @@ export default function VeteranPage() {
         </p>
       </div>
 
-      <div className="bg-purple-50 border border-purple-200 rounded-md p-6 flex flex-col items-center justify-center text-center space-y-4 shadow-sm h-[400px]">
-        <div className="w-32 h-32 flex items-center justify-center relative mb-4">
+      <div className="bg-purple-50 border border-purple-200 rounded-md p-6 flex flex-col items-center justify-center text-center space-y-4 shadow-sm">
+        <div className="w-28 h-28 flex items-center justify-center relative">
           {/* Subtle glow effect behind the badge */}
           <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full"></div>
-          <Image src="/veteran-badge.png" alt="Veteran Badge" width={128} height={128} className="object-contain drop-shadow-xl relative z-10" />
+          <Image src="/veteran-badge.png" alt="Veteran Badge" width={112} height={112} className="object-contain drop-shadow-md relative z-10" />
         </div>
         <div>
-          <h2 className="text-2xl font-heading font-bold text-purple-900 mb-2 uppercase tracking-tight">Top Performer</h2>
-          <p className="text-purple-700/90 font-mono text-xs tracking-widest uppercase max-w-md mx-auto leading-relaxed">
-            This badge signifies a high level of trust, reliability, and successful track record within the BlockBid network.
+          <h2 className="text-xl font-heading font-bold text-purple-800 mb-1 uppercase tracking-tight">Top Performer</h2>
+          <p className="text-purple-700/80 font-mono text-xs tracking-widest uppercase">
+            This badge signifies a high level of trust and reliability.
           </p>
         </div>
       </div>
