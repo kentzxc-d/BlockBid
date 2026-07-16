@@ -20,16 +20,7 @@ export default function DashboardTopbar() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Animation state: 'greeting' | 'wallet'
-  const [displayMode, setDisplayMode] = useState<'greeting' | 'wallet'>('greeting');
-
-  // Alternating Header Timer
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDisplayMode(prev => prev === 'greeting' ? 'wallet' : 'greeting');
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // Removed alternating timer
 
   // Safely extract an identifier for the user
   useEffect(() => {
@@ -123,7 +114,6 @@ export default function DashboardTopbar() {
       {/* User Actions */}
       <div className="flex items-center gap-3 md:gap-6">
         
-        {/* Alternating Wallet / Greeting Display */}
         {ready ? (
           <div 
             onClick={identifier ? handleCopy : undefined}
@@ -134,21 +124,11 @@ export default function DashboardTopbar() {
             }`}
             title={identifier ? "Click to copy identifier" : "Wallet not connected"}
           >
-            <div className="relative overflow-hidden">
-              <div className={`transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
-                <span className="text-sm font-heading font-bold whitespace-nowrap flex items-center gap-1.5">
-                  Welcome, {profile?.nickname || 'User'}
-                  {profile?.verification_status === 'verified' && (
-                    <Image src="/verified-badge.png" alt="Verified" width={18} height={18} title="Verified Identity" className="ml-1" />
-                  )}
-                </span>
-              </div>
-              <div className={`absolute inset-0 flex items-center gap-2 transition-all duration-500 transform ${displayMode === 'wallet' ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
-                <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-600" : "bg-red-500"}`}></div>
-                <span className={`text-xs font-mono font-bold truncate w-full`}>
-                  {identifier || "Not Connected"}
-                </span>
-              </div>
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-600" : "bg-red-500"}`}></div>
+              <span className={`text-xs font-mono font-bold truncate w-full`}>
+                {identifier || "Not Connected"}
+              </span>
             </div>
             <div className="shrink-0 hidden md:block">
               {identifier && (

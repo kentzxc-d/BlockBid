@@ -2,6 +2,7 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import RoleGuard from "@/components/RoleGuard";
 import { useState, useEffect } from "react";
@@ -49,6 +50,14 @@ export default function AgencyDashboard() {
     <RoleGuard allowedRoles={["requestor"]}>
       <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
         <div>
+          <div className="mb-6 mt-2">
+            <h2 className="text-2xl font-heading font-bold text-text-main uppercase tracking-tight flex items-center gap-2">
+              [ Welcome Back, {profile?.nickname || 'Agency'} ]
+              {profile?.verification_status === 'verified' && (
+                <Image src="/verified-badge.png" alt="Verified" width={28} height={28} title="Verified Identity" className="ml-1 drop-shadow-sm" />
+              )}
+            </h2>
+          </div>
           <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ PROCURING_AGENT_WORKSPACE ]</h1>
           <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Procurement_&_Evaluation_Hub</p>
         </div>

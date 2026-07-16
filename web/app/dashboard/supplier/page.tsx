@@ -2,6 +2,7 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { 
   BuildingOfficeIcon, 
@@ -80,6 +81,15 @@ export default function UserDashboard() {
         onClose={() => setIsLocationModalOpen(false)} 
         onSave={handleSaveLocation} 
       />
+
+      <div className="mb-6 mt-4">
+        <h2 className="text-2xl font-heading font-bold text-text-main uppercase tracking-tight flex items-center gap-2">
+          [ Welcome Back, {profile?.nickname || 'Supplier'} ]
+          {profile?.verification_status === 'verified' && (
+            <Image src="/verified-badge.png" alt="Verified" width={28} height={28} title="Verified Identity" className="ml-1 drop-shadow-sm" />
+          )}
+        </h2>
+      </div>
 
       {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
         <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
