@@ -9,6 +9,7 @@ import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { useProfile } from "@/contexts/ProfileContext";
+import NotificationBell from "@/components/NotificationBell";
 
 export default function DashboardTopbar() {
   const { user, ready, logout } = usePrivy();
@@ -146,8 +147,9 @@ export default function DashboardTopbar() {
 
         <div className="h-8 w-px bg-border"></div>
 
-        {/* Profile and Disconnect */}
+        {/* Notifications, Profile and Disconnect */}
         <div className="flex items-center gap-4">
+          <NotificationBell />
           <input 
             type="file" 
             ref={fileInputRef} 

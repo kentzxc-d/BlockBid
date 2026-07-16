@@ -148,6 +148,9 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
   }, [params.id]);
 
   const confirmAward = async (bidId: string) => {
+    const bidToAward = bids.find(b => b.id === bidId);
+    if (!bidToAward) return;
+    
     try {
       if (wallets && wallets.length > 0) {
         const wallet = wallets[0];
@@ -176,6 +179,20 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       }
     } catch (err) {
       console.error("Failed to finalize award on contract:", err);
+    }
+    
+    // Update Database and trigger notification
+    try {
+      await fetch(`/api/procurements/${params.id}/award`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          supplier_id: bidToAward.supplier_id, 
+          project_title: project?.title 
+        })
+      });
+    } catch (err) {
+      console.error("Failed to update backend award status:", err);
     }
     
     // Reveal the bidder after contract interaction
