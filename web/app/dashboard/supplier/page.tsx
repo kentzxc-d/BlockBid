@@ -29,10 +29,28 @@ export default function UserDashboard() {
   const [myBids, setMyBids] = useState<any[]>([]);
   const [allMyBidProjectIds, setAllMyBidProjectIds] = useState<string[]>([]);
   const [greeting, setGreeting] = useState("WELCOME BACK");
+  const [currentTime, setCurrentTime] = useState("");
+  const [blockHeight, setBlockHeight] = useState(18239012);
 
   useEffect(() => {
-    const hour = new Date().getHours();
-    setGreeting(hour < 12 ? "GOOD MORNING" : hour < 18 ? "GOOD AFTERNOON" : "GOOD EVENING");
+    const updateTime = () => {
+      const now = new Date();
+      const hour = now.getHours();
+      setGreeting(hour < 12 ? "GOOD MORNING" : hour < 18 ? "GOOD AFTERNOON" : "GOOD EVENING");
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    
+    const blockInterval = setInterval(() => {
+      setBlockHeight(prev => prev + 1);
+    }, 12000);
+    
+    return () => {
+      clearInterval(interval);
+      clearInterval(blockInterval);
+    };
   }, []);
 
   useEffect(() => {
@@ -116,6 +134,20 @@ export default function UserDashboard() {
               </div>
               <span className="opacity-30">|</span>
               <span>Authentication Active</span>
+            </div>
+          </div>
+          
+          <div className="hidden md:flex flex-col items-end border-l border-border/50 pl-6 space-y-1.5 relative">
+            <div className="text-[10px] font-mono text-text-muted tracking-widest uppercase mb-0.5">
+              Network Status
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold text-primary/70">BLOCK_HEIGHT:</span>
+              <span className="text-xs font-mono text-text-main font-bold">#{blockHeight.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold text-primary/70">LOCAL_TIME:</span>
+              <span className="text-xs font-mono text-text-main font-bold w-[60px] text-right">{currentTime || "--:--:--"}</span>
             </div>
           </div>
         </div>
