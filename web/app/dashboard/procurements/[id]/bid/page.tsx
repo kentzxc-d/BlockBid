@@ -186,7 +186,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
           href="/dashboard/procurements" 
           className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-4"
         >
-          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> Back to Solicitations
+          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_SOLICITATIONS
         </Link>
         <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
           [ SUBMIT_PROPOSAL: <span className="text-primary">{project.title}</span> ]

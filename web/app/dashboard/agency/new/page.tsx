@@ -132,9 +132,9 @@ export default function CreateProcurementPage() {
       <div className="mb-10">
         <Link 
           href="/dashboard/agency" 
-          className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main transition-colors uppercase mb-8"
+          className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-8"
         >
-          <ArrowLeftIcon className="w-4 h-4" /> Back to Workspace
+          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_WORKSPACE
         </Link>
         <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ POST_PROCUREMENT ]</h1>
         <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">

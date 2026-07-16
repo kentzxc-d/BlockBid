@@ -98,10 +98,9 @@ export default function VerifyPage() {
       <div className="mb-8">
         <button 
           onClick={() => router.back()}
-          className="inline-flex items-center gap-2 text-text-muted hover:text-text-main font-mono text-xs font-bold tracking-widest uppercase transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-6"
         >
-          <ArrowLeftIcon className="w-4 h-4" />
-          BACK_TO_OVERVIEW
+          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_OVERVIEW
         </button>
         <h1 className="text-2xl md:text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-center gap-3 uppercase">
           <CheckBadgeIcon className="w-8 h-8 text-primary" />
