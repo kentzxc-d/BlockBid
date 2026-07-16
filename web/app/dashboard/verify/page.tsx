@@ -9,10 +9,13 @@ import {
   CloudArrowUpIcon,
   DocumentTextIcon,
   ExclamationCircleIcon,
+  ArrowLeftIcon
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function VerifyPage() {
+  const router = useRouter();
   const { profile } = useProfile();
   const { user } = usePrivy();
   const supabase = createClient();
@@ -93,6 +96,13 @@ export default function VerifyPage() {
   return (
     <div className="max-w-4xl mx-auto py-10 px-6">
       <div className="mb-8">
+        <button 
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-2 text-text-muted hover:text-text-main font-mono text-xs font-bold tracking-widest uppercase transition-colors mb-6"
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          BACK_TO_OVERVIEW
+        </button>
         <h1 className="text-2xl md:text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-center gap-3 uppercase">
           <CheckBadgeIcon className="w-8 h-8 text-primary" />
           [ IDENTITY_VERIFICATION ]

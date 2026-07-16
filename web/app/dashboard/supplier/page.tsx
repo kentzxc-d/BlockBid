@@ -86,8 +86,11 @@ export default function UserDashboard() {
         <h2 className="text-2xl font-heading font-bold text-text-main uppercase tracking-tight flex items-center gap-2">
           [ Welcome Back, {profile?.nickname || 'Supplier'} ]
           {profile?.verification_status === 'verified' && (
-            <Link href="/dashboard/verify" title="[ Verified ]" className="ml-1 hover:scale-105 transition-transform cursor-pointer flex-shrink-0">
-              <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm" />
+            <Link href="/dashboard/verify" className="relative group ml-1 flex items-center justify-center cursor-pointer flex-shrink-0">
+              <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-green-500/10 border border-green-500 text-green-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
+                [ Verified ]
+              </div>
             </Link>
           )}
         </h2>
