@@ -64,7 +64,7 @@ export default function MyBidsPage() {
 
   const counts = {
     all: bids.length,
-    pending: bids.filter(b => b.status === "SUBMITTED").length,
+    pending: bids.filter(b => b.status === "SUBMITTED" || b.status === "EVALUATED").length,
     awarded: bids.filter(b => b.status === "WON").length,
     rejected: bids.filter(b => b.status === "LOST").length,
   };
