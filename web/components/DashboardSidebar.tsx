@@ -14,6 +14,7 @@ import {
   FolderOpenIcon,
   ArrowsRightLeftIcon,
   UserGroupIcon,
+  CheckBadgeIcon,
 } from "@heroicons/react/24/outline";
 import { useProfile } from "@/contexts/ProfileContext";
 
@@ -99,9 +100,13 @@ export default function DashboardSidebar() {
   if (activeMode === "admin") {
     navItems.unshift({ name: "Platform Overview", href: "/dashboard/admin", icon: HomeIcon, onClick: undefined });
     navItems.push({ name: "User Management", href: "/dashboard/admin/users", icon: UserGroupIcon, onClick: undefined });
+    navItems.push({ name: "KYC Applications", href: "/dashboard/admin/kyc", icon: CheckBadgeIcon, onClick: undefined });
   }
 
   // Always at bottom
+  if (activeMode !== "admin") {
+    navItems.push({ name: "Get Verified", href: "/dashboard/verify", icon: CheckBadgeIcon, onClick: undefined });
+  }
   navItems.push({ name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon, onClick: undefined });
 
   const displayName = profile?.nickname || (user?.wallet?.address ? `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : "Unknown Entity");

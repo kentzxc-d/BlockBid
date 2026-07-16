@@ -7,7 +7,12 @@ const pk = process.env.PRIVATE_KEY?.replace(/['"]/g, '').trim();
 const privateKey = pk ? (pk.startsWith("0x") ? pk : "0x" + pk) : "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.24",
+  solidity: {
+    version: "0.8.24",
+    settings: {
+      evmVersion: "cancun"
+    }
+  },
   networks: {
     polygonAmoy: {
       url: process.env.POLYGON_AMOY_RPC_URL || "https://rpc-amoy.polygon.technology/",

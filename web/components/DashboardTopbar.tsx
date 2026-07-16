@@ -3,7 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect, useRef } from "react";
 import { DocumentDuplicateIcon, ArrowRightOnRectangleIcon, CheckIcon, Bars3Icon } from "@heroicons/react/24/outline";
-import { PencilIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, CheckBadgeIcon } from "@heroicons/react/24/solid";
 import Avatar from "boring-avatars";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -135,8 +135,11 @@ export default function DashboardTopbar() {
           >
             <div className="relative overflow-hidden">
               <div className={`transition-all duration-500 transform ${displayMode === 'greeting' ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
-                <span className="text-sm font-heading font-bold whitespace-nowrap">
+                <span className="text-sm font-heading font-bold whitespace-nowrap flex items-center gap-1.5">
                   Welcome, {profile?.nickname || 'User'}
+                  {profile?.verification_status === 'verified' && (
+                    <CheckBadgeIcon className="w-4 h-4 text-blue-500" title="Verified User" />
+                  )}
                 </span>
               </div>
               <div className={`absolute inset-0 flex items-center gap-2 transition-all duration-500 transform ${displayMode === 'wallet' ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>

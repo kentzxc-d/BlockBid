@@ -8,6 +8,7 @@
     entity_type text check (entity_type in ('individual', 'company', 'institution', 'government', 'ngo')),
     nickname text,
     wallet_address text, -- Derived from embedded wallet or Metamask
+    verification_status text check (verification_status in ('unverified', 'pending', 'verified', 'rejected')) default 'unverified',
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
   );
 
@@ -82,3 +83,34 @@
   create policy "Avatar images are publicly accessible." on storage.objects for select using ( bucket_id = 'avatars' );
   create policy "Users can upload their own avatars." on storage.objects for insert with check ( bucket_id = 'avatars' );
   create policy "Users can update their own avatars." on storage.objects for update using ( bucket_id = 'avatars' );
+
+  -- 7. Verification Documents Table
+  create table verification_documents (
+    id uuid default uuid_generate_v4() primary key,
+    profile_id text references profiles(id) on delete cascade not null,
+    document_type text not null, -- e.g., 'dti_registration', 'primary_id', 'selfie'
+    file_path text not null,
+    uploaded_at timestamp with time zone default timezone('utc'::text, now()) not null
+  );
+  alter table verification_documents enable row level security;
+  
+  create policy "Users can view own verification docs" on verification_documents for select using (auth.uid()::text = profile_id);
+  create policy "Users can insert own verification docs" on verification_documents for insert with check (auth.uid()::text = profile_id);
+  create policy "Admins can view all verification docs" on verification_documents for select using (
+    exists (select 1 from profiles where id = auth.uid()::text and role = 'admin')
+  );
+
+  -- 8. KYC Storage Bucket & Policies
+  insert into storage.buckets (id, name, public) values ('kyc_documents', 'kyc_documents', false);
+  
+  create policy "Users can upload their own KYC documents." on storage.objects for insert with check ( 
+    bucket_id = 'kyc_documents' and (storage.foldername(name))[1] = auth.uid()::text
+  );
+  
+  create policy "Users can view their own KYC documents." on storage.objects for select using ( 
+    bucket_id = 'kyc_documents' and (storage.foldername(name))[1] = auth.uid()::text
+  );
+  
+  create policy "Admins can view all KYC documents." on storage.objects for select using ( 
+    bucket_id = 'kyc_documents' and exists (select 1 from profiles where id = auth.uid()::text and role = 'admin')
+  );
