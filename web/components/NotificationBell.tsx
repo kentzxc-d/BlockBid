@@ -68,6 +68,10 @@ export default function NotificationBell() {
       const token = await getAccessToken();
       const supabase = createClient(token || undefined);
       
+      if (token) {
+        supabase.realtime.setAuth(token);
+      }
+      
       channel = supabase
         .channel('schema-db-changes')
         .on(
