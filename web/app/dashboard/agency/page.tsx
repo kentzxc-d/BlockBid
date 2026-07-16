@@ -6,9 +6,11 @@ import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import RoleGuard from "@/components/RoleGuard";
 import { useState, useEffect } from "react";
 import { ClockIcon, CheckBadgeIcon, FolderOpenIcon } from "@heroicons/react/24/outline";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function AgencyDashboard() {
   const { ready, user } = usePrivy();
+  const { profile } = useProfile();
   const [procurements, setProcurements] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -50,6 +52,23 @@ export default function AgencyDashboard() {
           <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ PROCURING_AGENT_WORKSPACE ]</h1>
           <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Procurement_&_Evaluation_Hub</p>
         </div>
+
+        {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-amber-100 text-amber-600 rounded-full shrink-0 border border-amber-200">
+                <CheckBadgeIcon className="w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="font-heading font-bold text-amber-800 uppercase tracking-tight text-lg mb-1">[ VERIFICATION_REQUIRED ]</h3>
+                <p className="text-amber-700/90 font-mono text-xs tracking-wide">Get verified to establish your agency's legitimacy and build trust with suppliers.</p>
+              </div>
+            </div>
+            <Link href="/dashboard/verify" className="shrink-0 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-mono text-xs font-bold uppercase tracking-widest rounded-md transition-colors shadow-md">
+              GET_VERIFIED
+            </Link>
+          </div>
+        )}
 
         {procurements.length === 0 ? (
           <div className="bg-surface rounded-none p-8 border border-border hover:border-text-main transition-colors text-center py-20">

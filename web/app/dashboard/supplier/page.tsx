@@ -11,7 +11,8 @@ import {
   CheckCircleIcon, 
   ClockIcon,
   DocumentChartBarIcon,
-  TrophyIcon
+  TrophyIcon,
+  CheckBadgeIcon
 } from "@heroicons/react/24/outline";
 import TopBidsCarousel from "@/components/TopBidsCarousel";
 import LocationModal from "@/components/LocationModal";
@@ -79,6 +80,23 @@ export default function UserDashboard() {
         onClose={() => setIsLocationModalOpen(false)} 
         onSave={handleSaveLocation} 
       />
+
+      {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-amber-100 text-amber-600 rounded-full shrink-0 border border-amber-200">
+              <CheckBadgeIcon className="w-8 h-8" />
+            </div>
+            <div>
+              <h3 className="font-heading font-bold text-amber-800 uppercase tracking-tight text-lg mb-1">[ VERIFICATION_REQUIRED ]</h3>
+              <p className="text-amber-700/90 font-mono text-xs tracking-wide">Get verified to build reputation and increase your chances of winning bids.</p>
+            </div>
+          </div>
+          <Link href="/dashboard/verify" className="shrink-0 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-mono text-xs font-bold uppercase tracking-widest rounded-md transition-colors shadow-md">
+            GET_VERIFIED
+          </Link>
+        </div>
+      )}
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
