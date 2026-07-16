@@ -86,7 +86,9 @@ export default function UserDashboard() {
         <h2 className="text-2xl font-heading font-bold text-text-main uppercase tracking-tight flex items-center gap-2">
           [ Welcome Back, {profile?.nickname || 'Supplier'} ]
           {profile?.verification_status === 'verified' && (
-            <Image src="/verified-badge.png" alt="Verified" width={28} height={28} title="Verified Identity" className="ml-1 drop-shadow-sm" />
+            <Link href="/dashboard/verify" title="Verified User" className="ml-1 hover:scale-105 transition-transform cursor-pointer flex-shrink-0">
+              <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm" />
+            </Link>
           )}
         </h2>
       </div>
