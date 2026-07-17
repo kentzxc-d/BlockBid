@@ -160,45 +160,63 @@ export default function AdminKYCPage() {
     }
   };
 
-  if (loading) return <div className="p-8 text-slate-400">Loading KYC requests...</div>;
+  if (loading) return (
+    <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
+      <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">
+        [ INITIALIZING_VERIFICATION_MODULE ]
+      </div>
+    </div>
+  );
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold text-white mb-6">KYC/KYB Verification Dashboard</h1>
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+          [ KYC_&_KYB_VERIFICATION_MODULE ]
+        </h1>
+        <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+          Review and verify identity documents to authorize users on the platform.
+        </p>
+      </div>
       
       {requests.length === 0 ? (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
-          No pending verification requests at this time.
+        <div className="bg-surface border border-border rounded-md p-10 text-center flex flex-col items-center justify-center">
+          <CheckCircleIcon className="w-12 h-12 text-text-muted/50 mb-4 stroke-1" />
+          <p className="text-text-muted font-mono text-xs font-bold uppercase tracking-widest">
+            NO_PENDING_VERIFICATION_REQUESTS
+          </p>
         </div>
       ) : (
         <div className="space-y-6">
           {requests.map(req => (
-            <div key={req.id} className="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col md:flex-row gap-6">
+            <div key={req.id} className="bg-surface border border-border rounded-md p-6 flex flex-col md:flex-row gap-6 hover:border-text-main transition-colors group">
               
               {/* User Info */}
-              <div className="flex-1 space-y-4 border-b md:border-b-0 md:border-r border-slate-800 pb-4 md:pb-0 md:pr-6">
+              <div className="flex-1 space-y-4 border-b md:border-b-0 md:border-r border-border pb-4 md:pb-0 md:pr-6">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-white">{req.nickname || "Unknown"}</h2>
-                    <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs font-medium uppercase">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-xl font-heading font-black text-text-main uppercase">{req.nickname || "Unknown"}</h2>
+                    <span className="px-2 py-0.5 border border-primary/30 bg-primary/10 text-primary text-[10px] font-mono font-bold uppercase tracking-widest rounded-md">
                       {req.entity_type}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-400 mt-1 font-mono truncate">{req.wallet_address}</p>
+                  <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest truncate">WALLET: {req.wallet_address}</p>
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-300 mb-2">Uploaded Documents:</h3>
+                  <h3 className="text-[10px] font-mono font-bold text-text-muted uppercase tracking-widest mb-3 border-b border-border pb-2">
+                    [ UPLOADED_DOCUMENTS ]
+                  </h3>
                   <ul className="space-y-2">
                     {req.documents.map(doc => (
                       <li key={doc.id} className="flex items-center gap-2">
-                        <DocumentTextIcon className="w-4 h-4 text-slate-500" />
+                        <DocumentTextIcon className="w-4 h-4 text-primary" />
                         <button 
                           onClick={async () => {
                             const url = await getDocUrl(doc.file_path);
                             window.open(url, "_blank");
                           }}
-                          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                          className="text-xs font-mono font-bold text-text-main hover:text-primary transition-colors uppercase tracking-widest underline decoration-border hover:decoration-primary underline-offset-4"
                         >
                           {doc.document_type}
                         </button>
@@ -209,22 +227,22 @@ export default function AdminKYCPage() {
               </div>
 
               {/* Actions */}
-              <div className="shrink-0 flex flex-col gap-3 justify-center min-w-[200px]">
+              <div className="shrink-0 flex flex-col gap-3 justify-center min-w-[220px]">
                 <button
                   onClick={() => handleApprove(req)}
                   disabled={processingId !== null}
-                  className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                  className="w-full py-3 px-4 bg-primary text-background hover:bg-primary-hover font-mono text-xs font-bold uppercase tracking-widest transition-colors rounded-md shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <CheckCircleIcon className="w-5 h-5" />
-                  Approve & Mint SBT
+                  <CheckCircleIcon className="w-4 h-4 stroke-2" />
+                  APPROVE_&_MINT_SBT
                 </button>
                 <button
                   onClick={() => handleReject(req)}
                   disabled={processingId !== null}
-                  className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-300 font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50 border border-slate-700 hover:border-red-500/50"
+                  className="w-full py-3 px-4 bg-background border border-danger text-danger hover:bg-danger/10 font-mono text-xs font-bold uppercase tracking-widest transition-colors rounded-md flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <XCircleIcon className="w-5 h-5" />
-                  Reject
+                  <XCircleIcon className="w-4 h-4 stroke-2" />
+                  REJECT_APPLICATION
                 </button>
               </div>
 
