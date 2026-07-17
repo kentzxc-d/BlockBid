@@ -221,9 +221,11 @@ export default function DashboardSidebar() {
         </div>
       </div>
 
+      </div>
+
       {/* Brutalist Upgrade Modal */}
       {upgradeModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
           <div className="bg-secondary border-2 border-primary rounded-md p-8 max-w-md w-full shadow-[8px_8px_0_0_theme(colors.primary)] animate-in fade-in zoom-in duration-200">
             <h3 className="font-heading text-xl font-black text-primary uppercase tracking-widest mb-4">
               [ ROLE_UPGRADE_REQUIRED ]
@@ -233,7 +235,7 @@ export default function DashboardSidebar() {
               {upgradeMessage}
             </p>
             <div className="flex gap-4">
-              <button
+               <button
                 onClick={() => setUpgradeModalOpen(false)}
                 className="flex-1 py-3 px-4 font-mono text-xs rounded-md font-bold text-text-inverse-muted bg-surface-inverse hover:text-white transition-colors uppercase tracking-widest text-center"
               >
@@ -252,7 +254,6 @@ export default function DashboardSidebar() {
           </div>
         </div>
       )}
-      </div>
     </>
   );
 }
