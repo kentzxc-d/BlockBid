@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       prompt = `
         You are an expert procurement officer. Rewrite the following project description to make it highly professional, clear, and structured. 
         Fix any grammatical errors. Maintain all original requirements and constraints. Do not add fictitious information.
-        Format it cleanly with brief bullet points if necessary.
+        DO NOT use any markdown formatting (like ** for bolding). Output plain text only, though you may use standard dashes (-) for bullet points.
         
         Original text:
         "${text}"
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       prompt = `
         You are an expert proposal writer for B2B contracts. Rewrite the following bid proposal to make it highly professional, persuasive, and structured.
         Fix any grammatical errors. Maintain all original capabilities, pricing, and timelines. Do not add fictitious information.
-        Format it cleanly.
+        DO NOT use any markdown formatting (like ** for bolding). Output plain text only, though you may use standard dashes (-) for bullet points.
         
         Original text:
         "${text}"
@@ -40,7 +40,10 @@ export async function POST(request: Request) {
       prompt: prompt,
     });
 
-    return NextResponse.json({ success: true, enhancedText: enhancedText.trim() }, { status: 200 });
+    // Strip any lingering double asterisks just in case the model ignores the prompt
+    const cleanedText = enhancedText.replace(/\*\*/g, '').trim();
+
+    return NextResponse.json({ success: true, enhancedText: cleanedText }, { status: 200 });
 
   } catch (err: any) {
     console.error("AI Enhance API Error:", err);
