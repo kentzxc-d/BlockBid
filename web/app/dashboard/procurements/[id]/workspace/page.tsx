@@ -149,8 +149,8 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
             <h3 className="font-mono text-xs text-text-muted uppercase tracking-widest mb-4">[ YOUR_PROFILE ]</h3>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-md bg-gray-100 border border-border overflow-hidden shrink-0">
-                {myParty?.avatar_url ? <img src={myParty.avatar_url} className="w-full h-full object-cover"/> : <Avatar size={40} name={myParty?.wallet_address || myParty?.id || 'default'} variant="beam" colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']} />}
+              <div className="w-10 h-10 rounded-md bg-gray-100 border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                {myParty?.avatar_url ? <img src={myParty.avatar_url} className="w-full h-full object-cover"/> : <Avatar size={36} name={myParty?.wallet_address || myParty?.id || 'default'} variant="beam" colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']} />}
               </div>
               <div>
                 <p className="font-bold text-text-main leading-tight">{myParty?.nickname || 'Unknown'}</p>
@@ -168,8 +168,8 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-md bg-gray-100 border border-border overflow-hidden shrink-0">
-                  {otherParty?.avatar_url ? <img src={otherParty.avatar_url} className="w-full h-full object-cover"/> : <Avatar size={40} name={otherParty?.wallet_address || otherParty?.id || 'default'} variant="beam" colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']} />}
+                <div className="w-10 h-10 rounded-md bg-gray-100 border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                  {otherParty?.avatar_url ? <img src={otherParty.avatar_url} className="w-full h-full object-cover"/> : <Avatar size={36} name={otherParty?.wallet_address || otherParty?.id || 'default'} variant="beam" colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']} />}
                 </div>
                 <div>
                   <p className="font-bold text-text-main leading-tight">{otherParty?.nickname || 'Unknown'}</p>
