@@ -105,7 +105,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
         // If there are unevaluated bids, run AI on them
         if (unevaluatedBids.length > 0) {
           setIsEvaluating(true);
-          const aiRes = await fetch('/api/evaluate-bids', {
+          const aiRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/evaluate-bids`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -71,7 +71,7 @@ export default function CreateProcurementPage() {
     if (!description.trim()) return;
     setIsEnhancing(true);
     try {
-      const res = await fetch("/api/ai/enhance", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ai/enhance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: description, type: "procurement" })
