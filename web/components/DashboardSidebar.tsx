@@ -100,7 +100,7 @@ export default function DashboardSidebar() {
   if (activeMode === "admin") {
     navItems.unshift({ name: "Platform Overview", href: "/dashboard/admin", icon: HomeIcon, onClick: undefined });
     navItems.push({ name: "User Management", href: "/dashboard/admin/users", icon: UserGroupIcon, onClick: undefined });
-    navItems.push({ name: "KYC Applications", href: "/dashboard/admin/kyc", icon: CheckBadgeIcon, onClick: undefined });
+    navItems.push({ name: "Verification Module", href: "/dashboard/admin/kyc", icon: CheckBadgeIcon, onClick: undefined });
   }
 
   // Always at bottom
