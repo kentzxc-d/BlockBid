@@ -172,7 +172,7 @@ export default function AdminKYCPage() {
     <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
-          [ KYC_&_KYB_VERIFICATION_MODULE ]
+          [ IDENTITY_VERIFICATION_MODULE ]
         </h1>
         <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
           Review and verify identity documents to authorize users on the platform.
