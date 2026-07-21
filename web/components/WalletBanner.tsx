@@ -60,11 +60,6 @@ export default function WalletBanner() {
             </Link>
           )}
         </h2>
-        <div className="flex items-center gap-2 text-text-muted font-mono text-xs uppercase tracking-widest">
-          <span>Role: {userTypeLabel}</span>
-          <span className="opacity-30">|</span>
-          <span className="text-emerald-500">System Ready</span>
-        </div>
       </div>
 
       {/* WALLET CARD */}
@@ -76,11 +71,11 @@ export default function WalletBanner() {
           
           {/* LEFT: WALLET BALANCE & BUTTONS */}
           <div className="flex-1">
-            <div className="text-[10px] font-mono text-text-muted tracking-widest uppercase mb-1">
+            <div className="text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">
               Wallet Balance
             </div>
-            <div className="text-3xl font-heading font-bold text-text-main mb-3">
-              <span className="text-primary/70 mr-1">₱</span>{balance}
+            <div className="text-5xl font-heading font-black text-text-main mb-4 tracking-tighter">
+              <span className="text-primary/70 mr-2 text-4xl">₱</span>{balance}
             </div>
             <div className="flex items-center gap-3">
               <button 
