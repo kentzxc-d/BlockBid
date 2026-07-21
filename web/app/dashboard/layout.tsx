@@ -1,6 +1,8 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardTopbar from "@/components/DashboardTopbar";
 import OnboardingGuard from "@/components/OnboardingGuard";
+import TopUpModal from "@/components/TopUpModal";
+import WithdrawModal from "@/components/WithdrawModal";
 
 export default function DashboardLayout({
   children,
@@ -24,6 +26,8 @@ export default function DashboardLayout({
           </main>
         </div>
       </div>
+      <TopUpModal />
+      <WithdrawModal />
     </OnboardingGuard>
   );
 }

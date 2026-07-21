@@ -154,7 +154,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
               </div>
               <div>
                 <p className="font-bold text-text-main leading-tight">{myParty?.nickname || 'Unknown'}</p>
-                <p className="text-xs text-text-muted font-mono mt-1">{myParty?.entity_type}</p>
+                <p className="text-xs text-text-muted font-mono mt-1 capitalize">{myParty?.entity_type || 'Unknown Entity'} <span className="opacity-50 mx-1">•</span> <span className="text-primary">{amIRequestor ? 'Requestor' : 'Supplier'}</span></p>
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                 </div>
                 <div>
                   <p className="font-bold text-text-main leading-tight">{otherParty?.nickname || 'Unknown'}</p>
-                  <p className="text-xs text-text-muted font-mono mt-1">{otherParty?.entity_type}</p>
+                  <p className="text-xs text-text-muted font-mono mt-1 capitalize">{otherParty?.entity_type || 'Unknown Entity'} <span className="opacity-50 mx-1">•</span> <span className="text-secondary">{amIRequestor ? 'Supplier' : 'Requestor'}</span></p>
                 </div>
               </div>
               

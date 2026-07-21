@@ -19,6 +19,7 @@ import TopBidsCarousel from "@/components/TopBidsCarousel";
 import LocationModal from "@/components/LocationModal";
 import RoleGuard from "@/components/RoleGuard";
 import { useProfile } from "@/contexts/ProfileContext";
+import WalletBanner from "@/components/WalletBanner";
 
 export default function UserDashboard() {
   const { user, ready } = usePrivy();
@@ -110,59 +111,7 @@ export default function UserDashboard() {
       />
 
       {/* Greeting Card */}
-      <div className="mb-8 mt-4 bg-surface relative overflow-hidden border border-border rounded-md p-6 shadow-sm">
-        <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-px bg-gradient-to-r from-primary/30 to-transparent" />
-        
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-heading font-bold uppercase tracking-tight flex items-center gap-2 mb-1.5">
-              <span className="text-primary/70">[</span> 
-              <span className="text-text-main">{greeting},</span>
-              <span className="text-primary">{profile?.nickname || 'SUPPLIER'}</span> 
-              <span className="text-primary/70">]</span>
-              {profile?.verification_status === 'verified' && (
-                <Link href="/dashboard/verify" className="relative group ml-2 flex items-center justify-center cursor-pointer flex-shrink-0">
-                  <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-green-500/10 border border-green-500 text-green-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
-                    [ Verified ]
-                  </div>
-                </Link>
-              )}
-              {wonBidsCount >= 10 && (
-                <Link href="/dashboard/veteran" className="relative group ml-1 flex items-center justify-center cursor-pointer flex-shrink-0">
-                  <Image src="/veteran-badge.png" alt="Top Performer" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-purple-500/10 border border-purple-500 text-purple-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
-                    [ Veteran ]
-                  </div>
-                </Link>
-              )}
-            </h2>
-            <div className="flex items-center gap-3 text-text-muted font-mono text-xs uppercase tracking-widest">
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                System Ready
-              </div>
-              <span className="opacity-30">|</span>
-              <span>Authentication Active</span>
-            </div>
-          </div>
-          
-          <div className="hidden md:flex flex-col items-end border-l border-border/50 pl-6 space-y-1.5 relative">
-            <div className="text-[10px] font-mono text-text-muted tracking-widest uppercase mb-0.5">
-              Network Status
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold text-primary/70">BLOCK_HEIGHT:</span>
-              <span className="text-xs font-mono text-text-main font-bold">#{blockHeight.toLocaleString()}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold text-primary/70">LOCAL_TIME:</span>
-              <span className="text-xs font-mono text-text-main font-bold w-[60px] text-right">{currentTime || "--:--:--"}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <WalletBanner />
 
       {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
         <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
