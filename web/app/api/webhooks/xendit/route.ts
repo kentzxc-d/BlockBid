@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createWalletClient, http, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { sepolia } from "viem/chains"; // Testnet
+import { polygonAmoy } from "viem/chains"; // Testnet
 import BlockBidTokenArtifact from "../../../../lib/BlockBidToken.json";
 
 export async function POST(req: Request) {
@@ -32,13 +32,13 @@ export async function POST(req: Request) {
       // 3. Connect to Blockchain via viem
       const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY;
       const contractAddress = process.env.NEXT_PUBLIC_BLOCKBID_TOKEN_ADDRESS;
-      const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://rpc.sepolia.org";
+      const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com";
 
       if (adminPrivateKey && contractAddress) {
         const account = privateKeyToAccount(`0x${adminPrivateKey}`);
         const client = createWalletClient({
           account,
-          chain: sepolia,
+          chain: polygonAmoy,
           transport: http(rpcUrl)
         });
 
