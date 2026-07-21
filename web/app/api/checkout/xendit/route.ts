@@ -9,8 +9,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Minimum amount is 100 PHP" }, { status: 400 });
     }
 
-    // We pass the userAddress as the external_id so the Webhook knows exactly who to mint tokens to.
-    const external_id = userAddress || `invoice-${Date.now()}`;
+    // Calculate 2.5% platform fee
+    const platformFee = amount * 0.025;
+    const totalAmountToPay = Math.round(amount + platformFee);
+
+    // We pass the userAddress and original amount in external_id so the webhook mints the right amount.
+    const external_id = userAddress ? `${userAddress}|${amount}` : `invoice-${Date.now()}`;
 
     const xenditApiKey = process.env.XENDIT_SECRET_KEY;
     if (!xenditApiKey) {
@@ -29,8 +33,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         external_id: external_id,
-        amount: amount,
-        description: "BlockBid Token Escrow Deposit",
+        amount: totalAmountToPay,
+        description: `BlockBid Token Escrow Deposit (₱${amount} + 2.5% Fee)`,
         invoice_duration: 3600, // 1 hour expiration
         currency: "PHP"
       })

@@ -15,12 +15,19 @@ export async function POST(req: Request) {
     // 2. Check if the payment was successfully PAID
     if (body.status === "PAID" || body.status === "COMPLETED") {
       const amountPaid = body.amount;
-      // We will design the frontend to pass the user's wallet address as the "external_id"
-      // so we know exactly who to send the tokens to!
-      const userWalletAddress = body.external_id; 
+      // We designed the frontend to pass the user's wallet address and original amount
+      // as the "external_id" format: "address|amount"
+      let userWalletAddress = body.external_id; 
+      let amountToMint = amountPaid; // Default to paid amount if no original amount is passed
+
+      if (userWalletAddress && userWalletAddress.includes("|")) {
+        const parts = userWalletAddress.split("|");
+        userWalletAddress = parts[0];
+        amountToMint = Number(parts[1]);
+      }
 
       console.log(`[XENDIT WEBHOOK] Received payment of ${amountPaid} PHP from invoice ${body.id}`);
-      console.log(`[BLOCKCHAIN] Preparing to mint ${amountPaid} BlockBid Tokens to ${userWalletAddress}`);
+      console.log(`[BLOCKCHAIN] Preparing to mint ${amountToMint} BlockBid Tokens to ${userWalletAddress}`);
       
       // 3. Connect to Blockchain via viem
       const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY;
@@ -39,7 +46,7 @@ export async function POST(req: Request) {
           address: contractAddress as `0x${string}`,
           abi: BlockBidTokenArtifact.abi,
           functionName: 'mint',
-          args: [userWalletAddress as `0x${string}`, parseEther(amountPaid.toString())]
+          args: [userWalletAddress as `0x${string}`, parseEther(amountToMint.toString())]
         });
 
         console.log(`[SUCCESS] Tokens successfully minted! TX Hash: ${txHash}`);

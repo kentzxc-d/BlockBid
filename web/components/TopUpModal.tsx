@@ -103,13 +103,13 @@ export default function TopUpModal() {
               <span>₱ {amount ? Number(amount).toFixed(2) : "0.00"}</span>
             </div>
             <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-widest text-text-muted">
-              <span>Platform Fee (0%):</span>
-              <span>₱ 0.00</span>
+              <span>Platform Fee (2.5%):</span>
+              <span>₱ {amount ? (Number(amount) * 0.025).toFixed(2) : "0.00"}</span>
             </div>
             <div className="w-full h-px bg-primary/20 my-1" />
             <div className="flex items-center justify-between text-sm font-mono font-bold uppercase tracking-widest text-primary">
               <span>Total to Pay:</span>
-              <span>₱ {amount ? Number(amount).toFixed(2) : "0.00"}</span>
+              <span>₱ {amount ? (Number(amount) * 1.025).toFixed(2) : "0.00"}</span>
             </div>
           </div>
 
