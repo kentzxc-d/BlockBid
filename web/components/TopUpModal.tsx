@@ -59,7 +59,7 @@ export default function TopUpModal() {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-surface border border-border rounded-md shadow-2xl w-full max-w-md overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-emerald-500 to-primary" />
+
         
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-heading font-bold text-text-main uppercase flex items-center gap-2 tracking-tight">

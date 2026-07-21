@@ -64,11 +64,11 @@ export default function WithdrawModal() {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-surface border border-border rounded-md shadow-2xl w-full max-w-md overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500" />
+
         
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-heading font-bold text-text-main uppercase flex items-center gap-2 tracking-tight">
-            <BanknotesIcon className="w-6 h-6 text-red-500" />
+            <BanknotesIcon className="w-6 h-6 text-text-main" />
             [ Withdraw_Funds ]
           </h2>
           <button 
@@ -94,7 +94,7 @@ export default function WithdrawModal() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="1000"
-                className="w-full bg-background border border-border text-text-main text-lg font-bold font-mono pl-10 pr-4 py-3 rounded focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+                className="w-full bg-background border border-border text-text-main text-lg font-bold font-mono pl-10 pr-4 py-3 rounded focus:outline-none focus:border-text-main focus:ring-1 focus:ring-text-main transition-all"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function WithdrawModal() {
             <select
               value={channelCode}
               onChange={(e) => setChannelCode(e.target.value)}
-              className="w-full bg-background border border-border text-text-main text-sm font-bold font-mono px-4 py-3 rounded focus:outline-none focus:border-red-500 transition-all appearance-none uppercase"
+              className="w-full bg-background border border-border text-text-main text-sm font-bold font-mono px-4 py-3 rounded focus:outline-none focus:border-text-main transition-all appearance-none uppercase"
             >
               <option value="PH_GCASH">GCash</option>
               <option value="PH_MAYA">Maya</option>
@@ -126,14 +126,14 @@ export default function WithdrawModal() {
               value={accountNumber}
               onChange={(e) => setAccountNumber(e.target.value)}
               placeholder="09123456789"
-              className="w-full bg-background border border-border text-text-main text-sm font-bold font-mono px-4 py-3 rounded focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+              className="w-full bg-background border border-border text-text-main text-sm font-bold font-mono px-4 py-3 rounded focus:outline-none focus:border-text-main focus:ring-1 focus:ring-text-main transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading || !amount || !accountNumber}
-            className="w-full flex items-center justify-center gap-2 bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed py-3.5 rounded font-mono text-xs font-bold uppercase tracking-widest transition-all shadow-md mt-2"
+            className="w-full flex items-center justify-center gap-2 bg-text-main text-surface hover:bg-text-main/90 disabled:opacity-50 disabled:cursor-not-allowed py-3.5 rounded font-mono text-xs font-bold uppercase tracking-widest transition-all shadow-md mt-2"
           >
             {isLoading ? "PROCESSING_PAYOUT..." : "CONFIRM_WITHDRAWAL"} 
             {!isLoading && <ArrowRightIcon className="w-4 h-4 stroke-2" />}
