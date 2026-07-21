@@ -67,7 +67,7 @@ export default function WalletBanner() {
         <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-1/3 h-px bg-gradient-to-r from-primary/30 to-transparent" />
         
-        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8">
           
           {/* LEFT: WALLET BALANCE & BUTTONS */}
           <div>
@@ -94,7 +94,7 @@ export default function WalletBanner() {
           </div>
 
           {/* RIGHT: NETWORK STATUS */}
-          <div className="flex flex-col items-end space-y-2 relative md:pb-0.5">
+          <div className="flex flex-col items-end space-y-2 relative">
             <div className="text-[10px] font-mono text-text-muted tracking-widest uppercase mb-1 flex items-center gap-1.5 w-[200px] px-3">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Network Status
