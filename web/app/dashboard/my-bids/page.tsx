@@ -144,7 +144,7 @@ export default function MyBidsPage() {
         ) : (
           filteredBids.map((bid) => {
             const actionButton = (
-              <div className="flex flex-col gap-2 w-full md:w-auto">
+              <div className="flex flex-row items-center justify-end gap-3 w-full">
                 {bid.status === "WON" && (
                   <Link 
                     href={`/dashboard/acquisitions/${bid.acquisitionId}/workspace`}
@@ -155,7 +155,7 @@ export default function MyBidsPage() {
                 )}
                 <button 
                   onClick={() => setViewingBid(bid)}
-                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
                 >
                   <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_DETAILS
                 </button>
@@ -171,8 +171,7 @@ export default function MyBidsPage() {
                 location="Various" // Would come from DB
                 estBudget={bid.amount === "N/A" ? "TBD" : bid.amount}
                 closingDate={`Submitted: ${bid.submittedAt}`}
-                customMetaLabel="Bid & Project ID"
-                customMetaValue={`${bid.id.substring(0,8)}... | ${bid.acquisitionId.substring(0,8)}...`}
+                contractHash={bid.on_chain_hash || "b53d0128-37d5-457b-9c4a-08b7c093fb7d"} // mock hash if undefined
                 actionButton={actionButton}
               />
             );

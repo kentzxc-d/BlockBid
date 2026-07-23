@@ -1,4 +1,7 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
+import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline';
 
 export interface AcquisitionCardProps {
   title: string;
@@ -27,6 +30,20 @@ export default function AcquisitionCard({
 }: AcquisitionCardProps) {
   const statusUpper = status.toUpperCase();
   const isStatusGreen = statusUpper === 'OPEN' || statusUpper === 'WON';
+  
+  const [copiedHash, setCopiedHash] = useState(false);
+  const [copiedCustom, setCopiedCustom] = useState(false);
+
+  const handleCopy = (text: string, type: 'hash' | 'custom') => {
+    navigator.clipboard.writeText(text);
+    if (type === 'hash') {
+      setCopiedHash(true);
+      setTimeout(() => setCopiedHash(false), 2000);
+    } else {
+      setCopiedCustom(true);
+      setTimeout(() => setCopiedCustom(false), 2000);
+    }
+  };
   
   // Format budget to PHP if it's a number
   const formattedBudget = typeof estBudget === 'number' 
@@ -68,13 +85,27 @@ export default function AcquisitionCard({
         {contractHash && (
           <div className="flex flex-col gap-1">
             <span className="text-[11px] uppercase tracking-widest text-text-muted">Contract Hash</span>
-            <span className="text-primary font-medium">{contractHash}</span>
+            <button 
+              onClick={() => handleCopy(contractHash, 'hash')}
+              className="flex items-center gap-2 text-primary font-medium hover:text-primary/80 transition-colors"
+              title="Click to copy"
+            >
+              <span className="truncate max-w-[200px]">{contractHash}</span>
+              {copiedHash ? <CheckIcon className="w-4 h-4 text-green-500" /> : <DocumentDuplicateIcon className="w-4 h-4" />}
+            </button>
           </div>
         )}
         {customMetaLabel && customMetaValue && (
           <div className="flex flex-col gap-1">
             <span className="text-[11px] uppercase tracking-widest text-text-muted">{customMetaLabel}</span>
-            <span className="text-primary font-medium">{customMetaValue}</span>
+            <button 
+              onClick={() => handleCopy(customMetaValue, 'custom')}
+              className="flex items-center gap-2 text-primary font-medium hover:text-primary/80 transition-colors"
+              title="Click to copy"
+            >
+              <span className="truncate max-w-[200px]">{customMetaValue}</span>
+              {copiedCustom ? <CheckIcon className="w-4 h-4 text-green-500" /> : <DocumentDuplicateIcon className="w-4 h-4" />}
+            </button>
           </div>
         )}
       </div>
