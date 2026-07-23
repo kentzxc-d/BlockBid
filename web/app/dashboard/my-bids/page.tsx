@@ -30,8 +30,8 @@ export default function MyBidsPage() {
         if (data.bids) {
           const mappedBids = data.bids.map((b: any) => ({
             id: b.id,
-            procurementTitle: b.projects?.title || "Unknown Project",
-            procurementId: b.project_id,
+            acquisitionTitle: b.projects?.title || "Unknown Project",
+            acquisitionId: b.project_id,
             submittedAt: new Date(b.created_at).toLocaleDateString(),
             amount: "N/A", // In a real app, calculate from bid_values
             status: b.status.toUpperCase(),
@@ -50,7 +50,7 @@ export default function MyBidsPage() {
 
   const filteredBids = useMemo(() => {
     return bids.filter(bid => {
-      const matchesSearch = bid.procurementTitle.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      const matchesSearch = bid.acquisitionTitle.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             bid.id.toLowerCase().includes(searchQuery.toLowerCase());
       
       let matchesTab = true;
@@ -152,10 +152,10 @@ export default function MyBidsPage() {
                 <div className="flex flex-wrap items-center gap-3 mb-1">
                   <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{bid.id}</span>
                   <span className="text-[10px] font-mono font-bold text-text-muted">|</span>
-                  <span className="text-[10px] font-mono font-bold text-primary tracking-widest uppercase">{bid.procurementId}</span>
+                  <span className="text-[10px] font-mono font-bold text-primary tracking-widest uppercase">{bid.acquisitionId}</span>
                 </div>
                 <h3 className="font-bold text-text-main text-lg font-heading group-hover:text-primary transition-colors tracking-tight">
-                  {bid.procurementTitle}
+                  {bid.acquisitionTitle}
                 </h3>
                 <div className="flex flex-wrap items-center gap-4 mt-2 font-mono text-xs tracking-widest uppercase">
                   <span className="text-text-muted">
@@ -177,7 +177,7 @@ export default function MyBidsPage() {
               <div className="flex flex-col gap-2 w-full md:w-auto">
                 {bid.status === "WON" && (
                   <Link 
-                    href={`/dashboard/procurements/${bid.procurementId}/workspace`}
+                    href={`/dashboard/acquisitions/${bid.acquisitionId}/workspace`}
                     className="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 border border-transparent text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-green-700 transition-colors whitespace-nowrap"
                   >
                     WORKSPACE
@@ -215,9 +215,9 @@ export default function MyBidsPage() {
             
             <div className="p-6">
               <div className="bg-surface p-4 rounded-md border border-border mb-6 hover:border-text-main transition-colors">
-                <p className="text-[10px] font-mono font-bold text-text-muted mb-2 uppercase tracking-widest">TARGET_PROCUREMENT</p>
-                <p className="font-heading font-bold text-text-main text-lg leading-tight uppercase">{viewingBid.procurementTitle}</p>
-                <p className="text-[10px] font-mono font-bold text-primary mt-2 tracking-widest uppercase">{viewingBid.procurementId}</p>
+                <p className="text-[10px] font-mono font-bold text-text-muted mb-2 uppercase tracking-widest">TARGET_ACQUISITION</p>
+                <p className="font-heading font-bold text-text-main text-lg leading-tight uppercase">{viewingBid.acquisitionTitle}</p>
+                <p className="text-[10px] font-mono font-bold text-primary mt-2 tracking-widest uppercase">{viewingBid.acquisitionId}</p>
               </div>
 
               <div className="space-y-4 font-mono text-xs tracking-widest uppercase">
@@ -254,3 +254,4 @@ export default function MyBidsPage() {
     </div>
   );
 }
+

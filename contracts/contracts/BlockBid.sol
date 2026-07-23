@@ -1,78 +1,68 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BlockBid is Ownable {
-    IERC20 public blockBidToken;
-    uint256 public bidDepositAmount;
-
-    // Events for the Transparency Dashboard
-    event BidCommitted(string projectId, address indexed supplier, string bidHash, uint256 timestamp);
-    event AwardFinalized(string projectId, address indexed supplier, string winningBidHash, uint256 timestamp);
-    event DepositRefunded(string projectId, address indexed supplier, uint256 amount);
+    // Events for the Transparency Dashboard and Vouchers
+    event BidCommitted(string acquisitionId, address indexed supplier, string bidHash, uint256 timestamp);
+    event AwardFinalized(string acquisitionId, address indexed supplier, string winningBidHash, uint256 timestamp);
+    event PaymentGuaranteeIssued(string acquisitionId, address indexed supplier, uint256 timestamp);
 
     // Mappings
-    // projectId => (supplier => bidHash)
-    mapping(string => mapping(address => string)) public projectBids;
-    // projectId => (supplier => hasDeposited)
-    mapping(string => mapping(address => bool)) public hasDeposited;
-    // projectId => winningSupplier
-    mapping(string => address) public projectWinners;
-    // projectId => list of suppliers who bid
-    mapping(string => address[]) public projectBiddersList;
+    // acquisitionId => (supplier => bidHash)
+    mapping(string => mapping(address => string)) public acquisitionBids;
+    // acquisitionId => (supplier => hasBid)
+    mapping(string => mapping(address => bool)) public hasBid;
+    // acquisitionId => winningSupplier
+    mapping(string => address) public acquisitionWinners;
+    // acquisitionId => list of suppliers who bid
+    mapping(string => address[]) public acquisitionBiddersList;
+    // acquisitionId => delivery confirmed (voucher issued)
+    mapping(string => bool) public deliveryConfirmed;
 
-    constructor(address _tokenAddress, uint256 _bidDepositAmount) Ownable(msg.sender) {
-        blockBidToken = IERC20(_tokenAddress);
-        bidDepositAmount = _bidDepositAmount;
-    }
-
-    function setBidDepositAmount(uint256 _amount) public onlyOwner {
-        bidDepositAmount = _amount;
-    }
+    // We assume the ICT Head is the owner of this contract for the pilot test.
+    constructor() Ownable(msg.sender) {}
 
     /**
-     * @dev Commit a bid hash for a specific project. Requires transferring the bid deposit.
+     * @dev Supplier commits a bid hash for a specific acquisition.
      */
-    function commitBid(string memory _projectId, string memory _bidHash) public {
-        require(bytes(_projectId).length > 0, "Project ID cannot be empty");
+    function commitBid(string memory _acquisitionId, string memory _bidHash) public {
+        require(bytes(_acquisitionId).length > 0, "Acquisition ID cannot be empty");
         require(bytes(_bidHash).length > 0, "Bid hash cannot be empty");
-        require(projectWinners[_projectId] == address(0), "Project already awarded");
-        require(!hasDeposited[_projectId][msg.sender], "Already bid on this project");
+        require(acquisitionWinners[_acquisitionId] == address(0), "Acquisition already awarded");
+        require(!hasBid[_acquisitionId][msg.sender], "Already bid on this acquisition");
 
-        // Transfer deposit from bidder to this contract
-        require(blockBidToken.transferFrom(msg.sender, address(this), bidDepositAmount), "Deposit transfer failed");
-        
-        hasDeposited[_projectId][msg.sender] = true;
-        projectBids[_projectId][msg.sender] = _bidHash;
-        projectBiddersList[_projectId].push(msg.sender);
+        hasBid[_acquisitionId][msg.sender] = true;
+        acquisitionBids[_acquisitionId][msg.sender] = _bidHash;
+        acquisitionBiddersList[_acquisitionId].push(msg.sender);
 
-        emit BidCommitted(_projectId, msg.sender, _bidHash, block.timestamp);
+        emit BidCommitted(_acquisitionId, msg.sender, _bidHash, block.timestamp);
     }
 
     /**
-     * @dev Finalize the award. The winner's deposit is kept as fee. Losers get refunded.
+     * @dev ICT Head finalizes the award, selecting the winning supplier.
      */
-    function finalizeAward(string memory _projectId, address _supplier, string memory _winningBidHash) public onlyOwner {
-        require(bytes(_projectId).length > 0, "Project ID cannot be empty");
-        require(projectWinners[_projectId] == address(0), "Project already awarded");
-        require(hasDeposited[_projectId][_supplier], "Winner did not submit a bid");
+    function finalizeAward(string memory _acquisitionId, address _supplier, string memory _winningBidHash) public onlyOwner {
+        require(bytes(_acquisitionId).length > 0, "Acquisition ID cannot be empty");
+        require(acquisitionWinners[_acquisitionId] == address(0), "Acquisition already awarded");
+        require(hasBid[_acquisitionId][_supplier], "Winner did not submit a bid");
 
-        projectWinners[_projectId] = _supplier;
+        acquisitionWinners[_acquisitionId] = _supplier;
 
-        // Keep the winner's deposit as platform fee (send to owner/admin)
-        blockBidToken.transfer(owner(), bidDepositAmount);
+        emit AwardFinalized(_acquisitionId, _supplier, _winningBidHash, block.timestamp);
+    }
 
-        // Refund all other bidders
-        address[] memory bidders = projectBiddersList[_projectId];
-        for (uint i = 0; i < bidders.length; i++) {
-            if (bidders[i] != _supplier) {
-                blockBidToken.transfer(bidders[i], bidDepositAmount);
-                emit DepositRefunded(_projectId, bidders[i], bidDepositAmount);
-            }
-        }
+    /**
+     * @dev ICT Head confirms delivery. This acts as the Digital Payment Guarantee Voucher.
+     */
+    function confirmDelivery(string memory _acquisitionId) public onlyOwner {
+        require(acquisitionWinners[_acquisitionId] != address(0), "Acquisition not awarded yet");
+        require(!deliveryConfirmed[_acquisitionId], "Delivery already confirmed");
 
-        emit AwardFinalized(_projectId, _supplier, _winningBidHash, block.timestamp);
+        deliveryConfirmed[_acquisitionId] = true;
+        address winner = acquisitionWinners[_acquisitionId];
+
+        emit PaymentGuaranteeIssued(_acquisitionId, winner, block.timestamp);
     }
 }

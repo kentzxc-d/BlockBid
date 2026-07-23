@@ -62,7 +62,7 @@ export default function UserDashboard() {
       }
 
       // Fetch open solicitations
-      fetch('/api/procurements?filter=open')
+      fetch('/api/acquisitions?filter=open')
         .then(res => res.json())
         .then(data => {
           if (data.projects) setActiveSolicitations(data.projects.slice(0, 3));
@@ -170,7 +170,7 @@ export default function UserDashboard() {
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between border-b border-border pb-4">
             <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">[ ACTIVE_SOLICITATIONS ]</h2>
-            <Link href="/dashboard/procurements" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main flex items-center gap-2 transition-colors uppercase">
+            <Link href="/dashboard/acquisitions" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main flex items-center gap-2 transition-colors uppercase">
               View All <ArrowRightIcon className="w-4 h-4 stroke-2" />
             </Link>
           </div>
@@ -200,7 +200,7 @@ export default function UserDashboard() {
                   </p>
                   {solicitation.requestor_id === user?.id ? (
                     <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
-                      YOUR_PROCUREMENT
+                      YOUR_ACQUISITION
                     </span>
                   ) : allMyBidProjectIds.includes(solicitation.id) ? (
                     <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
@@ -208,7 +208,7 @@ export default function UserDashboard() {
                     </span>
                   ) : (
                     <Link 
-                      href={`/dashboard/procurements/${solicitation.id}/bid`}
+                      href={`/dashboard/acquisitions/${solicitation.id}/bid`}
                       className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
                     >
                       SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
@@ -275,3 +275,4 @@ export default function UserDashboard() {
     </RoleGuard>
   );
 }
+

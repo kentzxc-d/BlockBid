@@ -48,7 +48,7 @@ export async function GET(
     });
 
   } catch (err: any) {
-    console.error("GET Procurement API Error:", err);
-    return NextResponse.json({ error: err.message || "Failed to fetch procurement" }, { status: 500 });
+    console.error("GET Acquisition API Error:", err);
+    return NextResponse.json({ error: err.message || "Failed to fetch acquisition" }, { status: 500 });
   }
 }

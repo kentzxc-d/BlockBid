@@ -13,7 +13,7 @@ import WalletBanner from "@/components/WalletBanner";
 export default function AgencyDashboard() {
   const { ready, user } = usePrivy();
   const { profile } = useProfile();
-  const [procurements, setProcurements] = useState<any[]>([]);
+  const [acquisitions, setAcquisitions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [greeting, setGreeting] = useState("WELCOME BACK");
   const [currentTime, setCurrentTime] = useState("");
@@ -42,7 +42,7 @@ export default function AgencyDashboard() {
 
   useEffect(() => {
     if (!user) return;
-    fetch(`/api/procurements?requestor_id=${user.id}`)
+    fetch(`/api/acquisitions?requestor_id=${user.id}`)
       .then(res => res.json())
       .then(data => {
         if (data.projects) {
@@ -56,7 +56,7 @@ export default function AgencyDashboard() {
                          (p.status === 'awarded' ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" : "text-amber-500 bg-amber-500/10 border-amber-500/20"),
             icon: p.status === 'open' ? ClockIcon : (p.status === 'awarded' ? CheckBadgeIcon : FolderOpenIcon)
           }));
-          setProcurements(mappedProjects.slice(0, 3)); // Show top 3 recent
+          setAcquisitions(mappedProjects.slice(0, 3)); // Show top 3 recent
         }
       })
       .catch(console.error)
@@ -78,7 +78,7 @@ export default function AgencyDashboard() {
           {/* Greeting Card */}
           <WalletBanner />
           <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ PROCURING_AGENT_WORKSPACE ]</h1>
-          <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Procurement_&_Evaluation_Hub</p>
+          <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Acquisition_&_Evaluation_Hub</p>
         </div>
 
         {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
@@ -101,28 +101,28 @@ export default function AgencyDashboard() {
           </div>
         )}
 
-        {procurements.length === 0 ? (
+        {acquisitions.length === 0 ? (
           <div className="bg-surface rounded-none p-8 border border-border hover:border-text-main transition-colors text-center py-20">
             <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase mb-4">No Active Projects</h2>
-            <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase mb-8">You have not posted any procurements yet.</p>
+            <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase mb-8">You have not posted any acquisitions yet.</p>
             
             <Link 
               href="/dashboard/agency/new"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-background hover:bg-primary-hover font-mono text-sm font-bold uppercase tracking-widest transition-colors rounded-none shadow-md shadow-primary/20 border border-primary hover:-translate-y-0.5"
             >
-              [ POST_NEW_PROCUREMENT ] <ArrowRightIcon className="w-5 h-5 stroke-2" />
+              [ POST_NEW_ACQUISITION ] <ArrowRightIcon className="w-5 h-5 stroke-2" />
             </Link>
           </div>
         ) : (
           <div className="bg-surface border border-border rounded-md overflow-hidden">
             <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center justify-between">
               <h3 className="text-xs font-mono font-bold tracking-widest text-text-main uppercase">[ RECENT_SOLICITATIONS ]</h3>
-              <Link href="/dashboard/my-procurements" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-1 uppercase">
+              <Link href="/dashboard/my-acquisitions" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-1 uppercase">
                 VIEW_ALL <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
               </Link>
             </div>
             <div className="divide-y divide-border">
-              {procurements.map((req) => (
+              {acquisitions.map((req) => (
                 <div key={req.id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-6 group">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
@@ -147,13 +147,13 @@ export default function AgencyDashboard() {
                     {req.status === 'AWARDED' ? (
                       <>
                         <Link 
-                          href={`/dashboard/procurements/${req.id}/workspace`} 
+                          href={`/dashboard/acquisitions/${req.id}/workspace`} 
                           className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 transition-colors whitespace-nowrap shadow-sm w-full"
                         >
                           WORKSPACE
                         </Link>
                         <Link 
-                          href={`/dashboard/procurements/${req.id}/evaluate`} 
+                          href={`/dashboard/acquisitions/${req.id}/evaluate`} 
                           className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
                         >
                           <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_WINNER
@@ -161,7 +161,7 @@ export default function AgencyDashboard() {
                       </>
                     ) : (
                       <Link 
-                        href={`/dashboard/procurements/${req.id}/evaluate`} 
+                        href={`/dashboard/acquisitions/${req.id}/evaluate`} 
                         className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
                       >
                         VIEW_BIDS <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
@@ -177,3 +177,4 @@ export default function AgencyDashboard() {
     </RoleGuard>
   );
 }
+

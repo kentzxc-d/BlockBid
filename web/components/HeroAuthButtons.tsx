@@ -18,9 +18,9 @@ export default function HeroAuthButtons() {
   const handleBrowse = () => {
     if (!ready) return;
     if (authenticated) {
-      router.push("/dashboard/procurements");
+      router.push("/dashboard/acquisitions");
     } else {
-      setTargetRoute("/dashboard/procurements");
+      setTargetRoute("/dashboard/acquisitions");
       login();
     }
   };
@@ -54,3 +54,4 @@ export default function HeroAuthButtons() {
     </div>
   );
 }
+

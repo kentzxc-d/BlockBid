@@ -38,7 +38,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
 
   const fetchWorkspace = async () => {
     try {
-      const res = await fetch(`/api/procurements/${params.id}/workspace`);
+      const res = await fetch(`/api/acquisitions/${params.id}/workspace`);
       const data = await res.json();
       if (data.success) {
         setProject(data.project);
@@ -72,7 +72,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
     setInput("");
 
     try {
-      const res = await fetch(`/api/procurements/${params.id}/workspace`, {
+      const res = await fetch(`/api/acquisitions/${params.id}/workspace`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sender_id: profile.id, content })
@@ -124,7 +124,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
       {/* Header */}
       <div className="mb-6 flex-shrink-0">
         <Link 
-          href={amIRequestor ? "/dashboard/my-procurements" : "/dashboard/supplier"} 
+          href={amIRequestor ? "/dashboard/my-acquisitions" : "/dashboard/supplier"} 
           className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-4"
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_DASHBOARD

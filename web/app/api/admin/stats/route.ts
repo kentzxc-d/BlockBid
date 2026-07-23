@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     // Fetch counts in parallel for performance
     const [
       { count: usersCount },
-      { count: procurementsCount },
+      { count: acquisitionsCount },
       { count: bidsCount },
       { count: wonBidsCount }
     ] = await Promise.all([
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
       success: true,
       stats: {
         totalUsers: usersCount || 0,
-        totalProcurements: procurementsCount || 0,
+        totalAcquisitions: acquisitionsCount || 0,
         totalBids: bidsCount || 0,
         totalWonContracts: wonBidsCount || 0
       }
@@ -55,3 +55,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: err.message || "Failed to fetch admin stats" }, { status: 500 });
   }
 }
+

@@ -47,7 +47,7 @@ export async function GET(request: Request) {
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
 
-    const dataMap: Record<string, { date: string, users: number, procurements: number, bids: number, timestamp: number }> = {};
+    const dataMap: Record<string, { date: string, users: number, acquisitions: number, bids: number, timestamp: number }> = {};
 
     // Initialize map for the last 30 days to ensure continuous line chart
     for (let i = 29; i >= 0; i--) {
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
       d.setDate(d.getDate() - i);
       const formatted = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       // Reset hours to 0 to compare days properly if needed, but we are mapping by string 'Jul 14'
-      dataMap[formatted] = { date: formatted, users: 0, procurements: 0, bids: 0, timestamp: d.getTime() };
+      dataMap[formatted] = { date: formatted, users: 0, acquisitions: 0, bids: 0, timestamp: d.getTime() };
     }
 
     profilesRes.data.forEach(p => {
@@ -65,7 +65,7 @@ export async function GET(request: Request) {
 
     projectsRes.data.forEach(p => {
       const d = formatDate(p.created_at);
-      if (dataMap[d]) dataMap[d].procurements++;
+      if (dataMap[d]) dataMap[d].acquisitions++;
     });
 
     bidsRes.data.forEach(b => {
@@ -81,3 +81,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: err.message || "Failed to fetch analytics" }, { status: 500 });
   }
 }
+

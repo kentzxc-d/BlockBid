@@ -55,7 +55,7 @@ export async function POST(
         type: 'award',
         title: '[ BID_AWARDED ]',
         message: `Congratulations! Your bid for "${project_title || 'a project'}" was selected as the winner.`,
-        link: `/dashboard/procurements/${projectId}/workspace`
+        link: `/dashboard/acquisitions/${projectId}/workspace`
       });
       
     if (notifError) {

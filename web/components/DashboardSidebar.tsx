@@ -53,10 +53,10 @@ export default function DashboardSidebar() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  const handlePostProcurementClick = (e: React.MouseEvent) => {
+  const handlePostAcquisitionClick = (e: React.MouseEvent) => {
     if (profile?.role === "supplier") {
       e.preventDefault();
-      setUpgradeMessage("Want to post procurement projects? Upgrade your network role to Dual/Hybrid in Settings.");
+      setUpgradeMessage("Want to post acquisition projects? Upgrade your network role to Dual/Hybrid in Settings.");
       setUpgradeModalOpen(true);
     }
   };
@@ -71,7 +71,7 @@ export default function DashboardSidebar() {
 
   // Base items everyone sees
   const navItems: { name: string; href: string; icon: React.ElementType; onClick?: React.MouseEventHandler<HTMLAnchorElement> }[] = [
-    { name: "Active Solicitations", href: "/dashboard/procurements", icon: DocumentTextIcon },
+    { name: "Active Solicitations", href: "/dashboard/acquisitions", icon: DocumentTextIcon },
   ];
 
   // If in supplier mode
@@ -81,14 +81,14 @@ export default function DashboardSidebar() {
     
     // Add the upsell for pure suppliers
     if (profile?.role === "supplier") {
-      navItems.push({ name: "My Procurements", href: "#", icon: FolderOpenIcon, onClick: handlePostProcurementClick });
+      navItems.push({ name: "My Acquisitions", href: "#", icon: FolderOpenIcon, onClick: handlePostAcquisitionClick });
     }
   }
 
   // If in agency mode
   if (activeMode === "agency") {
     navItems.unshift({ name: "Overview", href: "/dashboard/agency", icon: HomeIcon, onClick: undefined });
-    navItems.push({ name: "My Procurements", href: "/dashboard/my-procurements", icon: FolderOpenIcon, onClick: undefined });
+    navItems.push({ name: "My Acquisitions", href: "/dashboard/my-acquisitions", icon: FolderOpenIcon, onClick: undefined });
     
     // Add the upsell for pure requestors
     if (profile?.role === "requestor") {
@@ -162,7 +162,7 @@ export default function DashboardSidebar() {
               <div className="mb-8">
                 <Link
                   href={activeMode === "agency" ? "/dashboard/agency/new" : "#"}
-                  onClick={activeMode === "supplier" ? handlePostProcurementClick : undefined}
+                  onClick={activeMode === "supplier" ? handlePostAcquisitionClick : undefined}
                   className={`flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md ${
                     activeMode === "agency" 
                       ? "bg-primary text-white hover:bg-primary-hover shadow-primary/20" 
@@ -257,3 +257,4 @@ export default function DashboardSidebar() {
     </>
   );
 }
+

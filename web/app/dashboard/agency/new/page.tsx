@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
@@ -18,13 +18,16 @@ const CRITERIA_COLORS = [
   "bg-pink-500", "bg-cyan-500", "bg-rose-500", "bg-indigo-500"
 ];
 
-export default function CreateProcurementPage() {
+export default function CreateAcquisitionPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
   const [deadline, setDeadline] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [suggestions, setSuggestions] = useState<{item_name: string, suggested_price: number}[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  
   const router = useRouter();
   const { user } = usePrivy();
   
@@ -38,6 +41,38 @@ export default function CreateProcurementPage() {
 
   const totalWeight = criteria.reduce((sum, item) => sum + item.weight, 0);
   const isValid = totalWeight === 100 && title.trim().length > 0 && deadline.trim().length > 0;
+
+  useEffect(() => {
+    if (!title.trim() || title.length < 3) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/price-reference?q=${encodeURIComponent(title)}`);
+        const data = await res.json();
+        if (data.prices && data.prices.length > 0) {
+          setSuggestions(data.prices);
+          setShowSuggestions(true);
+        } else {
+          setSuggestions([]);
+          setShowSuggestions(false);
+        }
+      } catch (err) {
+        console.error("Failed to fetch price references", err);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [title]);
+
+  const handleSelectSuggestion = (suggestion: {item_name: string, suggested_price: number}) => {
+    setTitle(suggestion.item_name);
+    setBudget(suggestion.suggested_price.toString());
+    setShowSuggestions(false);
+  };
 
   const handleAddCriteria = () => {
     setCriteria([...criteria, { id: Date.now(), name: "", weight: 0 }]);
@@ -74,7 +109,7 @@ export default function CreateProcurementPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ai/enhance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: description, type: "procurement" })
+        body: JSON.stringify({ text: description, type: "acquisition" })
       });
       const data = await res.json();
       if (data.enhancedText) {
@@ -105,7 +140,7 @@ export default function CreateProcurementPage() {
         criteria: criteria.map(c => ({ name: c.name, weight: c.weight }))
       };
 
-      const res = await fetch("/api/procurements", {
+      const res = await fetch("/api/acquisitions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -120,7 +155,7 @@ export default function CreateProcurementPage() {
       router.push("/dashboard/agency");
     } catch (err) {
       console.error(err);
-      alert("Error publishing procurement. Check console.");
+      alert("Error publishing acquisition. Check console.");
     } finally {
       setIsSubmitting(false);
     }
@@ -136,7 +171,7 @@ export default function CreateProcurementPage() {
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_WORKSPACE
         </Link>
-        <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ POST_PROCUREMENT ]</h1>
+        <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">[ POST_ACQUISITION ]</h1>
         <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">
           Define_Requirements_&_Evaluation_Matrix
         </p>
@@ -151,16 +186,42 @@ export default function CreateProcurementPage() {
           </h2>
           
           <div className="space-y-6">
-            {/* Title */}
-            <div>
-              <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Item/Project Title</label>
+            {/* Title & Price Reference */}
+            <div className="relative">
+              <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Item/Project Title (Auto-suggests SRP)</label>
               <input 
                 type="text" 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. PROCUREMENT OF 500 DESKTOP COMPUTERS"
+                onFocus={() => {
+                  if (suggestions.length > 0) setShowSuggestions(true);
+                }}
+                onBlur={() => {
+                  // Delay hiding to allow click event on suggestion to fire
+                  setTimeout(() => setShowSuggestions(false), 200);
+                }}
+                placeholder="e.g. LAPTOP COMPUTER"
                 className="w-full px-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider placeholder:text-text-muted/50 uppercase"
               />
+              
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-surface border border-border shadow-lg">
+                  <div className="px-4 py-2 bg-background/50 border-b border-border">
+                    <span className="text-[10px] font-mono font-bold text-primary tracking-widest uppercase">Historical SRP Found:</span>
+                  </div>
+                  {suggestions.map((item, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSelectSuggestion(item)}
+                      className="w-full text-left px-4 py-3 hover:bg-background/80 transition-colors border-b border-border/50 last:border-0 flex justify-between items-center"
+                    >
+                      <span className="text-sm font-mono font-bold text-text-main uppercase">{item.item_name}</span>
+                      <span className="text-xs font-mono text-text-muted">₱{item.suggested_price.toLocaleString()}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Description */}
@@ -352,7 +413,7 @@ export default function CreateProcurementPage() {
             ) : (
               <>
                 <CheckCircleIcon className="w-5 h-5 stroke-2" />
-                [ PUBLISH_PROCUREMENT_REQUEST ]
+                [ PUBLISH_ACQUISITION_REQUEST ]
               </>
             )}
           </button>
@@ -369,3 +430,4 @@ export default function CreateProcurementPage() {
     </div>
   );
 }
+

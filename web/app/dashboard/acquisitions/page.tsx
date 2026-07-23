@@ -23,7 +23,7 @@ export default function ActiveSolicitationsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/procurements?filter=open')
+    fetch('/api/acquisitions?filter=open')
       .then(res => res.json())
       .then(data => {
         if (data.projects) {
@@ -63,7 +63,7 @@ export default function ActiveSolicitationsPage() {
             [ ACTIVE_SOLICITATIONS ]
           </h1>
           <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
-            Browse and bid on open item procurements across all sectors.
+            Browse and bid on open item acquisitions across all sectors.
           </p>
         </div>
         
@@ -144,14 +144,14 @@ export default function ActiveSolicitationsPage() {
                 </p>
                 {solicitation.requestor_id === user?.id ? (
                   <span className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-background border border-border text-text-muted font-mono text-xs font-bold tracking-widest rounded-md uppercase cursor-not-allowed w-full sm:w-auto">
-                    YOUR_PROCUREMENT
+                    YOUR_ACQUISITION
                   </span>
                 ) : allMyBidProjectIds.includes(solicitation.id) ? (
                   <span className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-background border border-border text-text-muted font-mono text-xs font-bold tracking-widest rounded-md uppercase cursor-not-allowed w-full sm:w-auto">
                     ALREADY_BID
                   </span>
                 ) : (
-                  <Link href={`/dashboard/procurements/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase w-full sm:w-auto">
+                  <Link href={`/dashboard/acquisitions/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase w-full sm:w-auto">
                     SUBMIT_BID <ArrowRightIcon className="w-4 h-4 stroke-2" />
                   </Link>
                 )}
@@ -164,3 +164,4 @@ export default function ActiveSolicitationsPage() {
     </div>
   );
 }
+

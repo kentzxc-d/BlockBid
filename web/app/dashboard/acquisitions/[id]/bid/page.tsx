@@ -35,7 +35,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const { wallets } = useWallets();
 
   useEffect(() => {
-    fetch(`/api/procurements/${params.id}`)
+    fetch(`/api/acquisitions/${params.id}`)
       .then(res => res.json())
       .then(data => {
         if (data.project) {
@@ -159,7 +159,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     return (
       <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
         <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">
-          [ LOADING_PROCUREMENT_DATA ]
+          [ LOADING_ACQUISITION_DATA ]
         </div>
       </div>
     );
@@ -171,7 +171,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         <div className="font-mono text-sm font-bold tracking-widest text-danger uppercase mb-4">
           [ ERROR: {error} ]
         </div>
-        <Link href="/dashboard/procurements" className="text-primary hover:underline font-mono text-xs uppercase tracking-widest">
+        <Link href="/dashboard/acquisitions" className="text-primary hover:underline font-mono text-xs uppercase tracking-widest">
           Return to Solicitations
         </Link>
       </div>
@@ -183,7 +183,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       {/* Header */}
       <div className="mb-8 border-b border-border pb-6">
         <Link 
-          href="/dashboard/procurements" 
+          href="/dashboard/acquisitions" 
           className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-4"
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_SOLICITATIONS
@@ -279,7 +279,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
               </div>
               <h3 className="font-heading font-bold text-2xl text-text-main mb-2 uppercase tracking-tight">TRANSACTION_SUCCESS</h3>
               <p className="font-mono text-xs text-text-muted mb-8 leading-relaxed uppercase tracking-widest">
-                Payload formatted and transmitted to procurement ledger.
+                Payload formatted and transmitted to acquisition ledger.
               </p>
               
               <Link 

@@ -96,7 +96,7 @@ export default function OnboardingPage() {
             BLOCKBID
           </h1>
           <p className="text-text-inverse-muted font-medium text-sm max-w-xs">
-            Procurement, cryptographically sealed. Authenticate your identity to proceed.
+            Acquisition, cryptographically sealed. Authenticate your identity to proceed.
           </p>
         </div>
 
@@ -174,7 +174,7 @@ export default function OnboardingPage() {
                 </div>
                 <div>
                   <h3 className="font-heading font-bold text-lg text-text-main mb-1">Dual / Undefined</h3>
-                  <p className="text-sm text-text-muted font-medium">I require access to both bidding and procurement capabilities.</p>
+                  <p className="text-sm text-text-muted font-medium">I require access to both bidding and acquisition capabilities.</p>
                 </div>
               </button>
             </div>
@@ -278,3 +278,4 @@ export default function OnboardingPage() {
     </div>
   );
 }
+

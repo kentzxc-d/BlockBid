@@ -58,13 +58,13 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     const fetchData = async () => {
       try {
         // 1. Fetch Project and Criteria
-        const projRes = await fetch(`/api/procurements/${params.id}`);
+        const projRes = await fetch(`/api/acquisitions/${params.id}`);
         if (!projRes.ok) throw new Error("Failed to fetch project details");
         const projData = await projRes.json();
         setProject(projData.project);
 
         // 2. Fetch Bids
-        const bidsRes = await fetch(`/api/procurements/${params.id}/bids`);
+        const bidsRes = await fetch(`/api/acquisitions/${params.id}/bids`);
         if (!bidsRes.ok) throw new Error("Failed to fetch bids");
         const bidsData = await bidsRes.json();
         setBids(bidsData.bids);
@@ -111,7 +111,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
             body: JSON.stringify({
               criteria: projData.project.criteria.map((c:any) => ({ name: c.name, weight: c.weight_percentage })),
               bids: unevaluatedBids,
-              procurementDetails: {
+              acquisitionDetails: {
                 title: projData.project.title,
                 description: projData.project.description,
                 budget: "Not specified"
@@ -203,7 +203,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     
     // Update Database and trigger notification
     try {
-      await fetch(`/api/procurements/${params.id}/award`, {
+      await fetch(`/api/acquisitions/${params.id}/award`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -244,7 +244,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     return (
       <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
         <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">
-          [ LOADING_PROCUREMENT_LEDGER ]
+          [ LOADING_ACQUISITION_LEDGER ]
         </div>
       </div>
     );
@@ -256,8 +256,8 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
         <div className="font-mono text-sm font-bold tracking-widest text-danger uppercase mb-4">
           [ ERROR: {error} ]
         </div>
-        <Link href="/dashboard/my-procurements" className="text-primary hover:underline font-mono text-xs uppercase tracking-widest">
-          Return to Procurements
+        <Link href="/dashboard/my-acquisitions" className="text-primary hover:underline font-mono text-xs uppercase tracking-widest">
+          Return to Acquisitions
         </Link>
       </div>
     );
@@ -268,10 +268,10 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       {/* Header */}
       <div className="mb-8">
         <Link 
-          href="/dashboard/my-procurements" 
+          href="/dashboard/my-acquisitions" 
           className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-8"
         >
-          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_MY_PROCUREMENTS
+          <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_MY_ACQUISITIONS
         </Link>
         <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
           [ EVALUATE_BIDS: <span className="text-primary">{project?.title}</span> ]

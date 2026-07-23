@@ -47,7 +47,7 @@ export default function AdminOverview() {
     }
   }, [adminData]);
 
-  const stats = adminData?.stats || { totalUsers: 0, totalProcurements: 0, totalBids: 0, totalWonContracts: 0 };
+  const stats = adminData?.stats || { totalUsers: 0, totalAcquisitions: 0, totalBids: 0, totalWonContracts: 0 };
   const analytics = adminData?.analytics || [];
 
   const handleAction = async (projectId: string, action: 'approve' | 'reject') => {
@@ -127,7 +127,7 @@ export default function AdminOverview() {
             </div>
           </div>
 
-          {/* Total Procurements */}
+          {/* Total Acquisitions */}
           <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
             <div className="p-3 border border-border bg-gray-50 rounded-md">
               <DocumentTextIcon className="w-8 h-8 text-primary" />
@@ -135,7 +135,7 @@ export default function AdminOverview() {
             <div>
               <h3 className="text-text-muted font-mono text-[10px] font-bold tracking-widest uppercase mb-1">Open RFPs</h3>
               <p className="text-3xl font-heading font-bold text-text-main">
-                {stats?.totalProcurements || 0}
+                {stats?.totalAcquisitions || 0}
               </p>
             </div>
           </div>
@@ -225,14 +225,14 @@ export default function AdminOverview() {
               </div>
             </div>
 
-            {/* Area Chart: Procurements vs Bids */}
+            {/* Area Chart: Acquisitions vs Bids */}
             <div className="bg-surface rounded-md p-6 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.02)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.05)]">
               <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Platform_Activity ]</h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
-                      <linearGradient id="colorProcurements" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient id="colorAcquisitions" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.5} />
                         <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                       </linearGradient>
@@ -262,9 +262,9 @@ export default function AdminOverview() {
                     <Legend wrapperStyle={{ paddingTop: '20px', fontFamily: 'monospace', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }} />
                     <Area
                       type="monotone"
-                      dataKey="procurements"
+                      dataKey="acquisitions"
                       name="RFPs Created"
-                      fill="url(#colorProcurements)"
+                      fill="url(#colorAcquisitions)"
                       stroke="#8b5cf6"
                       strokeWidth={3}
                       fillOpacity={1}
@@ -349,3 +349,4 @@ export default function AdminOverview() {
     </RoleGuard>
   );
 }
+

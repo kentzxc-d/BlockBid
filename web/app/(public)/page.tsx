@@ -8,7 +8,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={`container ${styles.heroContainer}`}>
-          <h1 className={styles.heroTitle}>Procurement,<br/>cryptographically sealed.</h1>
+          <h1 className={styles.heroTitle}>Acquisition,<br/>cryptographically sealed.</h1>
           <p className={styles.heroSubtitle}>
             BlockBid is an immutable ledger for government bidding. 
             Ensuring fairness, anonymity, and auditable evaluation for every project on the Base network.
@@ -23,9 +23,9 @@ export default function Home() {
           <div className={styles.manifestoList}>
             <div className={styles.manifestoItem}>
               <div className={styles.manifestoLabel}>[ 0x01. ON-CHAIN SECURITY ]</div>
-              <h3>Immutable procurement.</h3>
+              <h3>Immutable acquisition.</h3>
               <p>
-                Every bid is hashed and committed directly to the Polygon network. This immutable ledger guarantees that procurement records cannot be altered or tampered with retroactively.
+                Every bid is hashed and committed directly to the Polygon network. This immutable ledger guarantees that acquisition records cannot be altered or tampered with retroactively.
               </p>
             </div>
 
@@ -41,26 +41,26 @@ export default function Home() {
               <div className={styles.manifestoLabel}>[ 0x03. AUDITABLE REGISTRY ]</div>
               <h3>Absolute transparency.</h3>
               <p>
-                From solicitation to evaluation, the entire procurement lifecycle leaves a verifiable cryptographic trail, eliminating systemic bias and ensuring public accountability.
+                From solicitation to evaluation, the entire acquisition lifecycle leaves a verifiable cryptographic trail, eliminating systemic bias and ensuring public accountability.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Recent Procurements Preview */}
+      {/* Recent Acquisitions Preview */}
       <section className={styles.recentProjectsSection}>
         <div className="container">
           <div className={styles.recentProjectsHeader}>
             <h2>Recent Solicitations</h2>
-            <Link href="/procurements" className="btn btn-outline" style={{ borderRadius: 0, fontWeight: 600 }}>View Registry</Link>
+            <Link href="/portal" className="btn btn-outline" style={{ borderRadius: 0, fontWeight: 600 }}>View Transparency Portal</Link>
           </div>
           
           <div style={{ display: 'grid', gap: '24px' }}>
-            {/* Mock Procurement 1 */}
+            {/* Mock Acquisition 1 */}
             <div className={styles.projectCard}>
               <div className={styles.projectCardHeader}>
-                <h3 className={styles.projectCardTitle}>Procurement of Medical Supplies (Q3 2026)</h3>
+                <h3 className={styles.projectCardTitle}>Acquisition of Medical Supplies (Q3 2026)</h3>
                 <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: OPEN</span>
               </div>
               <p style={{ color: 'var(--color-text-muted)' }}>
@@ -93,7 +93,7 @@ export default function Home() {
                 <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: OPEN</span>
               </div>
               <p style={{ color: 'var(--color-text-muted)' }}>
-                Procurement of 500 desktop computers and 50 network switches for the public high schools in the district.
+                Acquisition of 500 desktop computers and 50 network switches for the public high schools in the district.
               </p>
               <div className={styles.projectMeta}>
                 <div className={styles.metaItem}>
@@ -120,3 +120,4 @@ export default function Home() {
     </>
   );
 }
+

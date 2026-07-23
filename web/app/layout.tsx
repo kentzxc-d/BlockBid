@@ -4,7 +4,7 @@ import Providers from "./providers";
 
 
 export const metadata: Metadata = {
-  title: "BlockBid | Transparent Government Procurement",
+  title: "BlockBid | Transparent Government Acquisition",
   description: "Secure, bias-free, and transparent government bidding platform powered by Base Sepolia and AI.",
 };
 
@@ -23,3 +23,4 @@ export default function RootLayout({
     </html>
   );
 }
+

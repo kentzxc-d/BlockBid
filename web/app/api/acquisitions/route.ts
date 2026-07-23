@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     });
 
     const prompt = `
-      Evaluate the quality and legitimacy of this new procurement request.
+      Evaluate the quality and legitimacy of this new acquisition request.
       Title: "${title}"
       Description: "${description}"
       Criteria: ${JSON.stringify(criteria)}
@@ -111,8 +111,8 @@ export async function POST(request: Request) {
     }, { status: 201 });
     
   } catch (err: any) {
-    console.error("Procurement API Error:", err);
-    return NextResponse.json({ error: err.message || "Failed to create procurement" }, { status: 500 });
+    console.error("Acquisition API Error:", err);
+    return NextResponse.json({ error: err.message || "Failed to create acquisition" }, { status: 500 });
   }
 }
 
@@ -148,7 +148,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ success: true, projects }, { status: 200 });
   } catch (err: any) {
-    console.error("Procurement API Error:", err);
-    return NextResponse.json({ error: err.message || "Failed to fetch procurements" }, { status: 500 });
+    console.error("Acquisition API Error:", err);
+    return NextResponse.json({ error: err.message || "Failed to fetch acquisitions" }, { status: 500 });
   }
 }
+

@@ -10,11 +10,11 @@ export default function SubmitBidPage() {
   return (
     <div className="container" style={{ padding: '40px 24px', maxWidth: '800px' }}>
       <div style={{ marginBottom: '32px' }}>
-        <Link href="/procurements" style={{ color: 'var(--color-text-muted)', fontSize: '14px', marginBottom: '16px', display: 'inline-block' }}>
-          &larr; Back to Procurements
+        <Link href="/acquisitions" style={{ color: 'var(--color-text-muted)', fontSize: '14px', marginBottom: '16px', display: 'inline-block' }}>
+          &larr; Back to Acquisitions
         </Link>
         <h1>Submit Bid Proposal</h1>
-        <p style={{ color: 'var(--color-text-muted)' }}>You are bidding for: <strong>Procurement of Medical Supplies (Q3 2026)</strong></p>
+        <p style={{ color: 'var(--color-text-muted)' }}>You are bidding for: <strong>Acquisition of Medical Supplies (Q3 2026)</strong></p>
       </div>
 
       <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
