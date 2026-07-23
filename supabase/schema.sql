@@ -4,8 +4,8 @@
   -- 1. Profiles Table (Handles Privy Auth Users)
   create table profiles (
     id text primary key, -- Privy DID (e.g. did:privy:...)
-    role text check (role in ('requestor', 'supplier', 'admin', 'both')) not null,
-    entity_type text check (entity_type in ('individual', 'company', 'institution', 'government', 'ngo')),
+    role text check (role in ('ict_staff', 'ict_head', 'supplier')) not null,
+    entity_type text check (entity_type in ('individual', 'company')),
     nickname text,
     wallet_address text, -- Derived from embedded wallet or Metamask
     verification_status text check (verification_status in ('unverified', 'pending', 'verified', 'rejected')) default 'unverified',
@@ -56,12 +56,31 @@
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
   );
 
+  -- 6. Categories Table
+  create table categories (
+    id uuid default uuid_generate_v4() primary key,
+    name text not null unique,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+  );
+
+  -- 7. Price References Table
+  create table price_references (
+    id uuid default uuid_generate_v4() primary key,
+    category_id uuid references categories(id) not null,
+    item_name text not null,
+    suggested_price numeric(12, 2) not null,
+    last_updated timestamp with time zone default timezone('utc'::text, now()) not null,
+    unique(category_id, item_name)
+  );
+
   -- Set up Row Level Security (RLS)
   alter table profiles enable row level security;
   alter table projects enable row level security;
   alter table project_criteria enable row level security;
   alter table bids enable row level security;
   alter table bid_values enable row level security;
+  alter table categories enable row level security;
+  alter table price_references enable row level security;
 
   -- Basic RLS Policies (Can be refined later)
   
