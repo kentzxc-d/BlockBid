@@ -206,8 +206,9 @@ export default function SettingsPage() {
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none"
+                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
                     required
+                    disabled
                   >
                     <option value="" disabled>Select_Role</option>
                     <option value="requestor">Procuring Agency</option>
@@ -227,6 +228,7 @@ export default function SettingsPage() {
                     <option value="" disabled>Select_Entity</option>
                     <option value="individual">Individual / Freelancer</option>
                     <option value="company">Private Company</option>
+                    <option value="sme">SME (Small/Medium Enterprise)</option>
                     <option value="institution">Academic / Institution</option>
                     <option value="government">Government Agency</option>
                     <option value="ngo">NGO / Non-Profit</option>

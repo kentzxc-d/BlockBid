@@ -38,7 +38,7 @@ export default function LoginButton() {
   return (
     <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
       <button 
-        onClick={login}
+        onClick={() => router.push("/portal")}
         style={{ 
           background: 'transparent', 
           border: 'none', 
@@ -50,14 +50,14 @@ export default function LoginButton() {
           textTransform: 'uppercase'
         }}
       >
-        [ Officer Access ]
+        [ Public Portal ]
       </button>
       <button 
         className="btn btn-primary" 
         onClick={login}
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
       >
-        Supplier Portal
+        Supplier Login
       </button>
     </div>
   );

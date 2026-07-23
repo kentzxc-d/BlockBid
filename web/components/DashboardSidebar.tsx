@@ -27,21 +27,12 @@ export default function DashboardSidebar() {
   const { profile, loadingProfile } = useProfile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  // For hybrid users, this toggle lets them flip their sidebar between agency/supplier mode.
-  // Defaults to whatever role they have, or 'supplier' if they are 'both'.
-  const [activeMode, setActiveMode] = useState<"supplier" | "agency" | "admin">("supplier");
-
-  useEffect(() => {
-    if (ready && profile) {
-      if (profile.role === "requestor") {
-        setActiveMode("agency");
-      } else if (profile.role === "admin") {
-        setActiveMode("admin");
-      } else {
-        setActiveMode("supplier");
-      }
-    }
-  }, [profile, ready]);
+  // Sidebar mode derived directly from profile role.
+  const activeMode = profile?.role === "admin" 
+    ? "admin" 
+    : (profile?.role === "ict_staff" || profile?.role === "ict_head" || profile?.role === "requestor") 
+      ? "agency" 
+      : "supplier";
 
   useEffect(() => {
     const handleToggle = () => setMobileMenuOpen(prev => !prev);
@@ -54,17 +45,17 @@ export default function DashboardSidebar() {
   }, [pathname]);
 
   const handlePostAcquisitionClick = (e: React.MouseEvent) => {
-    if (profile?.role === "supplier") {
+    if (activeMode === "supplier") {
       e.preventDefault();
-      setUpgradeMessage("Want to post acquisition projects? Upgrade your network role to Dual/Hybrid in Settings.");
+      setUpgradeMessage("Only Procuring Entities can post acquisitions.");
       setUpgradeModalOpen(true);
     }
   };
 
   const handleSubmitBidsClick = (e: React.MouseEvent) => {
-    if (profile?.role === "requestor") {
+    if (activeMode === "agency") {
       e.preventDefault();
-      setUpgradeMessage("Want to submit bids? Upgrade your network role to Dual/Hybrid in Settings.");
+      setUpgradeMessage("Procuring Entities cannot submit bids.");
       setUpgradeModalOpen(true);
     }
   };
@@ -78,22 +69,12 @@ export default function DashboardSidebar() {
   if (activeMode === "supplier") {
     navItems.unshift({ name: "Overview", href: "/dashboard/supplier", icon: HomeIcon, onClick: undefined });
     navItems.push({ name: "My Bids", href: "/dashboard/my-bids", icon: ClipboardDocumentCheckIcon, onClick: undefined });
-    
-    // Add the upsell for pure suppliers
-    if (profile?.role === "supplier") {
-      navItems.push({ name: "My Acquisitions", href: "#", icon: FolderOpenIcon, onClick: handlePostAcquisitionClick });
-    }
   }
 
   // If in agency mode
   if (activeMode === "agency") {
     navItems.unshift({ name: "Overview", href: "/dashboard/agency", icon: HomeIcon, onClick: undefined });
     navItems.push({ name: "My Acquisitions", href: "/dashboard/my-acquisitions", icon: FolderOpenIcon, onClick: undefined });
-    
-    // Add the upsell for pure requestors
-    if (profile?.role === "requestor") {
-      navItems.push({ name: "My Bids", href: "#", icon: ClipboardDocumentCheckIcon, onClick: handleSubmitBidsClick });
-    }
   }
 
   // If in admin mode
@@ -140,34 +121,13 @@ export default function DashboardSidebar() {
           </div>
         ) : (
           <div className="space-y-2">
-            {/* Mode Switcher for Hybrid Users */}
-            {profile?.role === "both" && (
-              <div className="mb-6 bg-surface-inverse border border-border-inverse p-3 rounded-md">
-                <p className="text-[10px] font-mono text-text-inverse-muted uppercase tracking-widest mb-2 text-center">[ NETWORK_MODE ]</p>
-                <button
-                  onClick={() => {
-                    const newMode = activeMode === "supplier" ? "agency" : "supplier";
-                    setActiveMode(newMode);
-                    router.push(newMode === "supplier" ? "/dashboard/supplier" : "/dashboard/agency");
-                  }}
-                  className="w-full flex items-center justify-between px-3 py-2 bg-secondary text-white font-mono text-xs font-bold tracking-widest uppercase rounded border border-border-inverse hover:border-primary transition-colors"
-                >
-                  <span>{activeMode === "agency" ? "PROCURING AGENT" : "SUPPLIER"}</span>
-                  <ArrowsRightLeftIcon className="w-4 h-4 text-primary" />
-                </button>
-              </div>
-            )}
+            {/* Network Mode Switcher Removed */}
 
-            {activeMode !== "admin" && (
+            {activeMode === "agency" && (
               <div className="mb-8">
                 <Link
-                  href={activeMode === "agency" ? "/dashboard/agency/new" : "#"}
-                  onClick={activeMode === "supplier" ? handlePostAcquisitionClick : undefined}
-                  className={`flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md ${
-                    activeMode === "agency" 
-                      ? "bg-primary text-white hover:bg-primary-hover shadow-primary/20" 
-                      : "bg-surface-inverse text-text-inverse-muted border border-border-inverse hover:border-primary hover:text-primary"
-                  }`}
+                  href="/dashboard/agency/new"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md bg-primary text-white hover:bg-primary-hover shadow-primary/20"
                 >
                   <PlusCircleIcon className="w-5 h-5 stroke-2" />
                   New Request
