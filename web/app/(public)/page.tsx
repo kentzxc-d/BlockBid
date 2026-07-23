@@ -8,7 +8,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={`container ${styles.heroContainer}`}>
-          <h1 className={styles.heroTitle}>Acquisition,<br/>cryptographically sealed.</h1>
+          <h1 className={styles.heroTitle}>Transparent<br/>Acquisition Portal.</h1>
           <p className={styles.heroSubtitle}>
             BlockBid is an immutable ledger for government bidding. 
             Ensuring fairness, anonymity, and auditable evaluation for every project on the Base network.
