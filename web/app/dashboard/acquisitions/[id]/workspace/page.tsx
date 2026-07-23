@@ -133,7 +133,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
           <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">
             [ WORKSPACE: <span className="text-primary">{project.title}</span> ]
           </h1>
-          <div className="flex items-center gap-2 text-green-500 bg-green-500/10 px-3 py-1.5 rounded-md border border-green-500/20">
+          <div className="flex items-center gap-2 text-green-500 bg-green-500/10 px-3 py-1.5 rounded-none border border-green-500/20">
             <LockClosedIcon className="w-4 h-4" />
             <span className="text-xs font-mono font-bold tracking-widest uppercase">E2E_Encrypted_Channel</span>
           </div>
@@ -145,11 +145,11 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
         {/* Left Sidebar - Contact Info Reveal */}
         <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6 overflow-y-auto">
           
-          <div className="bg-surface border border-border p-5 rounded-md shadow-sm relative overflow-hidden">
+          <div className="bg-surface border border-border p-5 rounded-none shadow-sm relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
             <h3 className="font-mono text-xs text-text-muted uppercase tracking-widest mb-4">[ YOUR_PROFILE ]</h3>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-md bg-gray-100 border border-border overflow-hidden shrink-0 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-none bg-gray-100 border border-border overflow-hidden shrink-0 flex items-center justify-center">
                 {myParty?.avatar_url ? <img src={myParty.avatar_url} className="w-full h-full object-cover"/> : <Avatar size={36} name={myParty?.wallet_address || myParty?.id || 'default'} variant="beam" colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']} />}
               </div>
               <div>
@@ -159,16 +159,16 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             </div>
           </div>
 
-          <div className="bg-surface border border-primary/30 p-5 rounded-md shadow-sm relative overflow-hidden">
+          <div className="bg-surface border border-primary/30 p-5 rounded-none shadow-sm relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-secondary" />
             <h3 className="font-mono text-xs text-secondary uppercase tracking-widest mb-4 font-bold flex items-center justify-between">
               [ COUNTERPARTY_INFO ]
-              <span className="text-[9px] bg-secondary/10 text-secondary px-1.5 py-0.5 rounded-md">REVEALED</span>
+              <span className="text-[9px] bg-secondary/10 text-secondary px-1.5 py-0.5 rounded-none">REVEALED</span>
             </h3>
             
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-md bg-gray-100 border border-border overflow-hidden shrink-0 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-none bg-gray-100 border border-border overflow-hidden shrink-0 flex items-center justify-center">
                   {otherParty?.avatar_url ? <img src={otherParty.avatar_url} className="w-full h-full object-cover"/> : <Avatar size={36} name={otherParty?.wallet_address || otherParty?.id || 'default'} variant="beam" colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']} />}
                 </div>
                 <div>
@@ -195,9 +195,9 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
         </div>
 
         {/* Right Area - Discussion Board */}
-        <div className="flex-1 bg-surface border border-border rounded-md shadow-sm flex flex-col min-h-[400px]">
+        <div className="flex-1 bg-surface border border-border rounded-none shadow-sm flex flex-col min-h-[400px]">
           
-          <div className="p-3 border-b border-border bg-gray-50/50 flex justify-between items-center rounded-t-md">
+          <div className="p-3 border-b border-border bg-gray-50/50 flex justify-between items-center rounded-none">
             <span className="font-mono text-xs font-bold text-text-main uppercase tracking-widest">[ COMMUNICATION_LOG ]</span>
           </div>
 
@@ -220,12 +220,11 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                       </span>
                     </div>
                     <div 
-                      className={`max-w-[85%] px-4 py-2.5 rounded-md text-sm border ${
+                      className={`max-w-[85%] px-4 py-2.5 rounded-none text-sm border ${
                         isMe 
                           ? 'bg-primary/10 border-primary/20 text-text-main' 
                           : 'bg-white border-border text-text-main shadow-sm'
                       }`}
-                      style={{ borderTopRightRadius: isMe ? 0 : undefined, borderTopLeftRadius: !isMe ? 0 : undefined }}
                     >
                       <p className="whitespace-pre-wrap font-sans">{msg.content}</p>
                     </div>
@@ -243,13 +242,13 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="[ TYPE_MESSAGE_HERE... ]"
-                className="flex-1 bg-surface border border-border px-4 py-3 rounded-md text-sm font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                className="flex-1 bg-surface border border-border px-4 py-3 rounded-none text-sm font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                 disabled={sending}
               />
               <button
                 type="submit"
                 disabled={!input.trim() || sending}
-                className="bg-primary hover:bg-primary-dark text-white px-5 py-3 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-primary hover:bg-primary-dark text-white px-5 py-3 rounded-none font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {sending ? 'SENDING...' : 'TRANSMIT'} <PaperAirplaneIcon className="w-4 h-4" />
               </button>
