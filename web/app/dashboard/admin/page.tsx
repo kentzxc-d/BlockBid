@@ -303,7 +303,7 @@ export default function AdminOverview() {
         </div>
 
         {pendingProjects.length === 0 ? (
-          <div className="bg-surface rounded-md p-10 border border-border text-center">
+          <div className="bg-surface rounded-none p-10 border border-border text-center">
             <CheckCircleIcon className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
             <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">All Clear</h3>
             <p className="text-text-muted font-mono text-xs uppercase tracking-widest">No pending projects require moderation.</p>

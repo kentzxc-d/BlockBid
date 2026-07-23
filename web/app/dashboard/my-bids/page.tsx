@@ -134,8 +134,8 @@ export default function MyBidsPage() {
       {/* Bids List */}
       <div className="grid gap-4">
         {filteredBids.length === 0 ? (
-          <div className="bg-surface rounded-md p-10 border border-border text-center">
-            <div className="w-12 h-12 bg-gray-50 rounded-md flex items-center justify-center mx-auto mb-4 border border-border">
+          <div className="bg-surface rounded-none p-10 border border-border text-center">
+            <div className="w-12 h-12 bg-gray-50 rounded-none flex items-center justify-center mx-auto mb-4 border border-border">
               <MagnifyingGlassIcon className="w-6 h-6 text-text-muted stroke-1" />
             </div>
             <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">No records found</h3>

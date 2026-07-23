@@ -103,15 +103,15 @@ export default function ActiveSolicitationsPage() {
       {/* Solicitations List */}
       <div className="grid gap-4">
         {filteredSolicitations.length === 0 ? (
-          <div className="bg-surface rounded-md p-10 border border-border text-center">
-            <div className="w-12 h-12 bg-gray-50 rounded-md flex items-center justify-center mx-auto mb-4 border border-border">
+          <div className="bg-surface rounded-none p-10 border border-border text-center">
+            <div className="w-12 h-12 bg-gray-50 rounded-none flex items-center justify-center mx-auto mb-4 border border-border">
               <MagnifyingGlassIcon className="w-6 h-6 text-text-muted" />
             </div>
             <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">No records found</h3>
             <p className="text-text-muted font-mono text-xs uppercase tracking-widest">Query returned zero matching solicitations.</p>
             <button 
               onClick={() => { setSearchQuery(""); setSelectedSector("All"); }}
-              className="mt-6 px-6 py-2.5 bg-text-main text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
+              className="mt-6 px-6 py-2.5 bg-text-main text-white text-xs font-mono font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
             >
               Clear_Filters
             </button>
