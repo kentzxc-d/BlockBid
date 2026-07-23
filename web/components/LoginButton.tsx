@@ -53,6 +53,21 @@ export default function LoginButton() {
         [ Public Portal ]
       </button>
       <button 
+        onClick={login}
+        style={{ 
+          background: 'transparent', 
+          border: 'none', 
+          color: 'var(--color-text-muted)', 
+          cursor: 'pointer', 
+          fontFamily: 'var(--font-mono)', 
+          fontSize: '12px',
+          letterSpacing: '0.05em',
+          textTransform: 'uppercase'
+        }}
+      >
+        [ Officer Access ]
+      </button>
+      <button 
         className="btn btn-primary" 
         onClick={login}
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
