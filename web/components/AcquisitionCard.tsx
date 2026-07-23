@@ -8,6 +8,8 @@ export interface AcquisitionCardProps {
   estBudget: string | number;
   closingDate: string;
   contractHash?: string;
+  customMetaLabel?: string;
+  customMetaValue?: string;
   actionButton?: React.ReactNode;
 }
 
@@ -19,9 +21,12 @@ export default function AcquisitionCard({
   estBudget,
   closingDate,
   contractHash,
+  customMetaLabel,
+  customMetaValue,
   actionButton,
 }: AcquisitionCardProps) {
-  const isStatusOpen = status.toUpperCase() === 'OPEN';
+  const statusUpper = status.toUpperCase();
+  const isStatusGreen = statusUpper === 'OPEN' || statusUpper === 'WON';
   
   // Format budget to PHP if it's a number
   const formattedBudget = typeof estBudget === 'number' 
@@ -36,10 +41,10 @@ export default function AcquisitionCard({
         </h3>
         <span 
           className={`px-3 py-1 text-xs font-mono font-bold tracking-widest text-white rounded-none shrink-0 ${
-            isStatusOpen ? 'bg-green-600' : 'bg-secondary'
+            isStatusGreen ? 'bg-green-600' : 'bg-secondary'
           }`}
         >
-          STATUS: {status.toUpperCase()}
+          STATUS: {statusUpper}
         </span>
       </div>
       
@@ -64,6 +69,12 @@ export default function AcquisitionCard({
           <div className="flex flex-col gap-1">
             <span className="text-[11px] uppercase tracking-widest text-text-muted">Contract Hash</span>
             <span className="text-primary font-medium">{contractHash}</span>
+          </div>
+        )}
+        {customMetaLabel && customMetaValue && (
+          <div className="flex flex-col gap-1">
+            <span className="text-[11px] uppercase tracking-widest text-text-muted">{customMetaLabel}</span>
+            <span className="text-primary font-medium">{customMetaValue}</span>
           </div>
         )}
       </div>

@@ -148,7 +148,7 @@ export default function MyBidsPage() {
                 {bid.status === "WON" && (
                   <Link 
                     href={`/dashboard/acquisitions/${bid.acquisitionId}/workspace`}
-                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 border border-transparent text-white font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:bg-green-700 transition-colors whitespace-nowrap"
+                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border-2 border-primary text-primary font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:bg-primary hover:text-white transition-colors whitespace-nowrap"
                   >
                     WORKSPACE
                   </Link>
@@ -166,11 +166,13 @@ export default function MyBidsPage() {
               <AcquisitionCard
                 key={bid.id}
                 title={bid.acquisitionTitle}
-                description={`Bid ID: ${bid.id} | Acquisition: ${bid.acquisitionId}`}
+                description="This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met." // Placeholder since actual description isn't mapped
                 status={bid.status}
                 location="Various" // Would come from DB
                 estBudget={bid.amount === "N/A" ? "TBD" : bid.amount}
                 closingDate={`Submitted: ${bid.submittedAt}`}
+                customMetaLabel="Bid & Project ID"
+                customMetaValue={`${bid.id.substring(0,8)}... | ${bid.acquisitionId.substring(0,8)}...`}
                 actionButton={actionButton}
               />
             );
