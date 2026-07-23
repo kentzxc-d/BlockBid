@@ -13,6 +13,7 @@ import {
   EyeIcon,
   XMarkIcon
 } from "@heroicons/react/24/outline";
+import AcquisitionCard from "@/components/AcquisitionCard";
 
 export default function MyBidsPage() {
   const { user } = usePrivy();
@@ -141,59 +142,40 @@ export default function MyBidsPage() {
             <p className="text-text-muted font-mono text-xs uppercase tracking-widest">Query returned zero matching bids.</p>
           </div>
         ) : (
-          filteredBids.map((bid) => (
-          <div key={bid.id} className="bg-surface rounded-md p-6 border border-border hover:border-text-main transition-colors group flex flex-col md:flex-row md:items-center justify-between gap-6">
-            
-            <div className="flex items-start gap-5 flex-1">
-              <div className="p-3 bg-gray-50 rounded-md border border-border group-hover:bg-primary/10 transition-colors">
-                <DocumentTextIcon className="w-6 h-6 text-text-main group-hover:text-primary transition-colors" />
-              </div>
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-3 mb-1">
-                  <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase">{bid.id}</span>
-                  <span className="text-[10px] font-mono font-bold text-text-muted">|</span>
-                  <span className="text-[10px] font-mono font-bold text-primary tracking-widest uppercase">{bid.acquisitionId}</span>
-                </div>
-                <h3 className="font-bold text-text-main text-lg font-heading group-hover:text-primary transition-colors tracking-tight">
-                  {bid.acquisitionTitle}
-                </h3>
-                <div className="flex flex-wrap items-center gap-4 mt-2 font-mono text-xs tracking-widest uppercase">
-                  <span className="text-text-muted">
-                    SUBMITTED: {bid.submittedAt}
-                  </span>
-                  <span className="text-text-muted">|</span>
-                  <span className="font-bold text-text-main">
-                    EST: {bid.amount}
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between md:flex-col md:items-end gap-3 border-t md:border-t-0 pt-5 md:pt-0 border-border">
-              <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-mono font-bold tracking-widest uppercase border ${bid.statusBg} ${bid.statusColor} ${bid.statusBorder}`}>
-                <bid.statusIcon className="w-3 h-3 stroke-2" />
-                {bid.status}
-              </div>
+          filteredBids.map((bid) => {
+            const actionButton = (
               <div className="flex flex-col gap-2 w-full md:w-auto">
                 {bid.status === "WON" && (
                   <Link 
                     href={`/dashboard/acquisitions/${bid.acquisitionId}/workspace`}
-                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 border border-transparent text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-green-700 transition-colors whitespace-nowrap"
+                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-green-600 border border-transparent text-white font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:bg-green-700 transition-colors whitespace-nowrap"
                   >
                     WORKSPACE
                   </Link>
                 )}
                 <button 
                   onClick={() => setViewingBid(bid)}
-                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
                 >
                   <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_DETAILS
                 </button>
               </div>
-            </div>
+            );
 
-          </div>
-        )))}
+            return (
+              <AcquisitionCard
+                key={bid.id}
+                title={bid.acquisitionTitle}
+                description={`Bid ID: ${bid.id} | Acquisition: ${bid.acquisitionId}`}
+                status={bid.status}
+                location="Various" // Would come from DB
+                estBudget={bid.amount === "N/A" ? "TBD" : bid.amount}
+                closingDate={`Submitted: ${bid.submittedAt}`}
+                actionButton={actionButton}
+              />
+            );
+          })
+        )}
       </div>
 
       {/* View Details Modal */}

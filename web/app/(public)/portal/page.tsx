@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import styles from "../page.module.css";
+import AcquisitionCard from "@/components/AcquisitionCard";
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -78,47 +79,42 @@ export default async function TransparencyPortal() {
             </p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gap: '24px' }}>
-            {acquisitions.map((item) => (
-              <div key={item.id} className={styles.projectCard}>
-                <div className={styles.projectCardHeader}>
-                  <h3 className={styles.projectCardTitle}>{item.title}</h3>
-                  <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: AWARDED</span>
+          <div className="grid gap-6">
+            {acquisitions.map((item) => {
+              const actionButton = item.on_chain_hash ? (
+                <div className="flex w-full justify-between items-center text-xs font-mono font-bold uppercase tracking-widest">
+                  <span className="text-text-muted">Verification</span>
+                  <a
+                    href={`https://amoy.polygonscan.com/tx/${item.on_chain_hash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-primary hover:underline bg-primary/10 px-4 py-2"
+                  >
+                    <span>View on Polygon</span>
+                    <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                  </a>
                 </div>
-                
-                <div className={styles.projectMeta} style={{ marginTop: 'auto' }}>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Date Awarded</span>
-                    <span className={styles.metaValue}>{new Date(item.awarded_at).toLocaleDateString()}</span>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Winning Bid</span>
-                    <span className={styles.metaValue} style={{ color: 'var(--color-primary)' }}>₱{item.total_price.toLocaleString()}</span>
-                  </div>
-                  
-                  {item.on_chain_hash ? (
-                    <div className={styles.metaItem} style={{ marginLeft: 'auto' }}>
-                      <span className={styles.metaLabel}>Verification</span>
-                      <a
-                        href={`https://amoy.polygonscan.com/tx/${item.on_chain_hash}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                        style={{ fontWeight: 600 }}
-                      >
-                        <span>View on Polygon</span>
-                        <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                      </a>
-                    </div>
-                  ) : (
-                    <div className={styles.metaItem} style={{ marginLeft: 'auto' }}>
-                      <span className={styles.metaLabel}>Verification</span>
-                      <span className="text-text-muted">Syncing to Blockchain...</span>
-                    </div>
-                  )}
+              ) : (
+                <div className="flex w-full justify-between items-center text-xs font-mono font-bold uppercase tracking-widest">
+                  <span className="text-text-muted">Verification</span>
+                  <span className="text-text-muted px-4 py-2 border border-dashed border-border">Syncing to Blockchain...</span>
                 </div>
-              </div>
-            ))}
+              );
+
+              return (
+                <AcquisitionCard
+                  key={item.id}
+                  title={item.title}
+                  description={`Public record of awarded contract.`}
+                  status="AWARDED"
+                  location="Various" // Would come from DB normally
+                  estBudget={item.total_price}
+                  closingDate={`Awarded: ${new Date(item.awarded_at).toLocaleDateString()}`}
+                  contractHash={item.on_chain_hash || "Pending..."}
+                  actionButton={actionButton}
+                />
+              );
+            })}
           </div>
         )}
       </div>
