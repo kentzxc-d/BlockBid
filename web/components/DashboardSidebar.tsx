@@ -135,7 +135,7 @@ export default function DashboardSidebar() {
               </div>
             )}
 
-            <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4 mt-8">
+            <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
               [ NAVIGATION ]
             </p>
 
