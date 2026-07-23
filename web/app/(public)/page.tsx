@@ -11,7 +11,7 @@ export default function Home() {
           <h1 className={styles.heroTitle}>Transparent<br/>Acquisition Portal.</h1>
           <p className={styles.heroSubtitle}>
             BlockBid is an immutable ledger for government bidding. 
-            Ensuring fairness, anonymity, and auditable evaluation for every project on the Base network.
+            Ensuring fairness, anonymity, and auditable evaluation for every project on the Polygon Amoy network.
           </p>
           <HeroAuthButtons />
         </div>
