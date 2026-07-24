@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = 'force-dynamic';
-import { google } from '@ai-sdk/google';
-import { generateObject } from 'ai';
 import { z } from 'zod';
 
 export const runtime = 'edge';
@@ -34,32 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Limit reached: You can only have up to 5 active or pending projects at a time." }, { status: 400 });
     }
 
-    // 2. AI Auto-Moderation
-    const moderationSchema = z.object({
-      qualityScore: z.number().describe("Score from 0 to 100 representing clarity, professionalism, and detail."),
-      isSpam: z.boolean().describe("True if spam, gibberish, or test data."),
-      reasoning: z.string().describe("Brief reason for the score.")
-    });
-
-    const prompt = `
-      Evaluate the quality and legitimacy of this new acquisition request.
-      Title: "${title}"
-      Description: "${description}"
-      Criteria: ${JSON.stringify(criteria)}
-      
-      Score it from 0 to 100 based on detail, professionalism, and clarity. Flag as spam if it is gibberish, offensive, or clearly a test.
-    `;
-
-    const { object } = await generateObject({
-      model: google('gemini-3.5-flash'),
-      schema: moderationSchema,
-      prompt: prompt,
-    });
-
     let projectStatus = "open";
-    if (object.qualityScore < 90 || object.isSpam) {
-      projectStatus = "pending_approval";
-    }
 
     // 3. Insert Project into the database
     const { data: projectData, error: projectError } = await supabase
@@ -102,12 +75,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ 
       success: true, 
-      project: projectData,
-      moderation: {
-        score: object.qualityScore,
-        status: projectStatus,
-        reasoning: object.reasoning
-      }
+      project: projectData
     }, { status: 201 });
     
   } catch (err: any) {

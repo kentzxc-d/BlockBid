@@ -292,61 +292,7 @@ export default function AdminOverview() {
           </div>
         )}
 
-        {/* Pending Approvals Section */}
-        <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
-          <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">
-            [ PENDING_APPROVALS ]
-          </h2>
-          <span className="px-3 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md font-mono text-xs font-bold tracking-widest">
-            {pendingProjects.length} ITEMS
-          </span>
-        </div>
 
-        {pendingProjects.length === 0 ? (
-          <div className="bg-surface rounded-none p-10 border border-border text-center">
-            <CheckCircleIcon className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
-            <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">All Clear</h3>
-            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">No pending projects require moderation.</p>
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {pendingProjects.map((project) => {
-              const actionButton = (
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                  <button
-                    onClick={() => handleAction(project.id, 'reject')}
-                    disabled={processingId === project.id}
-                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-none font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50 w-full"
-                  >
-                    <XCircleIcon className="w-4 h-4" />
-                    Reject
-                  </button>
-                  <button
-                    onClick={() => handleAction(project.id, 'approve')}
-                    disabled={processingId === project.id}
-                    className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white rounded-none font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50 w-full"
-                  >
-                    <CheckCircleIcon className="w-4 h-4" />
-                    Approve
-                  </button>
-                </div>
-              );
-
-              return (
-                <AcquisitionCard
-                  key={project.id}
-                  title={project.title}
-                  description={project.description}
-                  status="PENDING_APPROVAL"
-                  location="Various" // Placeholder
-                  estBudget={project.budget || "TBD"}
-                  closingDate={`Submitted: ${new Date(project.created_at).toLocaleDateString()}`}
-                  actionButton={actionButton}
-                />
-              );
-            })}
-          </div>
-        )}
 
       </div>
     </RoleGuard>
