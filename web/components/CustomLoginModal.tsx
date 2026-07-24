@@ -9,6 +9,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   const [step, setStep] = useState<'initial' | 'email_input' | 'otp_input' | 'error'>('initial');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+  const [submittedCode, setSubmittedCode] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const { logout } = usePrivy();
   const router = useRouter();
@@ -53,17 +54,19 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   });
 
   useEffect(() => {
-    if (code.length === 6 && state.status !== 'submitting-code') {
+    if (code.length === 6 && code !== submittedCode && state.status !== 'submitting-code') {
+      setSubmittedCode(code);
       setErrorMsg('');
       loginWithCode({ code });
     }
-  }, [code, state.status, loginWithCode]);
+  }, [code, state.status, loginWithCode, submittedCode]);
 
   useEffect(() => {
     if (!isOpen) {
       setStep('initial');
       setEmail('');
       setCode('');
+      setSubmittedCode('');
       setErrorMsg('');
     }
   }, [isOpen]);
