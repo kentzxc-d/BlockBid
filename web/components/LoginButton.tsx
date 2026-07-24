@@ -24,13 +24,13 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           if (data.profile) {
             const role = data.profile.role;
             if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
-              setInvalidAccessMessage("Invalid access for this portal.");
+              setInvalidAccessMessage("Your account does not have the required permissions for this area.");
               setIsInvalidModalOpen(true);
               logout();
               return;
             }
             if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
-              setInvalidAccessMessage("Invalid access for this portal.");
+              setInvalidAccessMessage("Your account does not have the required permissions for this area.");
               setIsInvalidModalOpen(true);
               logout();
               return;

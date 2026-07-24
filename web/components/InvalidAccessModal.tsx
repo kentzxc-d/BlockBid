@@ -23,17 +23,13 @@ export default function InvalidAccessModal({ isOpen, onClose, message }: Invalid
           <XMarkIcon className="w-4 h-4 stroke-[2.5]" />
         </button>
 
-        <div className="flex flex-col flex-1 mt-6">
-          <h2 className="text-[20px] font-semibold text-white mb-2 font-body text-center leading-tight">
+        <div className="flex flex-col flex-1 items-center justify-center -mt-6">
+          <h2 className="text-[22px] font-semibold text-white mb-3 font-body text-center">
             Invalid Access
           </h2>
-          <div className="mt-6 flex flex-col gap-4">
-            <div className="w-full px-5 py-4 rounded-xl border border-zinc-800 bg-[#161618] flex items-center justify-center min-h-[60px]">
-               <p className="text-[15px] text-zinc-300 text-center font-body">
-                 {message}
-               </p>
-            </div>
-          </div>
+          <p className="text-[15px] text-zinc-400 font-body text-center leading-relaxed px-4 max-w-[280px]">
+            {message}
+          </p>
         </div>
 
         <div className="mt-auto pt-8 pb-2 flex justify-center opacity-70">
