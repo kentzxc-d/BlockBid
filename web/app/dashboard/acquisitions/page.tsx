@@ -108,13 +108,19 @@ export default function ActiveSolicitationsPage() {
               <MagnifyingGlassIcon className="w-6 h-6 text-text-muted" />
             </div>
             <h3 className="font-bold text-text-main font-heading text-lg mb-1 uppercase">No records found</h3>
-            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">Query returned zero matching solicitations.</p>
-            <button 
-              onClick={() => { setSearchQuery(""); setSelectedSector("All"); }}
-              className="mt-6 px-6 py-2.5 bg-text-main text-white text-xs font-mono font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
-            >
-              Clear_Filters
-            </button>
+            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+              {(searchQuery.length > 0 || selectedSector !== "All")
+                ? "Query returned zero matching solicitations."
+                : "There are currently no active solicitations available."}
+            </p>
+            {(searchQuery.length > 0 || selectedSector !== "All") && (
+              <button 
+                onClick={() => { setSearchQuery(""); setSelectedSector("All"); }}
+                className="mt-6 px-6 py-2.5 bg-text-main text-white text-xs font-mono font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
+              >
+                Clear_Filters
+              </button>
+            )}
           </div>
         ) : (
           filteredSolicitations.map((solicitation) => {
