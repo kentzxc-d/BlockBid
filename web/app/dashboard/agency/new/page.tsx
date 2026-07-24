@@ -402,7 +402,7 @@ export default function CreateAcquisitionPage() {
           <button 
             onClick={handleSubmit}
             disabled={!isValid || isSubmitting}
-            className={`w-full py-5 text-sm font-mono font-bold tracking-widest uppercase shadow-md transition-all flex items-center justify-center gap-3 ${
+            className={`w-full py-5 text-sm font-mono font-bold tracking-widest uppercase shadow-md rounded-md transition-all flex items-center justify-center gap-3 ${
               isValid && !isSubmitting
                 ? "bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 border border-primary shadow-primary/20" 
                 : "bg-surface text-text-muted border border-border cursor-not-allowed opacity-50"
