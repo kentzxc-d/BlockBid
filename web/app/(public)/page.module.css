@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  padding: 160px 0 60px;
+  padding: 160px 0 120px;
   text-align: left;
   background-color: var(--color-surface-inverse);
   color: var(--color-text-inverse);
