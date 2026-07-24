@@ -41,6 +41,7 @@ export default function MyBidsPage() {
         projectBudget: b.projects?.budget || "TBD",
         projectLocation: b.projects?.location || "Various",
         projectDescription: b.projects?.description || "This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met.",
+        projectDeadline: b.projects?.deadline || null,
         on_chain_hash: b.on_chain_hash
       }));
       setBids(mappedBids);
@@ -165,6 +166,9 @@ export default function MyBidsPage() {
               </div>
             );
 
+            const deadline = bid.projectDeadline ? new Date(bid.projectDeadline) : new Date();
+            const daysLeft = Math.max(0, Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)));
+
             return (
               <AcquisitionCard
                 key={bid.id}
@@ -173,7 +177,7 @@ export default function MyBidsPage() {
                 status={bid.status}
                 location={bid.projectLocation}
                 estBudget={bid.projectBudget}
-                closingDate={`Submitted: ${bid.submittedAt}`}
+                closingDate={`T-${daysLeft} Days`}
                 contractHash={bid.on_chain_hash || "b53d0128-37d5-457b-9c4a-08b7c093fb7d"} // mock hash if undefined
                 actionButton={actionButton}
               />

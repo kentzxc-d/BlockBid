@@ -84,7 +84,8 @@ export async function GET(request: Request) {
           title,
           location,
           budget,
-          description
+          description,
+          deadline
         ),
         bid_values (
           value
