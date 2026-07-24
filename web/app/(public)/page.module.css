@@ -1,7 +1,7 @@
 .hero {
   position: relative;
-  padding: 120px 0;
-  text-align: center;
+  padding: 160px 0 120px;
+  text-align: left;
   background-color: var(--color-surface-inverse);
   color: var(--color-text-inverse);
   overflow: hidden;
@@ -48,7 +48,7 @@
   font-size: 20px;
   color: var(--color-text-inverse-muted);
   max-width: 640px;
-  margin: 0 auto 48px;
+  margin: 0 0 48px;
   font-weight: 400;
 }
 

@@ -36,7 +36,7 @@ export default function HeroAuthButtons() {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-start' }}>
       <button 
         onClick={handleBrowse} 
         className="btn btn-primary" 
