@@ -114,12 +114,12 @@ export default function UserDashboard() {
       <WalletBanner />
 
       {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
-        <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
+        <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-none p-6 flex flex-col md:flex-row items-center justify-between gap-6 mb-8 shadow-sm">
           {/* Subtle Background Accent */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-none blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
           
           <div className="flex items-center gap-4 relative z-10">
-            <div className="p-3 bg-primary/10 text-primary rounded-full shrink-0 border border-primary/20">
+            <div className="p-3 bg-primary/10 text-primary rounded-none shrink-0 border border-primary/20">
               <CheckBadgeIcon className="w-8 h-8" />
             </div>
             <div>
@@ -127,7 +127,7 @@ export default function UserDashboard() {
               <p className="text-text-muted font-body text-sm">Get verified to build reputation and increase your chances of winning bids.</p>
             </div>
           </div>
-          <Link href="/dashboard/verify" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-md transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+          <Link href="/dashboard/verify" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-none transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
             Verify Identity
           </Link>
         </div>
@@ -135,8 +135,8 @@ export default function UserDashboard() {
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
-          <div className="p-3 border border-border bg-gray-50 rounded-md">
+        <div className="bg-surface rounded-none p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
+          <div className="p-3 border border-border bg-gray-50 rounded-none">
             <DocumentChartBarIcon className="w-8 h-8 text-text-main" />
           </div>
           <div>
@@ -144,8 +144,8 @@ export default function UserDashboard() {
             <p className="text-3xl font-heading font-bold text-text-main">{myBids.length > 0 ? myBids.length : '0'}</p>
           </div>
         </div>
-        <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
-          <div className="p-3 border border-border bg-gray-50 rounded-md">
+        <div className="bg-surface rounded-none p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
+          <div className="p-3 border border-border bg-gray-50 rounded-none">
             <TrophyIcon className="w-8 h-8 text-primary" />
           </div>
           <div>
@@ -153,8 +153,8 @@ export default function UserDashboard() {
             <p className="text-3xl font-heading font-bold text-text-main">{myBids.filter(b => b.status === 'won').length}</p>
           </div>
         </div>
-        <div className="bg-surface rounded-md p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
-          <div className="p-3 border border-border bg-gray-50 rounded-md">
+        <div className="bg-surface rounded-none p-6 border border-border flex items-center gap-5 hover:bg-gray-50 transition-colors">
+          <div className="p-3 border border-border bg-gray-50 rounded-none">
             <ClockIcon className="w-8 h-8 text-text-main" />
           </div>
           <div>
@@ -177,9 +177,9 @@ export default function UserDashboard() {
           
           <div className="grid gap-4">
             {activeSolicitations.map((solicitation) => (
-              <div key={solicitation.id} className="bg-surface rounded-md p-5 border border-border flex items-center justify-between group hover:border-text-main transition-colors">
+              <div key={solicitation.id} className="bg-surface rounded-none p-5 border border-border flex items-center justify-between group hover:border-text-main transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 border border-border bg-gray-50 rounded-md group-hover:bg-primary/10 transition-colors">
+                  <div className="p-2 border border-border bg-gray-50 rounded-none group-hover:bg-primary/10 transition-colors">
                     <DocumentChartBarIcon className="w-5 h-5 text-text-main group-hover:text-primary transition-colors" />
                   </div>
                   <div>
@@ -199,17 +199,17 @@ export default function UserDashboard() {
                     Due: {new Date(solicitation.deadline).toLocaleDateString()}
                   </p>
                   {solicitation.requestor_id === user?.id ? (
-                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
+                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-none uppercase cursor-not-allowed">
                       YOUR_ACQUISITION
                     </span>
                   ) : allMyBidProjectIds.includes(solicitation.id) ? (
-                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
+                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-none uppercase cursor-not-allowed">
                       ALREADY_BID
                     </span>
                   ) : (
                     <Link 
                       href={`/dashboard/acquisitions/${solicitation.id}/bid`}
-                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
+                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
                     >
                       SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
                     </Link>
@@ -226,10 +226,10 @@ export default function UserDashboard() {
             <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">[ RECENT_BIDS ]</h2>
           </div>
           
-          <div className="bg-surface rounded-md border border-border flex flex-col overflow-hidden">
+          <div className="bg-surface rounded-none border border-border flex flex-col overflow-hidden">
             <div className="space-y-4">
             {myBids.map((bid) => (
-              <div key={bid.id} className="bg-surface rounded-md p-5 border border-border">
+              <div key={bid.id} className="bg-surface rounded-none p-5 border border-border">
                 <div className="flex items-start justify-between mb-3 border-b border-border pb-3">
                   <div>
                     <span className="text-[10px] font-mono font-bold text-text-muted tracking-widest uppercase block mb-1">
@@ -239,7 +239,7 @@ export default function UserDashboard() {
                       {bid.projects?.title || "Unknown Project"}
                     </h3>
                   </div>
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-widest uppercase border ${
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-none text-[10px] font-mono font-bold tracking-widest uppercase border ${
                     bid.status === "submitted" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
                     (bid.status === "won" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-red-500/10 text-red-500 border-red-500/20")
                   }`}>

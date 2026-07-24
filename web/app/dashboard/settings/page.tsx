@@ -145,7 +145,7 @@ export default function SettingsPage() {
             <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">[ PROFILE_IDENTITY ]</h2>
           </div>
           
-          <div className="bg-surface rounded-md p-6 sm:p-8 border border-border space-y-8 hover:border-text-main transition-colors">
+          <div className="bg-surface rounded-none p-6 sm:p-8 border border-border space-y-8 hover:border-text-main transition-colors">
             
             {/* Avatar Section */}
             <div className="flex items-start sm:items-center gap-6 flex-col sm:flex-row">
@@ -161,9 +161,9 @@ export default function SettingsPage() {
                 onClick={() => fileInputRef.current?.click()}
                 title="Upload custom avatar"
               >
-                <div className="p-1 border border-border bg-gray-50 rounded-md transition-colors group-hover:border-primary w-[82px] h-[82px] overflow-hidden">
+                <div className="p-1 border border-border bg-gray-50 rounded-none transition-colors group-hover:border-primary w-[82px] h-[82px] overflow-hidden">
                   {avatarUrl ? (
-                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-sm" />
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-none" />
                   ) : (
                     <Avatar
                       size={72}
@@ -173,7 +173,7 @@ export default function SettingsPage() {
                     />
                   )}
                 </div>
-                <div className="absolute -bottom-2 -right-2 bg-text-main border-2 border-surface text-white p-1.5 rounded-full shadow-lg group-hover:bg-primary transition-colors">
+                <div className="absolute -bottom-2 -right-2 bg-text-main border-2 border-surface text-white p-1.5 rounded-none shadow-lg group-hover:bg-primary transition-colors">
                   <PencilIcon className="w-3.5 h-3.5" />
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function SettingsPage() {
                   type="text"
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
-                  className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors"
+                  className="w-full bg-background border border-border rounded-none px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors"
                   required
                 />
               </div>
@@ -206,7 +206,7 @@ export default function SettingsPage() {
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-background border border-border rounded-none px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
                     required
                     disabled
                   >
@@ -222,7 +222,7 @@ export default function SettingsPage() {
                   <select
                     value={entityType}
                     onChange={(e) => setEntityType(e.target.value)}
-                    className="w-full bg-background border border-border rounded-md px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none"
+                    className="w-full bg-background border border-border rounded-none px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors appearance-none"
                     required
                   >
                     <option value="" disabled>Select_Entity</option>
@@ -248,7 +248,7 @@ export default function SettingsPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest rounded-none hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
                 >
                   {isSaving ? "Sealing..." : "Save_Changes"}
                 </button>
@@ -263,10 +263,10 @@ export default function SettingsPage() {
             <h2 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">[ SECURITY_KEYS ]</h2>
           </div>
 
-          <div className="bg-surface rounded-md border border-border flex flex-col overflow-hidden hover:border-text-main transition-colors">
+          <div className="bg-surface rounded-none border border-border flex flex-col overflow-hidden hover:border-text-main transition-colors">
             <div className="p-5 border-l-4 border-l-primary">
               <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Connected_Wallet</label>
-              <div className="bg-background border border-border rounded-md p-3 font-mono text-xs font-bold text-text-main tracking-widest break-all">
+              <div className="bg-background border border-border rounded-none p-3 font-mono text-xs font-bold text-text-main tracking-widest break-all">
                 {walletAddress}
               </div>
             </div>
@@ -278,7 +278,7 @@ export default function SettingsPage() {
               </p>
               <button
                 onClick={() => exportWallet()}
-                className="w-full px-4 py-2.5 bg-text-main text-white text-[10px] font-mono font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
+                className="w-full px-4 py-2.5 bg-text-main text-white text-[10px] font-mono font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
               >
                 Export_Secret_Phrase
               </button>
