@@ -248,7 +248,7 @@ export default function SettingsPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest rounded-none hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
                 >
                   {isSaving ? "Sealing..." : "Save_Changes"}
                 </button>
@@ -278,7 +278,7 @@ export default function SettingsPage() {
               </p>
               <button
                 onClick={() => exportWallet()}
-                className="w-full px-4 py-2.5 bg-text-main text-white text-[10px] font-mono font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
+                className="w-full px-4 py-2.5 bg-text-main text-white text-[10px] font-mono font-bold tracking-widest rounded-md hover:bg-primary transition-colors uppercase"
               >
                 Export_Secret_Phrase
               </button>
