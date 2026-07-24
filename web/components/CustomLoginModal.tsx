@@ -62,7 +62,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
       <div 
-        className="relative w-full max-w-[400px] p-8 bg-surface border border-border shadow-2xl text-text-main flex flex-col items-center justify-center min-h-[320px] rounded-2xl"
+        className="relative w-full max-w-[400px] p-8 py-10 bg-[#18181b] border border-zinc-800 shadow-2xl text-white flex flex-col items-center rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         
@@ -71,10 +71,10 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
           <XMarkIcon className="w-5 h-5 stroke-2" />
         </button>
 
-        <h2 className="mb-2 font-heading text-xl font-bold uppercase tracking-widest text-text-main text-center">
+        <h2 className="mb-1 font-heading text-xl font-bold uppercase tracking-widest text-white text-center mt-4">
           {intent === 'officer' ? '[ Officer Access ]' : '[ Supplier Login ]'}
         </h2>
-        <p className="mb-8 text-[10px] font-mono font-bold text-text-muted uppercase tracking-widest text-center">
+        <p className="mb-10 text-[10px] font-mono font-bold text-zinc-400 uppercase tracking-widest text-center">
           Protected by Privy
         </p>
 
@@ -88,10 +88,10 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
         {(step === 'initial' || step === 'email_input') && (
           <form 
             onSubmit={handleSendCode}
-            className={`relative flex items-center bg-background border border-border transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden ${
+            className={`relative flex items-center bg-[#09090b] border border-zinc-700 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden ${
               step === 'initial' 
-                ? 'w-16 h-16 justify-center rounded-2xl cursor-pointer hover:border-primary/50 hover:bg-primary/5 shadow-lg hover:shadow-primary/20' 
-                : 'w-full h-14 pl-4 pr-2 rounded-xl shadow-inner'
+                ? 'w-16 h-16 justify-center rounded-2xl cursor-pointer hover:border-primary shadow-lg' 
+                : 'w-full h-14 px-4 rounded-xl shadow-inner gap-3'
             }`}
             onClick={() => {
               if (step === 'initial') setStep('email_input');
@@ -99,7 +99,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
           >
             <EnvelopeIcon 
               className={`shrink-0 transition-all duration-500 ${
-                step === 'initial' ? 'w-7 h-7 text-text-main group-hover:text-primary' : 'w-5 h-5 text-text-muted'
+                step === 'initial' ? 'w-7 h-7 text-white' : 'w-5 h-5 text-zinc-400'
               }`} 
             />
             
@@ -110,8 +110,8 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               autoFocus={step === 'email_input'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`flex-1 bg-transparent border-none focus:outline-none text-sm font-mono font-bold tracking-widest ml-3 transition-all duration-500 placeholder:text-text-muted/50 ${
-                step === 'initial' ? 'opacity-0 w-0' : 'opacity-100 w-full'
+              className={`flex-1 bg-transparent border-none focus:outline-none text-sm font-mono font-bold tracking-widest text-white transition-all duration-500 placeholder:text-zinc-500 ${
+                step === 'initial' ? 'opacity-0 w-0 hidden' : 'opacity-100 w-full'
               }`}
               disabled={step === 'initial'}
             />
