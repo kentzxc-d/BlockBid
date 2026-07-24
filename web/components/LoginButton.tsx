@@ -1,23 +1,49 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
+import { useLogin, usePrivy } from "@privy-io/react-auth";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import CustomLoginModal from "./CustomLoginModal";
 
 export default function LoginButton({ isLanding = true }: { isLanding?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { ready, authenticated, logout, user } = usePrivy();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loginIntent, setLoginIntent] = useState<'officer' | 'supplier' | null>(null);
+  
+  const { login } = useLogin({
+    onComplete: async ({ user }) => {
+      const intent = sessionStorage.getItem('loginIntent');
+      try {
+        const res = await fetch(`/api/user/profile?id=${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.profile) {
+            const role = data.profile.role;
+            if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
+              alert("Invalid access. This portal is for Officers only.");
+              logout();
+              return;
+            }
+            if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
+              alert("Invalid access. This portal is for Suppliers only.");
+              logout();
+              return;
+            }
+          }
+        }
+      } catch(err) {
+        console.error("Profile check failed", err);
+      }
+      
+      router.push('/dashboard');
+    }
+  });
 
   return (
     <>
       {!ready ? (
         <button className="btn btn-outline" disabled>Loading...</button>
-      ) : (authenticated && !isModalOpen) ? (
+      ) : authenticated ? (
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
           <span style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
             {user?.email?.address || user?.wallet?.address?.slice(0, 6) + "..." + user?.wallet?.address?.slice(-4)}
@@ -46,8 +72,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           <button 
             onClick={() => {
               sessionStorage.setItem('loginIntent', 'officer');
-              setLoginIntent('officer');
-              setIsModalOpen(true);
+              login();
             }}
             style={{ 
               background: 'transparent', 
@@ -66,8 +91,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
             className="btn btn-primary" 
             onClick={() => {
               sessionStorage.setItem('loginIntent', 'supplier');
-              setLoginIntent('supplier');
-              setIsModalOpen(true);
+              login();
             }}
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
           >
@@ -75,12 +99,6 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           </button>
         </div>
       )}
-
-      <CustomLoginModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        intent={loginIntent} 
-      />
     </>
   );
 }
