@@ -13,7 +13,7 @@ export default function InvalidAccessModal({ isOpen, onClose, message }: Invalid
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 transition-opacity">
       <div 
-        className="relative w-full max-w-[400px] min-h-[340px] p-8 bg-[#111113] border border-zinc-800/60 shadow-2xl text-white flex flex-col rounded-[24px]"
+        className="relative w-full max-w-[400px] p-8 bg-[#111113] border border-zinc-800/60 shadow-2xl text-white flex flex-col rounded-[24px]"
         onClick={(e) => e.stopPropagation()}
       >
         <button 
@@ -23,7 +23,7 @@ export default function InvalidAccessModal({ isOpen, onClose, message }: Invalid
           <XMarkIcon className="w-4 h-4 stroke-[2.5]" />
         </button>
 
-        <div className="flex flex-col flex-1 items-center justify-center -mt-6">
+        <div className="flex flex-col flex-1 items-center justify-center mt-4">
           <h2 className="text-[22px] font-semibold text-white mb-3 font-body text-center">
             Invalid Access
           </h2>
