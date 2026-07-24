@@ -24,8 +24,8 @@ export default function InvalidAccessModal({ isOpen, onClose, message }: Invalid
         </button>
 
         <div className="flex flex-col flex-1 items-center justify-center mt-4">
-          <h2 className="text-[22px] font-semibold text-white mb-3 font-body text-center">
-            Invalid Access
+          <h2 className="text-[22px] font-semibold text-red-500 mb-3 font-body text-center">
+            Permission Denied
           </h2>
           <p className="text-[15px] text-zinc-400 font-body text-center leading-relaxed px-4 max-w-[280px]">
             {message}
