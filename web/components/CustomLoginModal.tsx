@@ -6,7 +6,7 @@ import { EnvelopeIcon, XMarkIcon, ArrowRightIcon } from '@heroicons/react/24/out
 import { useRouter } from 'next/navigation';
 
 export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: boolean, onClose: () => void, intent: 'officer' | 'supplier' | null }) {
-  const [step, setStep] = useState<'initial' | 'email_input' | 'otp_input'>('initial');
+  const [step, setStep] = useState<'initial' | 'email_input' | 'otp_input' | 'error'>('initial');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -22,14 +22,16 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
           if (data.profile) {
             const role = data.profile.role;
             if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
-              setErrorMsg("Invalid access. This email is registered as a supplier.");
+              setErrorMsg("This email is registered as a supplier. Please use the Public Portal.");
               setCode('');
+              setStep('error');
               logout();
               return;
             }
             if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
-              setErrorMsg("Invalid access. This email is registered as an officer.");
+              setErrorMsg("This email is registered as an officer. Please use the Officer Access.");
               setCode('');
+              setStep('error');
               logout();
               return;
             }
@@ -110,7 +112,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
           Protected by Privy
         </p>
 
-        {errorMsg && (
+        {errorMsg && step !== 'error' && (
           <div className="mb-6 w-full p-3 bg-danger/10 border border-danger/30 rounded-lg text-xs font-mono font-bold text-danger tracking-widest text-center">
             {errorMsg}
           </div>
@@ -222,6 +224,30 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               Change Email
             </button>
           </form>
+        )}
+
+        {/* Invalid Access View */}
+        {step === 'error' && (
+          <div className="w-full flex flex-col items-center justify-center gap-4 py-8 animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 rounded-full bg-danger/10 flex items-center justify-center mb-2">
+              <XMarkIcon className="w-8 h-8 text-danger stroke-2" />
+            </div>
+            <h3 className="text-xl font-heading font-bold text-danger tracking-widest uppercase text-center">
+              Invalid Access
+            </h3>
+            <p className="text-xs font-mono text-zinc-400 text-center max-w-[280px]">
+              {errorMsg}
+            </p>
+            <button
+              onClick={() => {
+                setStep('email_input');
+                setErrorMsg('');
+              }}
+              className="mt-6 px-6 py-3 w-full bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-mono font-bold tracking-widest transition-colors uppercase"
+            >
+              Try Another Email
+            </button>
+          </div>
         )}
       </div>
     </div>
