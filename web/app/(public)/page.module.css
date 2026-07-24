@@ -200,3 +200,35 @@
   color: var(--color-text-main);
   font-weight: 500;
 }
+
+.footer {
+  background-color: #050505; /* very dark */
+  padding: 64px 0 40px;
+  text-align: center;
+}
+
+.footerLogo {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+.logoWhite {
+  color: #ffffff;
+}
+
+.logoGradient {
+  background: linear-gradient(to right, #C5A059, #4a3818);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.footerText {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}

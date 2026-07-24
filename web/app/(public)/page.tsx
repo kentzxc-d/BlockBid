@@ -118,6 +118,19 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <div className="container">
+          <div className={styles.footerLogo}>
+            <span className={styles.logoWhite}>BLOCK</span>
+            <span className={styles.logoGradient}>BID</span>
+          </div>
+          <p className={styles.footerText}>
+            BlockBid &middot; Cor Jesu College Capstone 2025&ndash;2026 &middot; Powered by Polygon
+          </p>
+        </div>
+      </footer>
     </>
   );
 }
