@@ -144,16 +144,32 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               </p>
             </div>
             
-            <input
-              type="text"
-              placeholder="0 0 0 0 0 0"
-              required
-              autoFocus
-              maxLength={6}
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
-              className="w-full h-16 bg-[#f8f9fa] border-2 border-primary rounded-xl text-center text-3xl tracking-[0.5em] font-mono font-bold text-zinc-700 placeholder:text-zinc-300 outline-none transition-colors shadow-inner"
-            />
+            <div className="relative flex justify-between w-full gap-2 mt-2 mb-2">
+              <input
+                type="text"
+                required
+                autoFocus
+                maxLength={6}
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
+                className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-text"
+              />
+              
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <div 
+                  key={i} 
+                  className={`flex-1 h-14 sm:h-16 flex items-center justify-center text-2xl font-mono font-bold rounded-xl border transition-all ${
+                    code.length === i 
+                      ? 'border-primary bg-zinc-800/80 ring-2 ring-primary/20 text-white' 
+                      : code[i] 
+                        ? 'border-zinc-600 bg-zinc-800 text-white' 
+                        : 'border-zinc-800 bg-[#121214] text-zinc-500'
+                  }`}
+                >
+                  {code[i] || ''}
+                </div>
+              ))}
+            </div>
             
             <button 
               type="submit"
