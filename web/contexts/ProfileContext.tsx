@@ -18,6 +18,7 @@ export interface UserProfile {
 interface ProfileContextType {
   profile: UserProfile | null;
   adminData: any;
+  supplierData: any;
   loadingProfile: boolean;
   refreshProfile: () => Promise<void>;
 }
@@ -25,6 +26,7 @@ interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType>({
   profile: null,
   adminData: null,
+  supplierData: null,
   loadingProfile: true,
   refreshProfile: async () => {},
 });
@@ -35,6 +37,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [loadingProfile, setLoadingProfile] = useState(true);
 
   const [adminData, setAdminData] = useState<any>(null);
+  const [supplierData, setSupplierData] = useState<any>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!ready) return;
@@ -42,6 +45,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     if (ready && (!authenticated || !user)) {
       setProfile(null);
       setAdminData(null);
+      setSupplierData(null);
       setLoadingProfile(false);
       return;
     }
@@ -77,6 +81,20 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
               setAdminData({ stats: null, pendingProjects: [], analytics: [] });
             }
           }
+
+          // Pre-fetch supplier data if user is a supplier
+          if (data.profile.role === 'supplier') {
+            try {
+              const bidsRes = await fetch(`/api/bids?supplier_id=${user!.id}`);
+              const bidsData = await bidsRes.json();
+              setSupplierData({
+                bids: bidsData.bids || []
+              });
+            } catch (err) {
+              console.error("Failed to pre-fetch supplier data", err);
+              setSupplierData({ bids: [] });
+            }
+          }
         } else {
           setProfile(null);
         }
@@ -97,7 +115,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   }, [fetchProfile]);
 
   return (
-    <ProfileContext.Provider value={{ profile, adminData, loadingProfile, refreshProfile: fetchProfile }}>
+    <ProfileContext.Provider value={{ profile, adminData, supplierData, loadingProfile, refreshProfile: fetchProfile }}>
       {children}
     </ProfileContext.Provider>
   );

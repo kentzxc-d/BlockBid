@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { usePrivy } from "@privy-io/react-auth";
+import { useProfile } from "@/contexts/ProfileContext";
 import { 
   DocumentTextIcon, 
   CheckCircleIcon, 
@@ -17,6 +18,7 @@ import AcquisitionCard from "@/components/AcquisitionCard";
 
 export default function MyBidsPage() {
   const { user } = usePrivy();
+  const { supplierData } = useProfile();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("ALL_BIDS");
   const [viewingBid, setViewingBid] = useState<any | null>(null);
@@ -24,29 +26,27 @@ export default function MyBidsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
-    fetch(`/api/bids?supplier_id=${user.id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.bids) {
-          const mappedBids = data.bids.map((b: any) => ({
-            id: b.id,
-            acquisitionTitle: b.projects?.title || "Unknown Project",
-            acquisitionId: b.project_id,
-            submittedAt: new Date(b.created_at).toLocaleDateString(),
-            amount: "N/A", // In a real app, calculate from bid_values
-            status: b.status.toUpperCase(),
-            statusIcon: b.status === "submitted" ? ClockIcon : (b.status === "won" ? CheckCircleIcon : XCircleIcon),
-            statusColor: b.status === "submitted" ? "text-amber-500" : (b.status === "won" ? "text-emerald-500" : "text-red-500"),
-            statusBg: b.status === "submitted" ? "bg-amber-500/10" : (b.status === "won" ? "bg-emerald-500/10" : "bg-red-500/10"),
-            statusBorder: b.status === "submitted" ? "border-amber-500/20" : (b.status === "won" ? "border-emerald-500/20" : "border-red-500/20")
-          }));
-          setBids(mappedBids);
-        }
-      })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  }, [user]);
+    if (supplierData?.bids) {
+      const mappedBids = supplierData.bids.map((b: any) => ({
+        id: b.id,
+        acquisitionTitle: b.projects?.title || "Unknown Project",
+        acquisitionId: b.project_id,
+        submittedAt: new Date(b.created_at).toLocaleDateString(),
+        amount: "N/A", // In a real app, calculate from bid_values
+        status: b.status.toUpperCase(),
+        statusIcon: b.status === "submitted" ? ClockIcon : (b.status === "won" ? CheckCircleIcon : XCircleIcon),
+        statusColor: b.status === "submitted" ? "text-amber-500" : (b.status === "won" ? "text-emerald-500" : "text-red-500"),
+        statusBg: b.status === "submitted" ? "bg-amber-500/10" : (b.status === "won" ? "bg-emerald-500/10" : "bg-red-500/10"),
+        statusBorder: b.status === "submitted" ? "border-amber-500/20" : (b.status === "won" ? "border-emerald-500/20" : "border-red-500/20"),
+        on_chain_hash: b.on_chain_hash
+      }));
+      setBids(mappedBids);
+      setIsLoading(false);
+    } else if (supplierData) {
+      setBids([]);
+      setIsLoading(false);
+    }
+  }, [supplierData]);
 
 
   const filteredBids = useMemo(() => {
