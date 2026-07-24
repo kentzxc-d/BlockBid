@@ -82,6 +82,9 @@ export async function GET(request: Request) {
         created_at,
         projects (
           title
+        ),
+        bid_values (
+          value
         )
       `)
       .eq("supplier_id", supplier_id)

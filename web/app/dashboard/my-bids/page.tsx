@@ -32,7 +32,7 @@ export default function MyBidsPage() {
         acquisitionTitle: b.projects?.title || "Unknown Project",
         acquisitionId: b.project_id,
         submittedAt: new Date(b.created_at).toLocaleDateString(),
-        amount: "N/A", // In a real app, calculate from bid_values
+        amount: b.bid_values && b.bid_values.length > 0 ? b.bid_values.map((v:any) => v.value).join(" | ").substring(0, 120) + (b.bid_values.map((v:any) => v.value).join(" | ").length > 120 ? "..." : "") : "N/A",
         status: b.status.toUpperCase(),
         statusIcon: b.status === "submitted" ? ClockIcon : (b.status === "won" ? CheckCircleIcon : XCircleIcon),
         statusColor: b.status === "submitted" ? "text-amber-500" : (b.status === "won" ? "text-emerald-500" : "text-red-500"),
@@ -209,8 +209,8 @@ export default function MyBidsPage() {
                   <span className="font-bold text-text-main">{viewingBid.submittedAt}</span>
                 </div>
                 <div className="flex justify-between items-center pb-4 border-b border-border">
-                  <span className="text-text-muted font-bold">PROPOSED_AMOUNT</span>
-                  <span className="font-bold text-primary bg-primary/10 px-3 py-1.5 border border-primary/20 rounded-md">{viewingBid.amount}</span>
+                  <span className="text-text-muted font-bold">PROPOSAL_SUMMARY</span>
+                  <span className="font-bold text-primary bg-primary/10 px-3 py-1.5 border border-primary/20 rounded-md max-w-[60%] text-right">{viewingBid.amount}</span>
                 </div>
                 <div className="flex justify-between items-center pb-2">
                   <span className="text-text-muted font-bold">CURRENT_STATUS</span>
