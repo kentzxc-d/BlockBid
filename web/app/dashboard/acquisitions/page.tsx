@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 
 import { usePrivy } from "@privy-io/react-auth";
+import { useProfile } from "@/contexts/ProfileContext";
 import Link from "next/link";
 import { 
   BuildingOfficeIcon, 
@@ -17,13 +18,18 @@ import AcquisitionCard from "@/components/AcquisitionCard";
 
 export default function ActiveSolicitationsPage() {
   const { user } = usePrivy();
+  const { supplierData, loadingProfile } = useProfile();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSector, setSelectedSector] = useState("All");
   const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
-  const [allMyBidProjectIds, setAllMyBidProjectIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const allMyBidProjectIds = useMemo(() => {
+    return supplierData?.bids?.map((b: any) => b.project_id) || [];
+  }, [supplierData]);
+
   useEffect(() => {
+    setIsLoading(true);
     fetch('/api/acquisitions?filter=open')
       .then(res => res.json())
       .then(data => {
@@ -33,18 +39,7 @@ export default function ActiveSolicitationsPage() {
       })
       .catch(console.error)
       .finally(() => setIsLoading(false));
-
-    if (user) {
-      fetch(`/api/bids?supplier_id=${user.id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.bids) {
-            setAllMyBidProjectIds(data.bids.map((b: any) => b.project_id));
-          }
-        })
-        .catch(console.error);
-    }
-  }, [user]);
+  }, []);
 
   const filteredSolicitations = useMemo(() => {
     return activeSolicitations.filter(solicitation => {
@@ -102,7 +97,12 @@ export default function ActiveSolicitationsPage() {
 
       {/* Solicitations List */}
       <div className="grid gap-4">
-        {filteredSolicitations.length === 0 ? (
+        {isLoading || loadingProfile ? (
+          <div className="bg-surface rounded-none p-10 border border-border text-center flex flex-col items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">SYNCING_LEDGER...</p>
+          </div>
+        ) : filteredSolicitations.length === 0 ? (
           <div className="bg-surface rounded-none p-10 border border-border text-center">
             <div className="w-12 h-12 bg-gray-50 rounded-none flex items-center justify-center mx-auto mb-4 border border-border">
               <MagnifyingGlassIcon className="w-6 h-6 text-text-muted" />
