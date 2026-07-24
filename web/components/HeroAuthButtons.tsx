@@ -1,19 +1,13 @@
 "use client";
 
-import { useLogin, usePrivy } from "@privy-io/react-auth";
+import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function HeroAuthButtons() {
   const router = useRouter();
-  const { authenticated, ready } = usePrivy();
+  const { authenticated, ready, login } = usePrivy();
   const [targetRoute, setTargetRoute] = useState<string>("/dashboard");
-
-  const { login } = useLogin({
-    onComplete: () => {
-      router.push(targetRoute);
-    }
-  });
 
   const handleBrowse = () => {
     if (!ready) return;
@@ -21,6 +15,8 @@ export default function HeroAuthButtons() {
       router.push("/dashboard/acquisitions");
     } else {
       setTargetRoute("/dashboard/acquisitions");
+      sessionStorage.setItem('targetRoute', '/dashboard/acquisitions');
+      sessionStorage.setItem('loginIntent', 'supplier');
       login();
     }
   };
@@ -31,6 +27,8 @@ export default function HeroAuthButtons() {
       router.push("/dashboard");
     } else {
       setTargetRoute("/dashboard");
+      sessionStorage.setItem('targetRoute', '/dashboard');
+      sessionStorage.setItem('loginIntent', 'supplier');
       login();
     }
   };

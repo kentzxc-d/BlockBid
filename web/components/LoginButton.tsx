@@ -41,7 +41,9 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
         console.error("Profile check failed", err);
       }
       
-      router.push('/dashboard');
+      const target = sessionStorage.getItem('targetRoute') || '/dashboard';
+      sessionStorage.removeItem('targetRoute');
+      router.push(target);
     }
   });
 
@@ -78,6 +80,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           <button 
             onClick={() => {
               sessionStorage.setItem('loginIntent', 'officer');
+              sessionStorage.setItem('targetRoute', '/dashboard');
               login();
             }}
             style={{ 
@@ -97,6 +100,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
             className="btn btn-primary" 
             onClick={() => {
               sessionStorage.setItem('loginIntent', 'supplier');
+              sessionStorage.setItem('targetRoute', '/dashboard');
               login();
             }}
             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
