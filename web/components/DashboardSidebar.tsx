@@ -123,17 +123,6 @@ export default function DashboardSidebar() {
           <div className="space-y-2">
             {/* Network Mode Switcher Removed */}
 
-            {activeMode === "agency" && (
-              <div className="mb-8">
-                <Link
-                  href="/dashboard/agency/new"
-                  className="flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md bg-primary text-secondary hover:text-secondary hover:bg-primary-hover shadow-primary/20"
-                >
-                  <PlusCircleIcon className="w-5 h-5 stroke-2" />
-                  New Request
-                </Link>
-              </div>
-            )}
 
             <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
               [ NAVIGATION ]

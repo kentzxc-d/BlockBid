@@ -56,7 +56,7 @@ export default function MyAcquisitionsPage() {
         
         {/* Create New CTA */}
         <Link 
-          href="/dashboard/requestor/new"
+          href="/dashboard/agency/new"
           className="flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white hover:bg-primary hover:text-white rounded-md font-mono text-xs font-bold uppercase tracking-widest transition-colors shadow-sm"
         >
           <PlusCircleIcon className="w-4 h-4 stroke-2" />
