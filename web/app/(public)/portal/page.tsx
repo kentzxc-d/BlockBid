@@ -19,6 +19,8 @@ async function getAwardedAcquisitions() {
       status,
       awarded_at,
       awarded_supplier_id,
+      location,
+      budget,
       bids (
         id,
         supplier_id,
@@ -47,7 +49,9 @@ async function getAwardedAcquisitions() {
       title: project.title,
       awarded_at: project.awarded_at,
       total_price: totalPrice,
-      on_chain_hash: onChainHash
+      on_chain_hash: onChainHash,
+      location: project.location,
+      budget: project.budget
     };
   });
 }
