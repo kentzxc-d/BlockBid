@@ -32,12 +32,15 @@ export default function MyBidsPage() {
         acquisitionTitle: b.projects?.title || "Unknown Project",
         acquisitionId: b.project_id,
         submittedAt: new Date(b.created_at).toLocaleDateString(),
-        amount: b.bid_values && b.bid_values.length > 0 ? b.bid_values.map((v:any) => v.value).join("\n\n") : "N/A",
+        proposalSummary: b.bid_values && b.bid_values.length > 0 ? b.bid_values.map((v:any) => v.value).join("\n\n") : "N/A",
         status: b.status.toUpperCase(),
         statusIcon: b.status === "submitted" ? ClockIcon : (b.status === "won" ? CheckCircleIcon : XCircleIcon),
         statusColor: b.status === "submitted" ? "text-amber-500" : (b.status === "won" ? "text-emerald-500" : "text-red-500"),
         statusBg: b.status === "submitted" ? "bg-amber-500/10" : (b.status === "won" ? "bg-emerald-500/10" : "bg-red-500/10"),
         statusBorder: b.status === "submitted" ? "border-amber-500/20" : (b.status === "won" ? "border-emerald-500/20" : "border-red-500/20"),
+        projectBudget: b.projects?.budget || "TBD",
+        projectLocation: b.projects?.location || "Various",
+        projectDescription: b.projects?.description || "This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met.",
         on_chain_hash: b.on_chain_hash
       }));
       setBids(mappedBids);
@@ -166,10 +169,10 @@ export default function MyBidsPage() {
               <AcquisitionCard
                 key={bid.id}
                 title={bid.acquisitionTitle}
-                description="This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met." // Placeholder since actual description isn't mapped
+                description={bid.projectDescription}
                 status={bid.status}
-                location={bid.project?.location || "Various"}
-                estBudget={bid.project?.budget || (bid.amount === "N/A" ? "TBD" : bid.amount)}
+                location={bid.projectLocation}
+                estBudget={bid.projectBudget}
                 closingDate={`Submitted: ${bid.submittedAt}`}
                 contractHash={bid.on_chain_hash || "b53d0128-37d5-457b-9c4a-08b7c093fb7d"} // mock hash if undefined
                 actionButton={actionButton}
@@ -211,7 +214,7 @@ export default function MyBidsPage() {
                 <div className="flex flex-col pb-4 border-b border-border">
                   <span className="text-text-muted font-bold mb-2">PROPOSAL_SUMMARY</span>
                   <div className="font-mono font-bold text-primary bg-primary/10 px-4 py-3 border border-primary/20 rounded-md max-h-40 overflow-y-auto whitespace-pre-wrap text-[10px] leading-relaxed">
-                    {viewingBid.amount}
+                    {viewingBid.proposalSummary}
                   </div>
                 </div>
                 <div className="flex justify-between items-center pb-2">

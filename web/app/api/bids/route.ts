@@ -81,7 +81,10 @@ export async function GET(request: Request) {
         status,
         created_at,
         projects (
-          title
+          title,
+          location,
+          budget,
+          description
         ),
         bid_values (
           value
