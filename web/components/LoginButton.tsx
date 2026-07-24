@@ -1,22 +1,17 @@
 "use client";
 
-import { usePrivy, useLogin } from "@privy-io/react-auth";
+import { usePrivy } from "@privy-io/react-auth";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
+import CustomLoginModal from "./CustomLoginModal";
 
 export default function LoginButton() {
   const router = useRouter();
   const pathname = usePathname();
   const { ready, authenticated, logout, user } = usePrivy();
-
-  const { login } = useLogin({
-    onComplete: () => {
-      // If logging in from the landing page, go to dashboard
-      if (ready && authenticated) {
-        router.push("/dashboard");
-      }
-    }
-  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loginIntent, setLoginIntent] = useState<'officer' | 'supplier' | null>(null);
 
   if (!ready) {
     return <button className="btn btn-outline" disabled>Loading...</button>;
@@ -55,7 +50,8 @@ export default function LoginButton() {
       <button 
         onClick={() => {
           sessionStorage.setItem('loginIntent', 'officer');
-          login();
+          setLoginIntent('officer');
+          setIsModalOpen(true);
         }}
         style={{ 
           background: 'transparent', 
@@ -74,12 +70,19 @@ export default function LoginButton() {
         className="btn btn-primary" 
         onClick={() => {
           sessionStorage.setItem('loginIntent', 'supplier');
-          login();
+          setLoginIntent('supplier');
+          setIsModalOpen(true);
         }}
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
       >
         Supplier Login
       </button>
+      
+      <CustomLoginModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        intent={loginIntent} 
+      />
     </div>
   );
 }
