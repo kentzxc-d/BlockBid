@@ -61,7 +61,7 @@ export default function MyBidsPage() {
 
       return matchesSearch && matchesTab;
     });
-  }, [searchQuery, activeTab]);
+  }, [bids, searchQuery, activeTab]);
 
   const counts = {
     all: bids.length,
