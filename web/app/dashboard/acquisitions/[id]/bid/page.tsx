@@ -114,37 +114,8 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         throw new Error(data.error || "Failed to submit bid");
       }
 
-      // Step 2: Write cryptographic hash to Polygon Amoy
-      if (wallets && wallets.length > 0) {
-        try {
-          const wallet = wallets[0];
-          await wallet.switchChain(activeChain.id);
-          const provider = await wallet.getEthereumProvider();
-          
-          const walletClient = createWalletClient({
-            account: wallet.address as `0x${string}`,
-            chain: activeChain,
-            transport: custom(provider)
-          });
-
-          const bidHash = keccak256(toHex(JSON.stringify(payload)));
-          const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
-          
-          if (contractAddress) {
-            const hash = await walletClient.writeContract({
-              address: contractAddress,
-              abi: BlockBidABI,
-              functionName: 'commitBid',
-              args: [params.id, bidHash]
-            });
-            setTxHash(hash);
-          }
-        } catch (contractErr: any) {
-          console.error("Smart Contract Error:", contractErr);
-          // We won't block the UI success if DB saved but contract failed, but we log it.
-          // Or we can set an error. Let's just log it for the hackathon.
-        }
-      }
+      // The smart contract transaction (commitBid) is now handled off-chain or by the backend admin wallet
+      // to sponsor the gas fee for the supplier.
 
       setShowSuccess(true);
     } catch (err: any) {
