@@ -4,11 +4,15 @@ import { useLogin, usePrivy } from "@privy-io/react-auth";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import InvalidAccessModal from "./InvalidAccessModal";
 
 export default function LoginButton({ isLanding = true }: { isLanding?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { ready, authenticated, logout, user } = usePrivy();
+  
+  const [invalidAccessMessage, setInvalidAccessMessage] = useState('');
+  const [isInvalidModalOpen, setIsInvalidModalOpen] = useState(false);
   
   const { login } = useLogin({
     onComplete: async ({ user }) => {
@@ -20,12 +24,14 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           if (data.profile) {
             const role = data.profile.role;
             if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
-              alert("Invalid access. This portal is for Officers only.");
+              setInvalidAccessMessage("This portal is for Officers only.");
+              setIsInvalidModalOpen(true);
               logout();
               return;
             }
             if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
-              alert("Invalid access. This portal is for Suppliers only.");
+              setInvalidAccessMessage("This portal is for Suppliers only.");
+              setIsInvalidModalOpen(true);
               logout();
               return;
             }
@@ -99,6 +105,12 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           </button>
         </div>
       )}
+
+      <InvalidAccessModal 
+        isOpen={isInvalidModalOpen} 
+        onClose={() => setIsInvalidModalOpen(false)} 
+        message={invalidAccessMessage} 
+      />
     </>
   );
 }
