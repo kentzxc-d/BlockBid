@@ -96,7 +96,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
       <div 
-        className="relative w-full max-w-[400px] min-h-[380px] p-8 py-10 bg-[#18181b] border border-zinc-800 shadow-2xl text-white flex flex-col items-center rounded-2xl transition-all duration-300"
+        className="relative w-full max-w-[400px] p-8 py-10 bg-[#18181b] border border-zinc-800 shadow-2xl text-white flex flex-col items-center rounded-2xl transition-all duration-300"
         onClick={(e) => e.stopPropagation()}
       >
 
@@ -187,25 +187,21 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               />
 
               {[0, 1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className={`flex-1 h-14 sm:h-16 flex items-center justify-center text-2xl font-mono font-bold rounded-xl border transition-all ${code.length === i
-                      ? 'border-primary bg-zinc-800/80 ring-2 ring-primary/20 text-white'
-                      : code[i]
-                        ? 'border-zinc-600 bg-zinc-800 text-white'
-                        : 'border-zinc-800 bg-[#121214] text-zinc-500'
-                    }`}
+                <div 
+                  key={i} 
+                  className={`flex-1 h-14 sm:h-16 flex items-center justify-center text-2xl font-mono font-bold rounded-xl border transition-all duration-300 ${
+                    state.status === 'submitting-code'
+                      ? 'border-[#10b981] bg-zinc-800 ring-2 ring-[#10b981]/20 text-[#10b981]'
+                      : code.length === i 
+                        ? 'border-zinc-400 bg-zinc-800/80 ring-2 ring-zinc-400/20 text-white' 
+                        : code[i] 
+                          ? 'border-zinc-600 bg-zinc-800 text-white' 
+                          : 'border-zinc-800 bg-[#121214] text-zinc-500'
+                  }`}
                 >
                   {code[i] || ''}
                 </div>
               ))}
-            </div>
-
-
-            <div className="w-full flex justify-center h-9 mt-2">
-              {state.status === 'submitting-code' && (
-                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              )}
             </div>
 
             <button
