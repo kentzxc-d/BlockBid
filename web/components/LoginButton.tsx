@@ -37,7 +37,7 @@ export default function LoginButton() {
         style={{ 
           background: 'transparent', 
           border: 'none', 
-          color: 'var(--color-text-muted)', 
+          color: 'var(--color-text-inverse)', 
           cursor: 'pointer', 
           fontFamily: 'var(--font-mono)', 
           fontSize: '12px',
@@ -56,7 +56,7 @@ export default function LoginButton() {
         style={{ 
           background: 'transparent', 
           border: 'none', 
-          color: 'var(--color-text-muted)', 
+          color: 'var(--color-text-inverse)', 
           cursor: 'pointer', 
           fontFamily: 'var(--font-mono)', 
           fontSize: '12px',
