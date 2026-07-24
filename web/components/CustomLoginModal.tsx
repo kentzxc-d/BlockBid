@@ -95,8 +95,8 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
-      <div
-        className="relative w-full max-w-[400px] p-8 py-10 bg-[#18181b] border border-zinc-800 shadow-2xl text-white flex flex-col items-center rounded-2xl"
+      <div 
+        className="relative w-full max-w-[400px] min-h-[380px] p-8 py-10 bg-[#18181b] border border-zinc-800 shadow-2xl text-white flex flex-col items-center rounded-2xl transition-all duration-300"
         onClick={(e) => e.stopPropagation()}
       >
 
@@ -202,11 +202,11 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
             </div>
 
 
-            {state.status === 'submitting-code' && (
-              <div className="w-full flex justify-center py-2 mt-2">
+            <div className="w-full flex justify-center h-9 mt-2">
+              {state.status === 'submitting-code' && (
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
+              )}
+            </div>
 
             <button
               type="button"
@@ -237,10 +237,6 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               <h3 className="text-xl font-heading font-black text-white tracking-[0.2em] uppercase text-center drop-shadow-md">
                 Invalid Access
               </h3>
-              <div className="h-[2px] w-12 bg-[#ef4444] rounded-full mt-1 mb-2 opacity-80"></div>
-              <p className="text-sm font-mono text-zinc-300 text-center max-w-[280px] leading-relaxed">
-                {errorMsg}
-              </p>
             </div>
 
             <button
