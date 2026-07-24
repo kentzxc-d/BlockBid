@@ -24,13 +24,13 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           if (data.profile) {
             const role = data.profile.role;
             if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
-              setInvalidAccessMessage("This portal is for Officers only.");
+              setInvalidAccessMessage("Invalid access for this portal.");
               setIsInvalidModalOpen(true);
               logout();
               return;
             }
             if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
-              setInvalidAccessMessage("This portal is for Suppliers only.");
+              setInvalidAccessMessage("Invalid access for this portal.");
               setIsInvalidModalOpen(true);
               logout();
               return;
