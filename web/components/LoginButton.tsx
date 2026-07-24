@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import CustomLoginModal from "./CustomLoginModal";
 
-export default function LoginButton() {
+export default function LoginButton({ isLanding = true }: { isLanding?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { ready, authenticated, logout, user } = usePrivy();
@@ -37,7 +37,7 @@ export default function LoginButton() {
         style={{ 
           background: 'transparent', 
           border: 'none', 
-          color: 'var(--color-text-inverse)', 
+          color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-muted)', 
           cursor: 'pointer', 
           fontFamily: 'var(--font-mono)', 
           fontSize: '12px',
@@ -56,7 +56,7 @@ export default function LoginButton() {
         style={{ 
           background: 'transparent', 
           border: 'none', 
-          color: 'var(--color-text-inverse)', 
+          color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-muted)', 
           cursor: 'pointer', 
           fontFamily: 'var(--font-mono)', 
           fontSize: '12px',
