@@ -57,7 +57,7 @@ export default function MyAcquisitionsPage() {
         {/* Create New CTA */}
         <Link 
           href="/dashboard/requestor/new"
-          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white hover:bg-primary rounded-md font-mono text-xs font-bold uppercase tracking-widest transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white hover:bg-primary hover:text-white rounded-md font-mono text-xs font-bold uppercase tracking-widest transition-colors shadow-sm"
         >
           <PlusCircleIcon className="w-4 h-4 stroke-2" />
           CREATE_REQUEST
@@ -123,13 +123,13 @@ export default function MyAcquisitionsPage() {
                     <>
                       <Link 
                         href={`/dashboard/acquisitions/${req.id}/workspace`} 
-                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 transition-colors whitespace-nowrap shadow-sm w-full"
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-emerald-600 hover:text-white transition-colors whitespace-nowrap shadow-sm w-full"
                       >
                         WORKSPACE
                       </Link>
                       <Link 
                         href={`/dashboard/acquisitions/${req.id}/evaluate`} 
-                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap w-full"
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 hover:text-text-main transition-colors whitespace-nowrap w-full"
                       >
                         <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_WINNER
                       </Link>
@@ -137,7 +137,7 @@ export default function MyAcquisitionsPage() {
                   ) : (
                     <Link 
                       href={`/dashboard/acquisitions/${req.id}/evaluate`} 
-                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:border-text-main hover:bg-gray-50 hover:text-text-main transition-colors whitespace-nowrap"
                     >
                       VIEW_BIDS <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
                     </Link>
