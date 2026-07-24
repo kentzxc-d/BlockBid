@@ -66,17 +66,17 @@ export default function MyAcquisitionsPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+        <div className="bg-surface rounded-none p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">TOTAL_REQUESTS</span>
           <span className="text-3xl font-mono font-bold text-text-main">{acquisitions.length.toString().padStart(2, '0')}</span>
         </div>
-        <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+        <div className="bg-surface rounded-none p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">BIDS_RECEIVED</span>
           <span className="text-3xl font-mono font-bold text-primary">
             {acquisitions.reduce((acc, p) => acc + p.bidsCount, 0).toString().padStart(2, '0')}
           </span>
         </div>
-        <div className="bg-surface rounded-md p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+        <div className="bg-surface rounded-none p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">SUCCESSFULLY_AWARDED</span>
           <span className="text-3xl font-mono font-bold text-emerald-500">
             {acquisitions.filter(p => p.status === 'AWARDED').length.toString().padStart(2, '0')}
@@ -85,7 +85,7 @@ export default function MyAcquisitionsPage() {
       </div>
 
       {/* List of Acquisitions */}
-      <div className="bg-surface border border-border rounded-md overflow-hidden">
+      <div className="bg-surface border border-border rounded-none overflow-hidden">
         <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center">
           <h3 className="text-xs font-mono font-bold tracking-widest text-text-main uppercase">[ RECENT_SOLICITATIONS ]</h3>
         </div>

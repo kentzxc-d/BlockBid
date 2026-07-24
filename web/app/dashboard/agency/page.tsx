@@ -82,7 +82,7 @@ export default function AgencyDashboard() {
         </div>
 
         {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (
-          <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-md p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="bg-surface relative overflow-hidden border border-primary/30 rounded-none p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
             {/* Subtle Background Accent */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
             
@@ -108,13 +108,13 @@ export default function AgencyDashboard() {
             
             <Link 
               href="/dashboard/agency/new"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-background hover:bg-primary-hover font-mono text-sm font-bold uppercase tracking-widest transition-colors rounded-md shadow-md shadow-primary/20 border border-primary hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-background hover:text-background hover:bg-primary-hover font-mono text-sm font-bold uppercase tracking-widest transition-colors rounded-md shadow-md shadow-primary/20 border border-primary hover:-translate-y-0.5"
             >
               [ POST_NEW_ACQUISITION ] <ArrowRightIcon className="w-5 h-5 stroke-2" />
             </Link>
           </div>
         ) : (
-          <div className="bg-surface border border-border rounded-md overflow-hidden">
+          <div className="bg-surface border border-border rounded-none overflow-hidden">
             <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center justify-between">
               <h3 className="text-xs font-mono font-bold tracking-widest text-text-main uppercase">[ RECENT_SOLICITATIONS ]</h3>
               <Link href="/dashboard/my-acquisitions" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-1 uppercase">
