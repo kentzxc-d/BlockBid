@@ -6,7 +6,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useProfile } from "@/contexts/ProfileContext";
 
 export default function DashboardRedirector() {
-  const { user, ready } = usePrivy();
+  const { user, ready, logout } = usePrivy();
   const { profile, loadingProfile } = useProfile();
   const router = useRouter();
 
@@ -20,6 +20,21 @@ export default function DashboardRedirector() {
       if (!loadingProfile) {
         if (profile) {
           const role = profile.role;
+          const intent = sessionStorage.getItem('loginIntent');
+
+          // Strict separation rules
+          if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
+            alert("Invalid access. Please check your credentials and portal selection.");
+            logout();
+            return;
+          }
+
+          if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
+            alert("Invalid access. Please check your credentials and portal selection.");
+            logout();
+            return;
+          }
+
           if (role === "admin") {
             router.replace("/dashboard/admin");
           } else if (role === "requestor") {

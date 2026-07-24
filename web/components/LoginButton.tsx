@@ -53,7 +53,10 @@ export default function LoginButton() {
         [ Public Portal ]
       </button>
       <button 
-        onClick={login}
+        onClick={() => {
+          sessionStorage.setItem('loginIntent', 'officer');
+          login();
+        }}
         style={{ 
           background: 'transparent', 
           border: 'none', 
@@ -69,7 +72,10 @@ export default function LoginButton() {
       </button>
       <button 
         className="btn btn-primary" 
-        onClick={login}
+        onClick={() => {
+          sessionStorage.setItem('loginIntent', 'supplier');
+          login();
+        }}
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
       >
         Supplier Login
