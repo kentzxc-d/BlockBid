@@ -12,6 +12,8 @@ export interface UserProfile {
   wallet_address: string | null;
   avatar_url?: string | null;
   location?: string | null;
+  contact_name?: string | null;
+  contact_number?: string | null;
   verification_status?: "unverified" | "pending" | "verified" | "rejected";
 }
 
