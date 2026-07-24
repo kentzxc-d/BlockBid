@@ -4,7 +4,6 @@
   text-align: center;
   background-color: var(--color-surface-inverse);
   color: var(--color-text-inverse);
-  border-bottom: 4px solid var(--color-primary);
   overflow: hidden;
 }
 
@@ -106,7 +105,7 @@
 
 .manifestoLabel {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   color: #fbbf24;
   letter-spacing: 0.05em;
   font-weight: 600;
@@ -114,14 +113,14 @@
 }
 
 .manifestoCard h3 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 12px;
   color: #ffffff;
 }
 
 .manifestoCard p {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
   color: #94a3b8;
 }
