@@ -111,10 +111,10 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
             body: JSON.stringify({
               criteria: projData.project.criteria.map((c:any) => ({ name: c.name, weight: c.weight_percentage })),
               bids: unevaluatedBids,
-              acquisitionDetails: {
+              procurementDetails: {
                 title: projData.project.title,
                 description: projData.project.description,
-                budget: "Not specified"
+                budget: projData.project.budget || "Not specified"
               }
             })
           });
