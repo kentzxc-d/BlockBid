@@ -224,24 +224,33 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
 
         {/* Invalid Access View */}
         {step === 'error' && (
-          <div className="w-full flex flex-col items-center justify-center gap-4 py-8 animate-in zoom-in-95 duration-300">
-            <div className="w-16 h-16 rounded-full bg-danger/10 flex items-center justify-center mb-2">
-              <XMarkIcon className="w-8 h-8 text-danger stroke-2" />
+          <div className="w-full flex flex-col items-center justify-center gap-6 py-6 animate-in zoom-in-95 duration-500">
+            {/* Pulsing error icon */}
+            <div className="relative flex items-center justify-center w-20 h-20">
+              <div className="absolute inset-0 rounded-full bg-[#ef4444] opacity-20 animate-ping" style={{ animationDuration: '2s' }}></div>
+              <div className="relative z-10 w-16 h-16 rounded-full bg-[#ef4444]/10 border border-[#ef4444]/30 flex items-center justify-center backdrop-blur-sm">
+                <XMarkIcon className="w-8 h-8 text-[#ef4444] stroke-[2.5]" />
+              </div>
             </div>
-            <h3 className="text-xl font-heading font-bold text-danger tracking-widest uppercase text-center">
-              Invalid Access
-            </h3>
-            <p className="text-xs font-mono text-zinc-400 text-center max-w-[280px]">
-              {errorMsg}
-            </p>
+            
+            <div className="flex flex-col items-center gap-2">
+              <h3 className="text-xl font-heading font-black text-white tracking-[0.2em] uppercase text-center drop-shadow-md">
+                Invalid Access
+              </h3>
+              <div className="h-[2px] w-12 bg-[#ef4444] rounded-full mt-1 mb-2 opacity-80"></div>
+              <p className="text-sm font-mono text-zinc-300 text-center max-w-[280px] leading-relaxed">
+                {errorMsg}
+              </p>
+            </div>
+
             <button
               onClick={() => {
                 setStep('email_input');
                 setErrorMsg('');
               }}
-              className="mt-6 px-6 py-3 w-full bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl text-xs font-mono font-bold tracking-widest transition-colors uppercase"
+              className="mt-4 px-8 py-4 w-full bg-[#18181b] border border-[#ef4444]/50 hover:bg-[#ef4444]/10 hover:border-[#ef4444] text-white rounded-xl text-xs font-mono font-bold tracking-widest transition-all uppercase shadow-lg shadow-black/20 hover:shadow-[#ef4444]/20 hover:-translate-y-0.5"
             >
-              Try Another Email
+              [ Try Another Email ]
             </button>
           </div>
         )}
