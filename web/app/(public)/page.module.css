@@ -11,12 +11,12 @@
 .hero::before {
   content: "0x1b4f...9a 0x8c21...3d 0x9f11...7e 0x5a2d...1c 0x4e8b...2f 0x1b4f...9a 0x8c21...3d 0x9f11...7e";
   position: absolute;
-  top: 0;
+  top: 80px;
   left: -50%;
   width: 200%;
   height: 100%;
   font-family: var(--font-mono);
-  font-size: 140px;
+  font-size: 200px;
   line-height: 1.1;
   color: rgba(249, 249, 246, 0.03); /* Extremely faint Parchment */
   word-break: break-all;
@@ -53,7 +53,7 @@
 }
 
 .manifestoSection {
-  padding: 120px 0;
+  padding: 80px 0;
   background: linear-gradient(135deg, #130b29 0%, #0b1120 100%);
   color: #fff;
 }
