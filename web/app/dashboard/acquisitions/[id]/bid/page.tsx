@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { createWalletClient, custom, keccak256, toHex } from "viem";
-import { polygonAmoy } from "viem/chains";
+import { activeChain } from "@/utils/network";
 import { BlockBidABI } from "@/lib/abi";
 import { 
   ArrowLeftIcon,
@@ -118,12 +118,12 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       if (wallets && wallets.length > 0) {
         try {
           const wallet = wallets[0];
-          await wallet.switchChain(polygonAmoy.id);
+          await wallet.switchChain(activeChain.id);
           const provider = await wallet.getEthereumProvider();
           
           const walletClient = createWalletClient({
             account: wallet.address as `0x${string}`,
-            chain: polygonAmoy,
+            chain: activeChain,
             transport: custom(provider)
           });
 

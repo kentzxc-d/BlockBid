@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useWallets } from "@privy-io/react-auth";
 import { createWalletClient, custom } from "viem";
-import { polygonAmoy } from "viem/chains";
+import { activeChain } from "@/utils/network";
 import {
   CheckCircleIcon,
   XCircleIcon,
@@ -105,11 +105,11 @@ export default function AdminKYCPage() {
 
       const provider = await adminWallet.getEthereumProvider();
       
-      await adminWallet.switchChain(polygonAmoy.id);
+      await adminWallet.switchChain(activeChain.id);
 
       const walletClient = createWalletClient({
         account: adminWallet.address as `0x${string}`,
-        chain: polygonAmoy,
+        chain: activeChain,
         transport: custom(provider)
       });
 

@@ -22,6 +22,9 @@ export default function CreateAcquisitionPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("");
+  const [location, setLocation] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
   const [deadline, setDeadline] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -136,6 +139,10 @@ export default function CreateAcquisitionPage() {
         requestor_id: user.id,
         title,
         description,
+        budget,
+        location,
+        contact_name: contactName,
+        contact_number: contactNumber,
         deadline: deadlineDate.toISOString(),
         criteria: criteria.map(c => ({ name: c.name, weight: c.weight }))
       };
@@ -275,6 +282,45 @@ export default function CreateAcquisitionPage() {
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
                   className="w-full px-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider uppercase"
+                />
+              </div>
+            </div>
+
+            {/* Location & Contact Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Location */}
+              <div>
+                <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Delivery Location</label>
+                <input 
+                  type="text" 
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="e.g. CEBU CITY HALL"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider placeholder:text-text-muted/50 uppercase"
+                />
+              </div>
+
+              {/* Contact Person Name */}
+              <div>
+                <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Contact Person Name</label>
+                <input 
+                  type="text" 
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  placeholder="e.g. JUAN DELA CRUZ"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider placeholder:text-text-muted/50 uppercase"
+                />
+              </div>
+
+              {/* Contact Number */}
+              <div>
+                <label className="block text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">Contact Number</label>
+                <input 
+                  type="text" 
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                  placeholder="e.g. 0917-123-4567"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-none focus:outline-none focus:border-text-main hover:border-text-main transition-colors text-text-main font-mono text-sm font-bold tracking-wider placeholder:text-text-muted/50 uppercase"
                 />
               </div>
             </div>

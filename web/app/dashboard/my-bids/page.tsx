@@ -168,8 +168,8 @@ export default function MyBidsPage() {
                 title={bid.acquisitionTitle}
                 description="This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met." // Placeholder since actual description isn't mapped
                 status={bid.status}
-                location="Various" // Would come from DB
-                estBudget={bid.amount === "N/A" ? "TBD" : bid.amount}
+                location={bid.project?.location || "Various"}
+                estBudget={bid.project?.budget || (bid.amount === "N/A" ? "TBD" : bid.amount)}
                 closingDate={`Submitted: ${bid.submittedAt}`}
                 contractHash={bid.on_chain_hash || "b53d0128-37d5-457b-9c4a-08b7c093fb7d"} // mock hash if undefined
                 actionButton={actionButton}

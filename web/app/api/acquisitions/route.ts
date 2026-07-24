@@ -14,7 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { requestor_id, title, description, deadline, criteria } = body;
+    const { requestor_id, title, description, deadline, criteria, budget, location, contact_name, contact_number } = body;
 
     if (!requestor_id || !title || !deadline || !criteria || criteria.length === 0) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -43,6 +43,10 @@ export async function POST(request: Request) {
           title,
           description,
           deadline,
+          budget,
+          location,
+          contact_name,
+          contact_number,
           status: projectStatus,
           // Optional: we could save the reasoning, but let's just save the status
         }
@@ -97,6 +101,8 @@ export async function GET(request: Request) {
       description,
       status,
       deadline,
+      budget,
+      location,
       created_at,
       bids ( count )
     `);

@@ -1,7 +1,7 @@
 "use client";
 
 import { PrivyProvider } from "@privy-io/react-auth";
-import { polygonAmoy } from "viem/chains";
+import { activeChain } from "@/utils/network";
 import { ProfileProvider } from "@/contexts/ProfileContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -21,8 +21,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             createOnLogin: "users-without-wallets",
           }
         },
-        defaultChain: polygonAmoy,
-        supportedChains: [polygonAmoy],
+        defaultChain: activeChain,
+        supportedChains: [activeChain],
       }}
     >
       <ProfileProvider>

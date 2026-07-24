@@ -149,7 +149,7 @@ export default function ActiveSolicitationsPage() {
                 title={solicitation.title}
                 description={solicitation.description || "Looking for verified suppliers. Detailed specs inside."}
                 status={solicitation.status || "OPEN"}
-                location="Various" // Would normally come from DB
+                location={solicitation.location || "Various"}
                 estBudget={solicitation.budget || "TBD"}
                 closingDate={`T-${daysLeft} Days`}
                 contractHash={solicitation.contract_address || `0x${solicitation.id.substring(0, 8)}...${solicitation.id.substring(solicitation.id.length - 4)}`}

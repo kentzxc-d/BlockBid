@@ -15,6 +15,8 @@ export default function SettingsPage() {
   const [role, setRole] = useState("");
   const [entityType, setEntityType] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [contactName, setContactName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
   
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -28,6 +30,8 @@ export default function SettingsPage() {
       setRole(profile.role || "");
       setEntityType(profile.entity_type || "");
       setAvatarUrl(profile.avatar_url || null);
+      setContactName(profile.contact_name || "");
+      setContactNumber(profile.contact_number || "");
     }
   }, [profile, loadingProfile]);
 
@@ -47,6 +51,8 @@ export default function SettingsPage() {
           nickname,
           role,
           entity_type: entityType,
+          contact_name: contactName,
+          contact_number: contactNumber,
         }),
       });
 
@@ -233,6 +239,30 @@ export default function SettingsPage() {
                     <option value="government">Government Agency</option>
                     <option value="ngo">NGO / Non-Profit</option>
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Contact Person (Optional)</label>
+                  <input
+                    type="text"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Juan Dela Cruz"
+                    className="w-full bg-background border border-border rounded-none px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-muted font-mono text-xs font-bold tracking-widest uppercase mb-2">Contact Number (Optional)</label>
+                  <input
+                    type="text"
+                    value={contactNumber}
+                    onChange={(e) => setContactNumber(e.target.value)}
+                    placeholder="0917-123-4567"
+                    className="w-full bg-background border border-border rounded-none px-4 py-3 text-text-main text-sm font-mono font-bold tracking-wider focus:outline-none focus:border-text-main hover:border-text-main transition-colors"
+                  />
                 </div>
               </div>
 

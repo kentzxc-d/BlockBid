@@ -35,6 +35,13 @@ export async function GET(
     const requestorProfile = profiles.find(p => p.id === project.requestor_id);
     const supplierProfile = profiles.find(p => p.id === project.awarded_supplier_id);
     
+    // The requestor's contact info for this project is saved in the projects table
+    if (requestorProfile && project) {
+      requestorProfile.contact_name = project.contact_name || requestorProfile.contact_name;
+      requestorProfile.contact_number = project.contact_number || requestorProfile.contact_number;
+      requestorProfile.location = project.location || requestorProfile.location;
+    }
+    
     // Get Messages
     const { data: messages, error: msgError } = await supabase
       .from('workspace_messages')

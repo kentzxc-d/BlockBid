@@ -107,8 +107,8 @@ export default async function TransparencyPortal() {
                   title={item.title}
                   description={`Public record of awarded contract.`}
                   status="AWARDED"
-                  location="Various" // Would come from DB normally
-                  estBudget={item.total_price}
+                  location={item.location || "Various"}
+                  estBudget={item.budget || item.total_price}
                   closingDate={`Awarded: ${new Date(item.awarded_at).toLocaleDateString()}`}
                   contractHash={item.on_chain_hash || "Pending..."}
                   actionButton={actionButton}

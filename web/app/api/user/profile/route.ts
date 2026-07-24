@@ -11,7 +11,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(req: Request) {
   try {
-    const { id, role, entity_type, nickname, wallet_address, avatar_url, location } = await req.json();
+    const { id, role, entity_type, nickname, wallet_address, avatar_url, location, contact_name, contact_number } = await req.json();
     
     if (!id || !role || !entity_type || !nickname) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const { data, error } = await supabase
       .from('profiles')
       .upsert([
-        { id, role, entity_type, nickname, wallet_address, avatar_url, location }
+        { id, role, entity_type, nickname, wallet_address, avatar_url, location, contact_name, contact_number }
       ])
       .select();
       

@@ -21,6 +21,8 @@ type Profile = {
   wallet_address: string;
   avatar_url?: string;
   location?: string;
+  contact_name?: string;
+  contact_number?: string;
 };
 
 export default function WorkspacePage(props: { params: Promise<{ id: string }> }) {
@@ -157,6 +159,17 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                 <p className="text-xs text-text-muted font-mono mt-1 capitalize">{myParty?.entity_type || 'Unknown Entity'} <span className="opacity-50 mx-1">•</span> <span className="text-primary">{amIRequestor ? 'Requestor' : 'Supplier'}</span></p>
               </div>
             </div>
+            
+            <div className="pt-4 border-t border-border/50 space-y-3">
+              <div>
+                <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest">Contact Person</p>
+                <p className="text-xs font-mono text-text-main mt-0.5">{myParty?.contact_name || 'Not provided'}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest">Contact Number</p>
+                <p className="text-xs font-mono text-text-main mt-0.5">{myParty?.contact_number || 'Not provided'}</p>
+              </div>
+            </div>
           </div>
 
           <div className="bg-surface border border-primary/30 p-5 rounded-none shadow-sm relative overflow-hidden">
@@ -187,6 +200,14 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                 <div>
                   <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest">Location</p>
                   <p className="text-xs text-text-main mt-0.5">{otherParty?.location || 'Not provided'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest">Contact Person</p>
+                  <p className="text-xs font-mono text-text-main mt-0.5">{otherParty?.contact_name || 'Not provided'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-text-muted font-mono uppercase tracking-widest">Contact Number</p>
+                  <p className="text-xs font-mono text-text-main mt-0.5">{otherParty?.contact_number || 'Not provided'}</p>
                 </div>
               </div>
             </div>

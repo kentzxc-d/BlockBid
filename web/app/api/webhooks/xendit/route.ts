@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createWalletClient, http, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { polygonAmoy } from "viem/chains"; // Testnet
+import { activeChain } from "@/utils/network"; // Dynamic network
 import BlockBidTokenArtifact from "../../../../lib/BlockBidToken.json";
 
 export async function POST(req: Request) {
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         const account = privateKeyToAccount(`0x${adminPrivateKey}`);
         const client = createWalletClient({
           account,
-          chain: polygonAmoy,
+          chain: activeChain,
           transport: http(rpcUrl)
         });
 
