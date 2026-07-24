@@ -1,6 +1,10 @@
 .hero {
   position: relative;
-  padding: 200px 0 180px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0;
   text-align: left;
   background-color: var(--color-surface-inverse);
   color: var(--color-text-inverse);
