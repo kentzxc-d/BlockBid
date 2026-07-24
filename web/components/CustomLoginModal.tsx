@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useLoginWithEmail } from '@privy-io/react-auth';
+import { useLoginWithEmail, usePrivy } from '@privy-io/react-auth';
 import { EnvelopeIcon, XMarkIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
@@ -10,10 +10,35 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const { logout } = usePrivy();
   const router = useRouter();
 
   const { sendCode, loginWithCode, state } = useLoginWithEmail({
-    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated }) => {
+    onComplete: async ({ user }) => {
+      try {
+        const res = await fetch(`/api/user/profile?id=${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.profile) {
+            const role = data.profile.role;
+            if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
+              setErrorMsg("Invalid access. This email is registered as a supplier.");
+              setCode('');
+              logout();
+              return;
+            }
+            if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
+              setErrorMsg("Invalid access. This email is registered as an officer.");
+              setCode('');
+              logout();
+              return;
+            }
+          }
+        }
+      } catch(err) {
+        console.error("Profile check failed", err);
+      }
+
       onClose();
       setTimeout(() => {
         router.push('/dashboard');
@@ -24,6 +49,13 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
       setErrorMsg("Authentication failed. Please check the code or try again.");
     }
   });
+
+  useEffect(() => {
+    if (code.length === 6 && state.status !== 'submitting-code') {
+      setErrorMsg('');
+      loginWithCode({ code });
+    }
+  }, [code, state.status, loginWithCode]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -171,15 +203,12 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               ))}
             </div>
             
-            <button 
-              type="submit"
-              disabled={state.status === 'submitting-code' || code.length < 6}
-              className="w-full bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5 shadow-lg shadow-primary/20 py-4 rounded-xl text-sm font-bold font-mono tracking-widest transition-all disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none flex justify-center items-center h-14"
-            >
-              {state.status === 'submitting-code' ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : '[ VERIFY_CODE ]'}
-            </button>
+            
+            {state.status === 'submitting-code' && (
+              <div className="w-full flex justify-center py-2 mt-2">
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
             
             <button
               type="button"

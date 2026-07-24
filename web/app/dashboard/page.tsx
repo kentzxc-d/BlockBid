@@ -22,15 +22,13 @@ export default function DashboardRedirector() {
           const role = profile.role;
           const intent = sessionStorage.getItem('loginIntent');
 
-          // Strict separation rules
+          // Strict separation rules (handled gracefully in login modal, but kept as a fallback here)
           if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
-            alert("Invalid access. Please check your credentials and portal selection.");
             logout();
             return;
           }
 
           if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
-            alert("Invalid access. Please check your credentials and portal selection.");
             logout();
             return;
           }
