@@ -108,7 +108,7 @@ export default function AgencyDashboard() {
             
             <Link 
               href="/dashboard/agency/new"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-background hover:bg-primary-hover font-mono text-sm font-bold uppercase tracking-widest transition-colors rounded-none shadow-md shadow-primary/20 border border-primary hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-background hover:bg-primary-hover font-mono text-sm font-bold uppercase tracking-widest transition-colors rounded-md shadow-md shadow-primary/20 border border-primary hover:-translate-y-0.5"
             >
               [ POST_NEW_ACQUISITION ] <ArrowRightIcon className="w-5 h-5 stroke-2" />
             </Link>

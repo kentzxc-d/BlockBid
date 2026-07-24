@@ -127,7 +127,7 @@ export default function DashboardSidebar() {
               <div className="mb-8">
                 <Link
                   href="/dashboard/agency/new"
-                  className="flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-none shadow-md bg-primary text-secondary hover:text-secondary hover:bg-primary-hover shadow-primary/20"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-4 font-heading font-bold uppercase tracking-widest transition-colors rounded-md shadow-md bg-primary text-secondary hover:text-secondary hover:bg-primary-hover shadow-primary/20"
                 >
                   <PlusCircleIcon className="w-5 h-5 stroke-2" />
                   New Request

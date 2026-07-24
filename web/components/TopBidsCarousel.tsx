@@ -48,7 +48,7 @@ export default function TopBidsCarousel({ location, onOpenLocationModal }: TopBi
               </p>
             </div>
           </div>
-          <button className="whitespace-nowrap px-6 py-3 rounded-none bg-primary text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-primary-hover transition-colors flex items-center gap-2 border border-transparent">
+          <button className="whitespace-nowrap px-6 py-3 rounded-md bg-primary text-white font-mono text-xs font-bold uppercase tracking-widest hover:bg-primary-hover transition-colors flex items-center gap-2 border border-transparent">
             Set_Location <ArrowRightIcon className="w-4 h-4 stroke-2" />
           </button>
         </div>
@@ -91,7 +91,7 @@ export default function TopBidsCarousel({ location, onOpenLocationModal }: TopBi
                   Category: {b.category}
                 </p>
               </div>
-              <button className="whitespace-nowrap px-8 py-3 rounded-none bg-white text-text-main font-mono text-xs font-bold uppercase tracking-widest hover:bg-gray-100 transition-colors flex items-center gap-2 z-20 border border-border">
+              <button className="whitespace-nowrap px-8 py-3 rounded-md bg-white text-text-main font-mono text-xs font-bold uppercase tracking-widest hover:bg-gray-100 transition-colors flex items-center gap-2 z-20 border border-border">
                 View_Details <ArrowRightIcon className="w-4 h-4 stroke-2" />
               </button>
             </div>

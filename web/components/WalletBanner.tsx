@@ -80,13 +80,13 @@ export default function WalletBanner() {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => window.dispatchEvent(new Event('open-topup-modal'))}
-                className="flex items-center gap-1.5 px-6 py-2 bg-primary text-background hover:bg-primary-hover transition-colors rounded-none font-mono text-xs font-bold tracking-widest uppercase shadow-sm"
+                className="flex items-center gap-1.5 px-6 py-2 bg-primary text-background hover:bg-primary-hover transition-colors rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm"
               >
                 <ArrowDownIcon className="w-3.5 h-3.5" /> Top-Up
               </button>
               <button 
                 onClick={() => window.dispatchEvent(new Event('open-withdraw-modal'))}
-                className="flex items-center gap-1.5 px-6 py-2 bg-transparent border border-border text-text-main hover:bg-surface transition-colors rounded-none font-mono text-xs font-bold tracking-widest uppercase shadow-sm"
+                className="flex items-center gap-1.5 px-6 py-2 bg-transparent border border-border text-text-main hover:bg-surface transition-colors rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm"
               >
                 <ArrowUpIcon className="w-3.5 h-3.5" /> Withdraw
               </button>
