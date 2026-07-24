@@ -146,13 +146,13 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
             
             <input
               type="text"
-              placeholder="000000"
+              placeholder="0 0 0 0 0 0"
               required
               autoFocus
               maxLength={6}
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="w-full h-16 bg-background border-2 border-border focus:border-primary rounded-xl text-center text-3xl tracking-[0.7em] font-mono font-bold outline-none transition-colors"
+              onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
+              className="w-full h-16 bg-[#f8f9fa] border-2 border-primary rounded-xl text-center text-3xl tracking-[0.5em] font-mono font-bold text-zinc-700 placeholder:text-zinc-300 outline-none transition-colors shadow-inner"
             />
             
             <button 
