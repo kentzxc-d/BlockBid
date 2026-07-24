@@ -22,14 +22,14 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
           if (data.profile) {
             const role = data.profile.role;
             if (intent === 'officer' && (role === 'supplier' || role === 'both')) {
-              setErrorMsg("This email is registered as a supplier. Please use the Public Portal.");
+              setErrorMsg("Invalid access for this portal.");
               setCode('');
               setStep('error');
               logout();
               return;
             }
             if (intent === 'supplier' && (role === 'admin' || role === 'requestor')) {
-              setErrorMsg("This email is registered as an officer. Please use the Officer Access.");
+              setErrorMsg("Invalid access for this portal.");
               setCode('');
               setStep('error');
               logout();
