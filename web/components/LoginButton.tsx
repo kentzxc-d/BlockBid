@@ -17,7 +17,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
     return <button className="btn btn-outline" disabled>Loading...</button>;
   }
 
-  if (authenticated) {
+  if (authenticated && !isModalOpen) {
     return (
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
         <span style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>

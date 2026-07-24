@@ -9,7 +9,6 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   const [step, setStep] = useState<'initial' | 'email_input' | 'otp_input' | 'error'>('initial');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [submittedCode, setSubmittedCode] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const { logout } = usePrivy();
   const router = useRouter();
@@ -38,7 +37,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
             }
           }
         }
-      } catch(err) {
+      } catch (err) {
         console.error("Profile check failed", err);
       }
 
@@ -54,19 +53,17 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
   });
 
   useEffect(() => {
-    if (code.length === 6 && code !== submittedCode && state.status !== 'submitting-code') {
-      setSubmittedCode(code);
+    if (code.length === 6 && state.status !== 'submitting-code') {
       setErrorMsg('');
       loginWithCode({ code });
     }
-  }, [code, state.status, loginWithCode, submittedCode]);
+  }, [code, state.status, loginWithCode]);
 
   useEffect(() => {
     if (!isOpen) {
       setStep('initial');
       setEmail('');
       setCode('');
-      setSubmittedCode('');
       setErrorMsg('');
     }
   }, [isOpen]);
@@ -98,11 +95,11 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
-      <div 
+      <div
         className="relative w-full max-w-[400px] p-8 py-10 bg-[#18181b] border border-zinc-800 shadow-2xl text-white flex flex-col items-center rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        
+
         {/* Close Button */}
         <button onClick={onClose} className="absolute top-4 right-4 p-2 text-text-muted hover:text-text-main hover:bg-background rounded-full transition-colors">
           <XMarkIcon className="w-5 h-5 stroke-2" />
@@ -123,23 +120,21 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
 
         {/* Email Form (Animated) */}
         {(step === 'initial' || step === 'email_input') && (
-          <form 
+          <form
             onSubmit={handleSendCode}
-            className={`relative flex items-center bg-[#09090b] border border-zinc-700 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden ${
-              step === 'initial' 
-                ? 'w-16 h-16 justify-center rounded-2xl cursor-pointer hover:border-primary shadow-lg' 
+            className={`relative flex items-center bg-[#09090b] border border-zinc-700 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden ${step === 'initial'
+                ? 'w-16 h-16 justify-center rounded-2xl cursor-pointer hover:border-primary shadow-lg'
                 : 'w-full h-14 px-4 rounded-xl shadow-inner gap-3'
-            }`}
+              }`}
             onClick={() => {
               if (step === 'initial') setStep('email_input');
             }}
           >
-            <EnvelopeIcon 
-              className={`shrink-0 transition-all duration-500 ${
-                step === 'initial' ? 'w-7 h-7 text-white' : 'w-5 h-5 text-zinc-400'
-              }`} 
+            <EnvelopeIcon
+              className={`shrink-0 transition-all duration-500 ${step === 'initial' ? 'w-7 h-7 text-white' : 'w-5 h-5 text-zinc-400'
+                }`}
             />
-            
+
             <input
               type="email"
               placeholder="your@email.com"
@@ -147,20 +142,19 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
               autoFocus={step === 'email_input'}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`flex-1 bg-transparent border-none focus:outline-none text-sm font-mono font-bold tracking-widest text-white transition-all duration-500 placeholder:text-zinc-500 ${
-                step === 'initial' ? 'opacity-0 w-0 hidden' : 'opacity-100 w-full'
-              }`}
+              className={`flex-1 bg-transparent border-none focus:outline-none text-sm font-mono font-bold tracking-widest text-white transition-all duration-500 placeholder:text-zinc-500 ${step === 'initial' ? 'opacity-0 w-0 hidden' : 'opacity-100 w-full'
+                }`}
               disabled={step === 'initial'}
             />
 
             {step === 'email_input' && (
-              <button 
+              <button
                 type="submit"
                 disabled={state.status === 'sending-code' || !email}
                 className="bg-primary/20 text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-lg text-xs font-bold font-mono tracking-widest transition-colors shrink-0 flex items-center justify-center min-w-[44px]"
               >
                 {state.status === 'sending-code' ? (
-                   <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <ArrowRightIcon className="w-4 h-4 stroke-2" />
                 )}
@@ -180,7 +174,7 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
                 {email}
               </p>
             </div>
-            
+
             <div className="relative flex justify-between w-full gap-2 mt-2 mb-2">
               <input
                 type="text"
@@ -191,30 +185,29 @@ export default function CustomLoginModal({ isOpen, onClose, intent }: { isOpen: 
                 onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
                 className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-text"
               />
-              
+
               {[0, 1, 2, 3, 4, 5].map((i) => (
-                <div 
-                  key={i} 
-                  className={`flex-1 h-14 sm:h-16 flex items-center justify-center text-2xl font-mono font-bold rounded-xl border transition-all ${
-                    code.length === i 
-                      ? 'border-primary bg-zinc-800/80 ring-2 ring-primary/20 text-white' 
-                      : code[i] 
-                        ? 'border-zinc-600 bg-zinc-800 text-white' 
+                <div
+                  key={i}
+                  className={`flex-1 h-14 sm:h-16 flex items-center justify-center text-2xl font-mono font-bold rounded-xl border transition-all ${code.length === i
+                      ? 'border-primary bg-zinc-800/80 ring-2 ring-primary/20 text-white'
+                      : code[i]
+                        ? 'border-zinc-600 bg-zinc-800 text-white'
                         : 'border-zinc-800 bg-[#121214] text-zinc-500'
-                  }`}
+                    }`}
                 >
                   {code[i] || ''}
                 </div>
               ))}
             </div>
-            
-            
+
+
             {state.status === 'submitting-code' && (
               <div className="w-full flex justify-center py-2 mt-2">
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
             )}
-            
+
             <button
               type="button"
               onClick={() => {
