@@ -10,8 +10,10 @@ import { BlockBidABI } from "@/lib/abi";
 import { 
   ArrowLeftIcon,
   CheckBadgeIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  ExclamationTriangleIcon
 } from "@heroicons/react/24/outline";
+import { useProfile } from "@/contexts/ProfileContext";
 
 type FieldData = {
   id: string; // matches project_criteria.id
@@ -22,6 +24,7 @@ type FieldData = {
 export default function SubmitBidPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
   const { user } = usePrivy();
+  const { supplierData } = useProfile();
   const router = useRouter();
 
   const [project, setProject] = useState<any>(null);
@@ -32,6 +35,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const [error, setError] = useState("");
   const [txHash, setTxHash] = useState<string | null>(null);
   const [enhancingFieldId, setEnhancingFieldId] = useState<string | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { wallets } = useWallets();
 
   useEffect(() => {
@@ -83,10 +87,15 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handlePreSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    setShowConfirmModal(true);
+  };
+
+  const executeSubmit = async () => {
     setIsSubmitting(true);
+    setShowConfirmModal(false);
     setError("");
     
     try {
@@ -188,7 +197,21 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Bid Bond Banner */}
+        {project && (
+          <div className="mb-6 p-4 bg-warning/10 border border-warning/20 rounded-md flex gap-3 items-start">
+            <ExclamationTriangleIcon className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+            <div>
+              <h4 className="font-mono text-xs font-bold tracking-widest text-warning uppercase mb-1">Bid Security Required</h4>
+              <p className="font-mono text-[10px] text-text-main leading-relaxed">
+                A Bid Bond equivalent to 1% of the Estimated Budget is required to participate. Upon submission, 
+                <span className="font-bold text-text-main"> ₱{(project.budget * 0.01).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> will be locked from your Wallet Balance. This will be automatically returned if you do not win the bid.
+              </p>
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handlePreSubmit} className="space-y-6">
           <h2 className="text-lg font-bold text-text-main font-heading uppercase tracking-tight border-b border-border pb-3">
             Evaluation Matrix Payload
           </h2>
@@ -219,26 +242,77 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
             </div>
           ))}
 
+          {/* Execute Button */}
           <div className="pt-6 border-t border-border flex justify-end">
             <button
               type="submit"
               disabled={isSubmitting || fields.some(f => !f.value.trim())}
               className="px-8 py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-70 disabled:hover:bg-text-main shadow-sm"
             >
-              {isSubmitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  PROCESSING...
-                </>
-              ) : (
-                <>
-                  <DocumentTextIcon className="w-4 h-4 stroke-2" /> EXECUTE_PROPOSAL
-                </>
-              )}
+              <DocumentTextIcon className="w-4 h-4 stroke-2" /> EXECUTE_PROPOSAL
             </button>
           </div>
         </form>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && project && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
+          <div className="bg-surface rounded-md w-full max-w-md border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-border">
+              <h3 className="font-heading font-bold text-lg text-text-main uppercase tracking-tight flex items-center gap-2">
+                <ExclamationTriangleIcon className="w-5 h-5 text-warning stroke-2" />
+                Confirm Bid Submission
+              </h3>
+            </div>
+            
+            <div className="p-6 bg-background space-y-4">
+              <p className="font-mono text-xs text-text-muted leading-relaxed">
+                You are about to submit a formal proposal for <span className="font-bold text-text-main">"{project.title}"</span>.
+              </p>
+              
+              <div className="bg-surface border border-border rounded-md p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">Required Bid Bond (1%)</span>
+                  <span className="font-mono text-xs font-bold text-text-main">₱{(project.budget * 0.01).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div className="flex justify-between items-center pt-3 border-t border-border border-dashed">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">Your Wallet Balance</span>
+                  <span className={`font-mono text-xs font-bold ${Number(supplierData?.wallet_balance || 0) < (project.budget * 0.01) ? 'text-danger' : 'text-primary'}`}>
+                    ₱{Number(supplierData?.wallet_balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+
+              <p className="font-mono text-[10px] text-text-muted leading-relaxed italic">
+                By confirming, the Bid Bond will be held in escrow. If you win and subsequently withdraw, these funds will be permanently forfeited as a penalty.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-surface border-t border-border flex justify-end gap-3">
+              <button 
+                onClick={() => setShowConfirmModal(false)}
+                className="px-6 py-2.5 bg-background border border-border text-text-main rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-gray-50 transition-colors"
+                disabled={isSubmitting}
+              >
+                CANCEL
+              </button>
+              <button 
+                onClick={executeSubmit}
+                disabled={isSubmitting || Number(supplierData?.wallet_balance || 0) < (project.budget * 0.01)}
+                className="px-6 py-2.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    PROCESSING...
+                  </>
+                ) : "CONFIRM_SUBMISSION"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Success Modal */}
       {showSuccess && (
