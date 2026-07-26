@@ -123,12 +123,12 @@ export default function UserDashboard() {
               <CheckBadgeIcon className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="font-heading font-bold text-text-main text-lg mb-0.5">Identity Verification Required</h3>
-              <p className="text-text-muted font-body text-sm">Get verified to build reputation and increase your chances of winning bids.</p>
+              <h3 className="font-heading font-bold text-text-main text-lg mb-0.5">Account Verification Required</h3>
+              <p className="text-text-muted font-body text-sm">Submit your PhilGEPS Class A documents to unlock bidding capabilities.</p>
             </div>
           </div>
-          <Link href="/dashboard/verify" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-none transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
-            Verify Identity
+          <Link href="/dashboard/settings?tab=verification" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-none transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+            Verify Account
           </Link>
         </div>
       )}
