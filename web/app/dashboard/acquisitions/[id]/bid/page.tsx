@@ -200,15 +200,15 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
 
         {/* Bid Bond Banner */}
         {project && (
-          <div className="mb-6 p-4 bg-warning/10 border border-warning/20 rounded-md flex gap-3 items-start">
-            <ExclamationTriangleIcon className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-mono text-xs font-bold tracking-widest text-warning uppercase mb-1">Bid Security Required</h4>
-              <p className="font-mono text-[10px] text-text-main leading-relaxed">
-                A Bid Bond equivalent to 1% of the Estimated Budget is required to participate. Upon submission, 
-                <span className="font-bold text-text-main"> ₱{(project.budget * 0.01).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> will be locked from your Wallet Balance. This will be automatically returned if you do not win the bid.
-              </p>
+          <div className="mb-6 p-5 bg-orange-500/10 border border-orange-500/20 rounded-md">
+            <div className="flex items-center gap-2 mb-2">
+              <ExclamationTriangleIcon className="w-5 h-5 text-orange-600 flex-shrink-0" />
+              <h4 className="font-mono text-sm font-bold tracking-widest text-orange-600 uppercase">Bid Security Required</h4>
             </div>
+            <p className="font-mono text-xs text-text-muted leading-relaxed pl-7">
+              A Bid Bond equivalent to 1% of the Estimated Budget is required to participate. Upon submission, 
+              <span className="font-bold text-text-main"> ₱{(project.budget * 0.01).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> will be locked from your Wallet Balance. This will be automatically returned if you do not win the bid.
+            </p>
           </div>
         )}
 
