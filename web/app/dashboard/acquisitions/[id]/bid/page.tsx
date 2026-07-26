@@ -94,6 +94,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   };
 
   const executeSubmit = async () => {
+    if (!user) return;
     setIsSubmitting(true);
     setShowConfirmModal(false);
     setError("");
