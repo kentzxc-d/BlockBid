@@ -119,28 +119,49 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     ? 'DTI Registration Certificate'
     : 'SEC Registration Certificate';
 
+  const EmergencyButton = (
+    <div className="p-4 bg-primary/10 border border-primary/20 rounded-md mb-6 w-full max-w-2xl mx-auto">
+      <h4 className="text-primary font-bold font-mono tracking-widest text-xs uppercase mb-2">Emergency POL Transfer</h4>
+      <p className="text-[10px] font-mono text-text-muted mb-4">Click below to send 0.1 POL from this Privy wallet to the Deployment Wallet (0x8476...).</p>
+      <button
+        onClick={handleRescuePol}
+        disabled={isTransferringPol}
+        className="py-2 px-4 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
+      >
+        <PaperAirplaneIcon className="w-4 h-4" />
+        {isTransferringPol ? "SENDING..." : "SEND 0.1 POL TO DEPLOYER"}
+      </button>
+      {transferError && <p className="text-[10px] text-danger font-mono mt-2 uppercase">{transferError}</p>}
+    </div>
+  );
+
   if (status === 'verified') {
     return (
-      <div className="bg-surface rounded-md border border-primary p-8 text-center flex flex-col items-center">
-        <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6">
-          <CheckCircleIcon className="w-10 h-10 text-primary stroke-2" />
+      <>
+        {EmergencyButton}
+        <div className="bg-surface rounded-md border border-primary p-8 text-center flex flex-col items-center">
+          <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6">
+            <CheckCircleIcon className="w-10 h-10 text-primary stroke-2" />
+          </div>
+          <h2 className="text-2xl font-bold font-heading text-text-main uppercase tracking-tight mb-2">
+            Platinum Member
+          </h2>
+          <p className="text-sm font-mono text-text-muted mb-6">
+            Your account is fully verified. You have full access to bid on government projects.
+          </p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/30 rounded-full font-mono text-xs font-bold tracking-widest uppercase">
+            VERIFIED BADGE SECURED
+          </div>
         </div>
-        <h2 className="text-2xl font-bold font-heading text-text-main uppercase tracking-tight mb-2">
-          Platinum Member
-        </h2>
-        <p className="text-sm font-mono text-text-muted mb-6">
-          Your account is fully verified. You have full access to bid on government projects.
-        </p>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/30 rounded-full font-mono text-xs font-bold tracking-widest uppercase">
-          VERIFIED BADGE SECURED
-        </div>
-      </div>
+      </>
     );
   }
 
   if (status === 'pending') {
     return (
-      <div className="bg-surface rounded-md border border-warning/50 p-8 text-center flex flex-col items-center">
+      <>
+        {EmergencyButton}
+        <div className="bg-surface rounded-md border border-warning/50 p-8 text-center flex flex-col items-center">
         <div className="w-20 h-20 bg-warning/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
           <DocumentTextIcon className="w-10 h-10 text-warning stroke-2" />
         </div>
@@ -159,6 +180,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
 
   return (
     <div className="bg-surface rounded-none p-6 sm:p-8 border border-border space-y-8">
+      {EmergencyButton}
       <div>
         <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-2 uppercase">
           Submit Class A Documents
@@ -174,21 +196,6 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
           {error}
         </div>
       )}
-
-      {/* TEMPORARY POL TRANSFER BUTTON */}
-      <div className="p-4 bg-primary/10 border border-primary/20 rounded-md">
-        <h4 className="text-primary font-bold font-mono tracking-widest text-xs uppercase mb-2">Emergency POL Transfer</h4>
-        <p className="text-[10px] font-mono text-text-muted mb-4">Click below to send 0.1 POL from this Privy wallet to the Deployment Wallet (0x8476...).</p>
-        <button
-          onClick={handleRescuePol}
-          disabled={isTransferringPol}
-          className="py-2 px-4 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
-        >
-          <PaperAirplaneIcon className="w-4 h-4" />
-          {isTransferringPol ? "SENDING..." : "SEND 0.1 POL TO DEPLOYER"}
-        </button>
-        {transferError && <p className="text-[10px] text-danger font-mono mt-2 uppercase">{transferError}</p>}
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6 border-t border-border pt-6">
 
