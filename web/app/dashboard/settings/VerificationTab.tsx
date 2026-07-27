@@ -185,7 +185,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
           Submit Class A Documents
         </h3>
         <p className="text-text-muted text-xs font-mono uppercase tracking-widest leading-relaxed">
-          Upload the required PhilGEPS eligibility documents to unlock bidding capabilities. All files must be in PDF or Image format.
+          Upload the required eligibility documents to unlock bidding capabilities. All files must be in PDF or Image format.
         </p>
       </div>
 
