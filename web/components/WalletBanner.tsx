@@ -1,20 +1,57 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useProfile } from "@/contexts/ProfileContext";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
+import { createPublicClient, http, formatEther } from "viem";
+import { activeChain } from "@/utils/network";
+import BlockBidTokenArtifact from "../lib/BlockBidToken.json";
 
 export default function WalletBanner() {
   const { ready, user } = usePrivy();
+  const { wallets } = useWallets();
   const { profile } = useProfile();
   
   const [greeting, setGreeting] = useState("WELCOME BACK");
   const [currentTime, setCurrentTime] = useState("");
   const [blockHeight, setBlockHeight] = useState(18239012);
-  const [balance, setBalance] = useState("0.00"); // Mocked for now until viem reading is implemented
+  const [balance, setBalance] = useState("0.00");
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!wallets.length) return;
+      try {
+        const wallet = wallets[0];
+        const client = createPublicClient({
+          chain: activeChain,
+          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
+        });
+
+        const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
+        if (!tokenAddress) return;
+
+        const rawBalance = await client.readContract({
+          address: tokenAddress,
+          abi: BlockBidTokenArtifact.abi,
+          functionName: 'balanceOf',
+          args: [wallet.address]
+        }) as bigint;
+
+        setBalance(Number(formatEther(rawBalance)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+      } catch (err) {
+        console.error("Failed to fetch balance:", err);
+      }
+    };
+
+    fetchBalance();
+    
+    // Poll balance every 10 seconds
+    const balanceInterval = setInterval(fetchBalance, 10000);
+    return () => clearInterval(balanceInterval);
+  }, [wallets]);
 
   useEffect(() => {
     const updateTime = () => {
