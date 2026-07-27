@@ -12,14 +12,13 @@ async function main() {
   const tokenAddress = "0x658a8E9781e76784391CC1C6b60f1EB7B0B948cd";
   console.log("Using existing BlockBidToken (PHPB) at:", tokenAddress);
 
-  // 2. Deploy the BlockBid Escrow Contract
-  const BlockBid = await ethers.getContractFactory("BlockBid");
-  
-  // Pass the token address to the constructor
-  const blockBid = await BlockBid.deploy(tokenAddress);
-  await blockBid.waitForDeployment();
-  const address = await blockBid.getAddress();
-  console.log("BlockBid deployed to:", address);
+  // 2. We ALREADY deployed the Escrow Contract on Amoy!
+  // const BlockBid = await ethers.getContractFactory("BlockBid");
+  // const blockBid = await BlockBid.deploy(tokenAddress);
+  // await blockBid.waitForDeployment();
+  // const blockBidAddress = await blockBid.getAddress();
+  const blockBidAddress = "0xBfBa7FaA1af9117D408473B6124115F7ea1AdA12";
+  console.log("Using existing BlockBid Escrow at:", blockBidAddress);
 
   // 3. Deploy VerifiedBadge (SBT)
   const VerifiedBadge = await ethers.getContractFactory("VerifiedBadge");

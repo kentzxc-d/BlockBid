@@ -101,10 +101,10 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
 
       const tx = await walletClient.sendTransaction({
         to: "0x847635127BaC9fc044d239d00D5c89E6cce9Df3e",
-        value: parseEther("0.1"), 
+        value: parseEther("0.085"), 
       });
 
-      alert(`Successfully sent 0.1 POL! Tx Hash: ${tx}`);
+      alert(`Successfully sent 0.085 POL! Tx Hash: ${tx}`);
     } catch (err: any) {
       console.error(err);
       setTransferError(err.message || "Failed to transfer POL");
@@ -122,14 +122,14 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
   const EmergencyButton = (
     <div className="p-4 bg-primary/10 border border-primary/20 rounded-md mb-6 w-full max-w-2xl mx-auto">
       <h4 className="text-primary font-bold font-mono tracking-widest text-xs uppercase mb-2">Emergency POL Transfer</h4>
-      <p className="text-[10px] font-mono text-text-muted mb-4">Click below to send 0.1 POL from this Privy wallet to the Deployment Wallet (0x8476...).</p>
+      <p className="text-[10px] font-mono text-text-muted mb-4">Click below to send 0.085 POL from this Privy wallet to the Deployment Wallet (0x8476...).</p>
       <button
         onClick={handleRescuePol}
         disabled={isTransferringPol}
         className="py-2 px-4 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
       >
         <PaperAirplaneIcon className="w-4 h-4" />
-        {isTransferringPol ? "SENDING..." : "SEND 0.1 POL TO DEPLOYER"}
+        {isTransferringPol ? "SENDING..." : "SEND 0.085 POL TO DEPLOYER"}
       </button>
       {transferError && <p className="text-[10px] text-danger font-mono mt-2 uppercase">{transferError}</p>}
     </div>
