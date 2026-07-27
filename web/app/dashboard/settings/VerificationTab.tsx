@@ -175,6 +175,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
           STATUS: PENDING_VERIFICATION
         </div>
       </div>
+      </>
     );
   }
 
