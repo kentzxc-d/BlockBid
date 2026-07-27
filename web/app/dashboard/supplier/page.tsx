@@ -211,7 +211,7 @@ export default function UserDashboard() {
                   ) : (
                     <Link 
                       href={`/dashboard/acquisitions/${solicitation.id}/bid`}
-                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary hover:text-white transition-colors uppercase"
+                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-secondary text-white font-mono text-[10px] font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5 uppercase"
                     >
                       SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
                     </Link>
