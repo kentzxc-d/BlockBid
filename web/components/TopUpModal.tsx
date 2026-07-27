@@ -116,7 +116,7 @@ export default function TopUpModal() {
           <button
             type="submit"
             disabled={isLoading || !amount}
-            className="w-full flex items-center justify-center gap-2 bg-primary text-background hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed py-3.5 rounded font-mono text-xs font-bold uppercase tracking-widest transition-all shadow-md"
+            className="w-full flex items-center justify-center gap-2 bg-secondary text-white disabled:opacity-50 disabled:cursor-not-allowed py-3.5 rounded-md font-mono text-xs font-bold uppercase tracking-widest transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5"
           >
             {isLoading ? "PROCESSING_LINK..." : "PROCEED_TO_XENDIT_CHECKOUT"} 
             {!isLoading && <ArrowRightIcon className="w-4 h-4 stroke-2" />}

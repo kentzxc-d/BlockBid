@@ -245,7 +245,7 @@ export default function ProfileTab({ user, profile, loadingProfile, refreshProfi
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest rounded-md hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2.5 bg-secondary text-white text-xs font-mono font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 disabled:opacity-50"
           >
             {isSaving ? "Sealing..." : "Save_Changes"}
           </button>

@@ -124,7 +124,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
       <button
         onClick={handleRescuePol}
         disabled={isTransferringPol}
-        className="py-2 px-4 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
+        className="py-2 px-4 bg-secondary text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 disabled:opacity-50"
       >
         <PaperAirplaneIcon className="w-4 h-4" />
         {isTransferringPol ? "SENDING..." : "SEND 0.085 POL TO DEPLOYER"}
@@ -245,7 +245,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
           <button
             type="submit"
             disabled={!isFormComplete || isSubmitting}
-            className="w-full py-4 bg-primary text-white font-mono text-sm font-bold tracking-widest rounded-md hover:bg-primary-hover transition-colors uppercase disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-4 bg-secondary text-white font-mono text-sm font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5 uppercase disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               "UPLOADING DOCUMENTS..."
