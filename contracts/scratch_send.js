@@ -1,0 +1,1 @@
+const hre = require('hardhat'); async function main() { const [signer] = await hre.ethers.getSigners(); const tx = await signer.sendTransaction({ to: '0xf420986c72d71809807e60c79fE25D33DB23025A', value: hre.ethers.parseEther('0.05') }); console.log('Sent POL! TX:', tx.hash); } main().catch(console.error);
