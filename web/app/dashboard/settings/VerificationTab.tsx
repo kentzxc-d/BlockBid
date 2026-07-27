@@ -79,7 +79,11 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     }
   };
 
+  const status = profile?.verification_status || 'unverified';
 
+  const docTypeLabel = profile?.entity_type === 'sme'
+    ? 'DTI Registration Certificate'
+    : 'SEC Registration Certificate';
 
   if (status === 'verified') {
     return (
