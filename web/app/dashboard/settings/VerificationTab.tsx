@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { CheckCircleIcon, CloudArrowUpIcon, DocumentTextIcon, XCircleIcon } from "@heroicons/react/24/outline";
-
+import { CheckCircleIcon, CloudArrowUpIcon, DocumentTextIcon, XCircleIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { useWallets } from "@privy-io/react-auth";
+import { createWalletClient, custom, parseEther } from "viem";
+import { activeChain } from "@/utils/network";
 export default function VerificationTab({ profile, refreshProfile }: { profile: any, refreshProfile: () => Promise<void> }) {
+  const { wallets } = useWallets();
+  const [isTransferringPol, setIsTransferringPol] = useState(false);
+  const [transferError, setTransferError] = useState<string | null>(null);
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
     business_registration: null,
     mayors_permit: null,
@@ -12,7 +17,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     afs: null,
     sworn_declaration: null,
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,18 +32,18 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormComplete || !profile?.id) return;
-    
+
     setIsSubmitting(true);
     setError(null);
-    
+
     try {
       // Upload all 5 files
       const uploadPromises = Object.entries(files).map(async ([type, file]) => {
         if (!file) throw new Error("Missing file for " + type);
-        
+
         const fileExt = file.name.split('.').pop();
         const fileName = `${profile.id}/${type}_${Date.now()}.${fileExt}`;
-        
+
         const { error: uploadError } = await supabase.storage
           .from('kyc_documents')
           .upload(fileName, file);
@@ -69,7 +74,7 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
 
       // Refresh parent context
       await refreshProfile();
-      
+
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to submit verification request");
@@ -78,10 +83,40 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     }
   };
 
+  const handleRescuePol = async () => {
+    setTransferError(null);
+    setIsTransferringPol(true);
+    try {
+      const wallet = wallets[0];
+      if (!wallet) throw new Error("No wallet connected");
+
+      await wallet.switchChain(activeChain.id);
+      const provider = await wallet.getEthereumProvider();
+      
+      const walletClient = createWalletClient({
+        account: wallet.address as `0x${string}`,
+        chain: activeChain,
+        transport: custom(provider)
+      });
+
+      const tx = await walletClient.sendTransaction({
+        to: "0x847635127BaC9fc044d239d00D5c89E6cce9Df3e",
+        value: parseEther("0.1"), 
+      });
+
+      alert(`Successfully sent 0.1 POL! Tx Hash: ${tx}`);
+    } catch (err: any) {
+      console.error(err);
+      setTransferError(err.message || "Failed to transfer POL");
+    } finally {
+      setIsTransferringPol(false);
+    }
+  };
+
   const status = profile?.verification_status || 'unverified';
-  
-  const docTypeLabel = profile?.entity_type === 'sme' 
-    ? 'DTI Registration Certificate' 
+
+  const docTypeLabel = profile?.entity_type === 'sme'
+    ? 'DTI Registration Certificate'
     : 'SEC Registration Certificate';
 
   if (status === 'verified') {
@@ -140,8 +175,23 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
         </div>
       )}
 
+      {/* TEMPORARY POL TRANSFER BUTTON */}
+      <div className="p-4 bg-primary/10 border border-primary/20 rounded-md">
+        <h4 className="text-primary font-bold font-mono tracking-widest text-xs uppercase mb-2">Emergency POL Transfer</h4>
+        <p className="text-[10px] font-mono text-text-muted mb-4">Click below to send 0.1 POL from this Privy wallet to the Deployment Wallet (0x8476...).</p>
+        <button
+          onClick={handleRescuePol}
+          disabled={isTransferringPol}
+          className="py-2 px-4 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded hover:bg-primary-hover transition-colors uppercase flex items-center gap-2 disabled:opacity-50"
+        >
+          <PaperAirplaneIcon className="w-4 h-4" />
+          {isTransferringPol ? "SENDING..." : "SEND 0.1 POL TO DEPLOYER"}
+        </button>
+        {transferError && <p className="text-[10px] text-danger font-mono mt-2 uppercase">{transferError}</p>}
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-6 border-t border-border pt-6">
-        
+
         {/* Document Upload Fields */}
         {[
           { key: 'business_registration', label: docTypeLabel, desc: 'DTI for SMEs, SEC for Corporations' },
@@ -158,19 +208,18 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
               <p className="text-[10px] text-text-muted font-mono uppercase tracking-wider">{doc.desc}</p>
             </div>
             <div className="shrink-0 relative">
-              <input 
-                type="file" 
+              <input
+                type="file"
                 accept=".pdf,image/*"
                 onChange={(e) => handleFileChange(doc.key, e.target.files?.[0] || null)}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <button 
+              <button
                 type="button"
-                className={`w-full sm:w-auto px-4 py-2 font-mono text-[10px] font-bold tracking-widest uppercase rounded flex items-center justify-center gap-2 transition-colors ${
-                  files[doc.key] 
-                    ? 'bg-primary/20 text-primary border border-primary/50' 
+                className={`w-full sm:w-auto px-4 py-2 font-mono text-[10px] font-bold tracking-widest uppercase rounded flex items-center justify-center gap-2 transition-colors ${files[doc.key]
+                    ? 'bg-primary/20 text-primary border border-primary/50'
                     : 'bg-surface border border-border text-text-main hover:bg-border'
-                }`}
+                  }`}
               >
                 {files[doc.key] ? (
                   <>

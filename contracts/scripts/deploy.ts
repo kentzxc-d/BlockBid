@@ -4,12 +4,13 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with the account:", deployer.address);
 
-  // 1. Deploy the PHPB Stablecoin Token
-  const BlockBidToken = await ethers.getContractFactory("BlockBidToken");
-  const token = await BlockBidToken.deploy();
-  await token.waitForDeployment();
-  const tokenAddress = await token.getAddress();
-  console.log("BlockBidToken (PHPB) deployed to:", tokenAddress);
+  // 1. We ALREADY deployed PHPB Stablecoin on Polygon Amoy, so we reuse it to save gas!
+  // const BlockBidToken = await ethers.getContractFactory("BlockBidToken");
+  // const token = await BlockBidToken.deploy();
+  // await token.waitForDeployment();
+  // const tokenAddress = await token.getAddress();
+  const tokenAddress = "0x658a8E9781e76784391CC1C6b60f1EB7B0B948cd";
+  console.log("Using existing BlockBidToken (PHPB) at:", tokenAddress);
 
   // 2. Deploy the BlockBid Escrow Contract
   const BlockBid = await ethers.getContractFactory("BlockBid");
@@ -22,7 +23,7 @@ async function main() {
 
   // 3. Deploy VerifiedBadge (SBT)
   const VerifiedBadge = await ethers.getContractFactory("VerifiedBadge");
-  const badge = await VerifiedBadge.deploy();
+  const badge = await VerifiedBadge.deploy(deployer.address);
   await badge.waitForDeployment();
   const badgeAddress = await badge.getAddress();
   console.log("VerifiedBadge (SBT) deployed to:", badgeAddress);
