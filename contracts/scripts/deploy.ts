@@ -22,7 +22,11 @@ async function main() {
 
   // 3. Deploy VerifiedBadge (SBT)
   const VerifiedBadge = await ethers.getContractFactory("VerifiedBadge");
-  const badge = await VerifiedBadge.deploy(deployer.address);
+  // Hardhat is overestimating gas. We force maxFeePerGas to 35 gwei to prevent 0.3 POL costs.
+  const badge = await VerifiedBadge.deploy(deployer.address, {
+    maxFeePerGas: ethers.parseUnits("35", "gwei"),
+    maxPriorityFeePerGas: ethers.parseUnits("35", "gwei")
+  });
   await badge.waitForDeployment();
   const badgeAddress = await badge.getAddress();
   console.log("VerifiedBadge (SBT) deployed to:", badgeAddress);

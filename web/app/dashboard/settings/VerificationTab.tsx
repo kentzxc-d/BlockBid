@@ -14,8 +14,6 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     business_registration: null,
     mayors_permit: null,
     tax_clearance: null,
-    afs: null,
-    sworn_declaration: null,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -205,8 +203,6 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
           { key: 'business_registration', label: docTypeLabel, desc: 'DTI for SMEs, SEC for Corporations' },
           { key: 'mayors_permit', label: "Mayor's / Business Permit", desc: 'Valid permit from your LGU' },
           { key: 'tax_clearance', label: 'Tax Clearance Certificate', desc: 'Issued by the BIR' },
-          { key: 'afs', label: 'Audited Financial Statements', desc: 'Stamped "Received" by the BIR' },
-          { key: 'sworn_declaration', label: 'PhilGEPS Sworn Declaration', desc: 'Notarized statement' },
         ].map((doc) => (
           <div key={doc.key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-border rounded-md hover:border-text-main transition-colors bg-background">
             <div>
