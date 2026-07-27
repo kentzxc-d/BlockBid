@@ -124,10 +124,10 @@ export default function UserDashboard() {
             </div>
             <div>
               <h3 className="font-heading font-bold text-text-main text-lg mb-0.5">Account Verification Required</h3>
-              <p className="text-text-muted font-body text-sm">Submit your PhilGEPS Class A documents to unlock bidding capabilities.</p>
+              <p className="text-text-muted font-body text-sm">Submit your Class A documents to unlock bidding capabilities.</p>
             </div>
           </div>
-          <Link href="/dashboard/settings?tab=verification" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-none transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+          <Link href="/dashboard/settings?tab=verification" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-md transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
             Verify Account
           </Link>
         </div>
@@ -176,7 +176,9 @@ export default function UserDashboard() {
           </div>
           
           <div className="grid gap-4">
-            {activeSolicitations.map((solicitation) => (
+            {activeSolicitations.map((solicitation) => {
+              const daysLeft = Math.max(0, Math.ceil((new Date(solicitation.deadline).getTime() - new Date().getTime()) / (1000 * 3600 * 24)));
+              return (
               <div key={solicitation.id} className="bg-surface rounded-none p-5 border border-border flex items-center justify-between group hover:border-text-main transition-colors">
                 <div className="flex items-center gap-4">
                   <div className="p-2 border border-border bg-gray-50 rounded-none group-hover:bg-primary/10 transition-colors">
@@ -196,27 +198,27 @@ export default function UserDashboard() {
                 </div>
                 <div className="text-right">
                   <p className="font-mono text-xs font-bold text-text-main mb-1 uppercase tracking-widest">
-                    Due: {new Date(solicitation.deadline).toLocaleDateString()}
+                    T-{daysLeft} Days
                   </p>
                   {solicitation.requestor_id === user?.id ? (
-                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-none uppercase cursor-not-allowed">
+                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
                       YOUR_ACQUISITION
                     </span>
                   ) : allMyBidProjectIds.includes(solicitation.id) ? (
-                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-none uppercase cursor-not-allowed">
+                    <span className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-background border border-border text-text-muted font-mono text-[10px] font-bold tracking-widest rounded-md uppercase cursor-not-allowed">
                       ALREADY_BID
                     </span>
                   ) : (
                     <Link 
                       href={`/dashboard/acquisitions/${solicitation.id}/bid`}
-                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase"
+                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-text-main text-white font-mono text-[10px] font-bold tracking-widest rounded-md hover:bg-primary hover:text-white transition-colors uppercase"
                     >
                       SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
                     </Link>
                   )}
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </div>
 
