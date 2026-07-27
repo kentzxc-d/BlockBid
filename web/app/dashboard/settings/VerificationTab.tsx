@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { CheckCircleIcon, CloudArrowUpIcon, DocumentTextIcon, XCircleIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, CloudArrowUpIcon, DocumentTextIcon, XCircleIcon, PaperAirplaneIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { useWallets } from "@privy-io/react-auth";
 import { createWalletClient, custom, parseEther } from "viem";
 import { activeChain } from "@/utils/network";
@@ -137,19 +137,26 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     return (
       <>
         {EmergencyButton}
-        <div className="bg-surface rounded-md border border-primary p-8 text-center flex flex-col items-center">
-          <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6">
-            <CheckCircleIcon className="w-10 h-10 text-primary stroke-2" />
+        <div className="mb-6">
+          <div className="flex items-center gap-6">
+            <div className="relative group cursor-default">
+              <div className="w-20 h-20 bg-surface border-2 border-border group-hover:border-text-main transition-colors flex items-center justify-center overflow-hidden">
+                <CheckCircleIcon className="w-10 h-10 text-text-main" />
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-text-main border-2 border-surface text-white p-1.5 rounded-none shadow-lg group-hover:bg-primary transition-colors">
+                <CheckIcon className="w-3.5 h-3.5" />
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-1 uppercase">
+                Verified Member
+              </h3>
+              <p className="text-text-muted text-[11px] font-mono font-bold tracking-wider uppercase max-w-md leading-relaxed">
+                Your account is fully verified. You have full access to bid on government projects.
+              </p>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold font-heading text-text-main uppercase tracking-tight mb-2">
-            Platinum Member
-          </h2>
-          <p className="text-sm font-mono text-text-muted mb-6">
-            Your account is fully verified. You have full access to bid on government projects.
-          </p>
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/30 rounded-full font-mono text-xs font-bold tracking-widest uppercase">
-            VERIFIED BADGE SECURED
-          </div>
+          <div className="w-full h-px bg-border my-6" />
         </div>
       </>
     );
