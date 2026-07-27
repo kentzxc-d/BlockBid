@@ -137,7 +137,7 @@ export default function ActiveSolicitationsPage() {
               );
             } else {
               actionButton = (
-                <Link href={`/dashboard/acquisitions/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-text-main text-white font-mono text-xs font-bold tracking-widest rounded-none hover:bg-primary transition-colors uppercase w-full sm:w-auto">
+                <Link href={`/dashboard/acquisitions/${solicitation.id}/bid`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-secondary text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5 uppercase w-full sm:w-auto">
                   SUBMIT_BID <ArrowRightIcon className="w-4 h-4 stroke-2" />
                 </Link>
               );
