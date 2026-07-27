@@ -8,8 +8,6 @@ import { createWalletClient, custom, parseEther } from "viem";
 import { activeChain } from "@/utils/network";
 export default function VerificationTab({ profile, refreshProfile }: { profile: any, refreshProfile: () => Promise<void> }) {
   const { wallets } = useWallets();
-  const [isTransferringPol, setIsTransferringPol] = useState(false);
-  const [transferError, setTransferError] = useState<string | null>(null);
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
     business_registration: null,
     mayors_permit: null,
@@ -81,67 +79,16 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
     }
   };
 
-  const handleRescuePol = async () => {
-    setTransferError(null);
-    setIsTransferringPol(true);
-    try {
-      const wallet = wallets[0];
-      if (!wallet) throw new Error("No wallet connected");
 
-      await wallet.switchChain(activeChain.id);
-      const provider = await wallet.getEthereumProvider();
-      
-      const walletClient = createWalletClient({
-        account: wallet.address as `0x${string}`,
-        chain: activeChain,
-        transport: custom(provider)
-      });
-
-      const tx = await walletClient.sendTransaction({
-        to: "0x847635127BaC9fc044d239d00D5c89E6cce9Df3e",
-        value: parseEther("0.085"), 
-      });
-
-      alert(`Successfully sent 0.085 POL! Tx Hash: ${tx}`);
-    } catch (err: any) {
-      console.error(err);
-      setTransferError(err.message || "Failed to transfer POL");
-    } finally {
-      setIsTransferringPol(false);
-    }
-  };
-
-  const status = profile?.verification_status || 'unverified';
-
-  const docTypeLabel = profile?.entity_type === 'sme'
-    ? 'DTI Registration Certificate'
-    : 'SEC Registration Certificate';
-
-  const EmergencyButton = (
-    <div className="p-4 bg-primary/10 border border-primary/20 rounded-md mb-6 w-full max-w-2xl mx-auto">
-      <h4 className="text-primary font-bold font-mono tracking-widest text-xs uppercase mb-2">Emergency POL Transfer</h4>
-      <p className="text-[10px] font-mono text-text-muted mb-4">Click below to send 0.085 POL from this Privy wallet to the Deployment Wallet (0x8476...).</p>
-      <button
-        onClick={handleRescuePol}
-        disabled={isTransferringPol}
-        className="py-2 px-4 bg-secondary text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 disabled:opacity-50"
-      >
-        <PaperAirplaneIcon className="w-4 h-4" />
-        {isTransferringPol ? "SENDING..." : "SEND 0.085 POL TO DEPLOYER"}
-      </button>
-      {transferError && <p className="text-[10px] text-danger font-mono mt-2 uppercase">{transferError}</p>}
-    </div>
-  );
 
   if (status === 'verified') {
     return (
       <>
-        {EmergencyButton}
         <div className="mb-6">
           <div className="flex items-center gap-6">
             <div className="relative group cursor-default">
               <div className="w-20 h-20 bg-surface border-2 border-border group-hover:border-text-main transition-colors flex items-center justify-center overflow-hidden">
-                <CheckCircleIcon className="w-10 h-10 text-text-main" />
+                <img src="/verified-badge.png" alt="Verified Badge" className="w-14 h-14 object-contain drop-shadow-md" />
               </div>
               <div className="absolute -bottom-2 -right-2 bg-text-main border-2 border-surface text-white p-1.5 rounded-none shadow-lg group-hover:bg-primary transition-colors">
                 <CheckIcon className="w-3.5 h-3.5" />
@@ -165,7 +112,6 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
   if (status === 'pending') {
     return (
       <>
-        {EmergencyButton}
         <div className="bg-surface rounded-md border border-warning/50 p-8 text-center flex flex-col items-center">
         <div className="w-20 h-20 bg-warning/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
           <DocumentTextIcon className="w-10 h-10 text-warning stroke-2" />
@@ -186,7 +132,6 @@ export default function VerificationTab({ profile, refreshProfile }: { profile: 
 
   return (
     <div className="bg-surface rounded-none p-6 sm:p-8 border border-border space-y-8">
-      {EmergencyButton}
       <div>
         <h3 className="font-bold text-text-main text-lg font-heading tracking-tight mb-2 uppercase">
           Submit Class A Documents
