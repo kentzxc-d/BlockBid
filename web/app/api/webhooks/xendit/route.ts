@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       
       // 3. Connect to Blockchain via viem
       const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY;
-      const contractAddress = process.env.NEXT_PUBLIC_BLOCKBID_TOKEN_ADDRESS;
+      const contractAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS;
       const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com";
 
       if (adminPrivateKey && contractAddress) {

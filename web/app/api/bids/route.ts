@@ -17,50 +17,8 @@ export async function POST(request: Request) {
     }
 
     // --- BID BOND LOGIC ---
-    // 1. Fetch Project Budget
-    const { data: projectData, error: projectError } = await supabase
-      .from("projects")
-      .select("budget")
-      .eq("id", project_id)
-      .single();
-
-    if (projectError || !projectData) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
-    }
-
-    // 2. Fetch Supplier Profile for Wallet Balance
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("wallet_balance")
-      .eq("id", supplier_id)
-      .single();
-
-    if (profileError || !profileData) {
-      return NextResponse.json({ error: "Supplier profile not found" }, { status: 404 });
-    }
-
-    // 3. Calculate 1% Bid Bond
-    const bidBond = projectData.budget * 0.01;
-    const currentBalance = Number(profileData.wallet_balance) || 0;
-
-    // 4. Check for sufficient funds
-    if (currentBalance < bidBond) {
-      return NextResponse.json(
-        { error: `Insufficient balance for Bid Bond. Required: ₱${bidBond.toLocaleString(undefined, { minimumFractionDigits: 2 })}. Your balance: ₱${currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}` }, 
-        { status: 402 } // 402 Payment Required
-      );
-    }
-
-    // 5. Deduct Bid Bond from Wallet Balance
-    const newBalance = currentBalance - bidBond;
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ wallet_balance: newBalance })
-      .eq("id", supplier_id);
-
-    if (updateError) {
-      throw new Error("Failed to deduct Bid Bond from wallet balance.");
-    }
+    // Removed! Bid Bond deduction is now handled on-chain by the BlockBid Escrow Smart Contract.
+    // The Frontend Web3 logic handles the transaction before calling this API route.
     // --- END BID BOND LOGIC ---
 
     // 6. Insert Bid into the database

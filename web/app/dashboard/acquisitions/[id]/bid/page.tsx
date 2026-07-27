@@ -4,9 +4,10 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { createWalletClient, custom, keccak256, toHex } from "viem";
+import { createWalletClient, custom, keccak256, toHex, parseEther, publicActions } from "viem";
 import { activeChain } from "@/utils/network";
-import { BlockBidABI } from "@/lib/abi";
+import BlockBidArtifact from "@/lib/BlockBid.json";
+import BlockBidTokenArtifact from "@/lib/BlockBidToken.json";
 import { 
   ArrowLeftIcon,
   CheckBadgeIcon,
@@ -94,13 +95,58 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   };
 
   const executeSubmit = async () => {
-    if (!user) return;
+    if (!user || !wallets.length) return;
     setIsSubmitting(true);
     setShowConfirmModal(false);
     setError("");
     
     try {
-      // Generate a random alias for blind bidding
+      // Setup Viem Client
+      const wallet = wallets[0];
+      await wallet.switchChain(activeChain.id);
+      const provider = await wallet.getEthereumProvider();
+      const walletClient = createWalletClient({
+        account: wallet.address as `0x${string}`,
+        chain: activeChain,
+        transport: custom(provider)
+      }).extend(publicActions);
+      
+      const bidBondAmount = project.budget * 0.01;
+      const bondWei = parseEther(bidBondAmount.toString());
+      const escrowAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+      const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
+
+      // 1. APPROVE PHPB (Infinite Approve)
+      const allowance = await walletClient.readContract({
+        address: tokenAddress,
+        abi: BlockBidTokenArtifact.abi,
+        functionName: 'allowance',
+        args: [wallet.address, escrowAddress]
+      }) as bigint;
+
+      if (allowance < bondWei) {
+        console.log("Approving Escrow Contract...");
+        const approveHash = await walletClient.writeContract({
+          address: tokenAddress,
+          abi: BlockBidTokenArtifact.abi,
+          functionName: 'approve',
+          args: [escrowAddress, parseEther("1000000")] // Approve 1 Million PHPB
+        });
+        await walletClient.waitForTransactionReceipt({ hash: approveHash });
+      }
+
+      // 2. COMMIT BID ON-CHAIN
+      console.log("Committing Bid...");
+      const payloadHash = keccak256(toHex(JSON.stringify(fields)));
+      const commitHash = await walletClient.writeContract({
+        address: escrowAddress,
+        abi: BlockBidArtifact.abi,
+        functionName: 'commitBid',
+        args: [params.id, payloadHash, bondWei]
+      });
+      await walletClient.waitForTransactionReceipt({ hash: commitHash });
+
+      // 3. SAVE METADATA TO SUPABASE
       const anonymous_alias = `Supplier-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
       
       const payload = {
@@ -121,11 +167,8 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to submit bid");
+        throw new Error(data.error || "Failed to save bid metadata off-chain");
       }
-
-      // The smart contract transaction (commitBid) is now handled off-chain or by the backend admin wallet
-      // to sponsor the gas fee for the supplier.
 
       setShowSuccess(true);
     } catch (err: any) {
