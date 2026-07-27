@@ -4,7 +4,7 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { createWalletClient, custom, keccak256, toHex, parseEther, publicActions } from "viem";
+import { createWalletClient, custom, keccak256, toHex, parseEther, publicActions, createPublicClient, http, formatEther } from "viem";
 import { activeChain } from "@/utils/network";
 import BlockBidArtifact from "@/lib/BlockBid.json";
 import BlockBidTokenArtifact from "@/lib/BlockBidToken.json";
@@ -37,6 +37,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const [txHash, setTxHash] = useState<string | null>(null);
   const [enhancingFieldId, setEnhancingFieldId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [onChainBalance, setOnChainBalance] = useState<number>(0);
   const { wallets } = useWallets();
 
   useEffect(() => {
@@ -62,6 +63,35 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         setIsLoading(false);
       });
   }, [params.id]);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!wallets.length) return;
+      try {
+        const wallet = wallets[0];
+        const client = createPublicClient({
+          chain: activeChain,
+          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
+        });
+
+        const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
+        if (!tokenAddress) return;
+
+        const rawBalance = await client.readContract({
+          address: tokenAddress,
+          abi: BlockBidTokenArtifact.abi,
+          functionName: 'balanceOf',
+          args: [wallet.address]
+        }) as bigint;
+
+        setOnChainBalance(Number(formatEther(rawBalance)));
+      } catch (err) {
+        console.error("Failed to fetch balance:", err);
+      }
+    };
+
+    fetchBalance();
+  }, [wallets, showConfirmModal]);
 
   const handleFieldChange = (id: string, value: string) => {
     setFields(fields.map(f => f.id === id ? { ...f, value } : f));
@@ -322,8 +352,8 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
                 </div>
                 <div className="flex justify-between items-center pt-3 border-t border-border border-dashed">
                   <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">Your Wallet Balance</span>
-                  <span className={`font-mono text-xs font-bold ${Number(supplierData?.wallet_balance || 0) < (project.budget * 0.01) ? 'text-danger' : 'text-primary'}`}>
-                    ₱{Number(supplierData?.wallet_balance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  <span className={`font-mono text-xs font-bold ${onChainBalance < (project.budget * 0.01) ? 'text-danger' : 'text-primary'}`}>
+                    ₱{onChainBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
@@ -343,7 +373,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
               </button>
               <button 
                 onClick={executeSubmit}
-                disabled={isSubmitting || Number(supplierData?.wallet_balance || 0) < (project.budget * 0.01)}
+                disabled={isSubmitting || onChainBalance < (project.budget * 0.01)}
                 className="px-6 py-2.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-50"
               >
                 {isSubmitting ? (
