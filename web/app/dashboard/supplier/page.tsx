@@ -127,7 +127,7 @@ export default function UserDashboard() {
               <p className="text-text-muted font-body text-sm">Submit your Class A documents to unlock bidding capabilities.</p>
             </div>
           </div>
-          <Link href="/dashboard/settings?tab=verification" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white font-heading text-sm font-semibold rounded-md transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+          <Link href="/dashboard/settings?tab=verification" className="relative z-10 shrink-0 px-6 py-3 bg-secondary hover:bg-secondary-hover text-white hover:text-primary font-heading text-sm font-semibold rounded-md transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
             Verify Account
           </Link>
         </div>
@@ -211,7 +211,7 @@ export default function UserDashboard() {
                   ) : (
                     <Link 
                       href={`/dashboard/acquisitions/${solicitation.id}/bid`}
-                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-secondary text-white font-mono text-[10px] font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5 uppercase"
+                      className="inline-flex items-center justify-center gap-1 px-4 py-1.5 bg-secondary text-white font-mono text-[10px] font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5 uppercase"
                     >
                       SUBMIT_BID <ArrowRightIcon className="w-3 h-3 stroke-2" />
                     </Link>

@@ -80,7 +80,7 @@ export default function WalletBanner() {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => window.dispatchEvent(new Event('open-topup-modal'))}
-                className="flex items-center gap-1.5 px-6 py-2 bg-secondary text-white transition-all rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5"
+                className="flex items-center gap-1.5 px-6 py-2 bg-secondary text-white transition-all rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5"
               >
                 <ArrowDownIcon className="w-3 h-3 stroke-2" /> TOP-UP
               </button>

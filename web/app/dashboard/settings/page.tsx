@@ -111,7 +111,7 @@ function SettingsPageContent() {
               </p>
               <button
                 onClick={() => exportWallet()}
-                className="w-full px-4 py-2.5 bg-secondary text-white text-[10px] font-mono font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:shadow-md hover:-translate-y-0.5 uppercase"
+                className="w-full px-4 py-2.5 bg-secondary text-white text-[10px] font-mono font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5 uppercase"
               >
                 Export_Secret_Phrase
               </button>
