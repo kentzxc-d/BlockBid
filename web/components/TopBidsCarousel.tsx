@@ -48,7 +48,7 @@ export default function TopBidsCarousel({ location, onOpenLocationModal }: TopBi
               </p>
             </div>
           </div>
-          <button className="whitespace-nowrap px-6 py-3 bg-secondary text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 border border-transparent">
+          <button className="whitespace-nowrap px-6 py-3 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-primary-hover hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 border border-transparent">
             Set_Location <ArrowRightIcon className="w-4 h-4 stroke-2" />
           </button>
         </div>
