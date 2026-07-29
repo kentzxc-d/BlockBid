@@ -206,8 +206,9 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
 
       setShowSuccess(true);
     } catch (err: any) {
-      console.error(err);
+      console.error("Submission Error:", err);
       setError(err.message || "Failed to submit bid");
+      alert(`Error submitting bid: ${err.message || "Unknown error"}`);
     } finally {
       setIsSubmitting(false);
     }

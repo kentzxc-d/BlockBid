@@ -210,7 +210,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     
     // Update Database and trigger notification
     try {
-      await fetch(`/api/acquisitions/${params.id}/award`, {
+      const res = await fetch(`/api/acquisitions/${params.id}/award`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -218,8 +218,13 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
           project_title: project?.title 
         })
       });
-    } catch (err) {
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(`Warning: Blockchain award succeeded, but database update failed: ${errorData.error}`);
+      }
+    } catch (err: any) {
       console.error("Failed to update backend award status:", err);
+      alert(`Network error updating backend: ${err.message}`);
     }
     
     // Reveal the bidder after contract interaction
