@@ -250,11 +250,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         </p>
       </div>
 
-      {error && (
-        <div className="mb-6 p-4 bg-danger/10 border border-danger text-danger font-mono text-xs font-bold tracking-widest uppercase">
-          ERR: {error}
-        </div>
-      )}
+
 
       <div className="bg-surface rounded-md p-6 md:p-8 border border-border shadow-sm mb-8">
         
@@ -401,12 +397,12 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
                 Payload formatted and transmitted to acquisition ledger.
               </p>
               
-              <Link 
+              <a 
                 href="/dashboard/my-bids" 
                 className="inline-flex w-full justify-center py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors shadow-sm"
               >
                 VIEW_MY_BIDS
-              </Link>
+              </a>
             </div>
           </div>
         </div>
