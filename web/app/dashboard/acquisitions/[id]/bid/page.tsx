@@ -146,8 +146,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       const escrowAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
       const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
 
-      // 1. APPROVE PHPB (Infinite Approve) [MOCKED FOR TESTING]
-      /*
+      // 1. APPROVE PHPB (Infinite Approve)
       const allowance = await walletClient.readContract({
         address: tokenAddress,
         abi: BlockBidTokenArtifact.abi,
@@ -165,14 +164,11 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         });
         await walletClient.waitForTransactionReceipt({ hash: approveHash });
       }
-      */
-      await new Promise(r => setTimeout(r, 1000)); // Mock delay
 
-      // 2. COMMIT BID ON-CHAIN [MOCKED FOR TESTING]
+      // 2. COMMIT BID ON-CHAIN
       console.log("Committing Bid...");
       const payloadHash = keccak256(toHex(JSON.stringify(fields)));
       
-      /*
       const commitHash = await walletClient.writeContract({
         address: escrowAddress,
         abi: BlockBidArtifact.abi,
@@ -180,9 +176,6 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         args: [params.id, payloadHash, bondWei]
       });
       await walletClient.waitForTransactionReceipt({ hash: commitHash });
-      */
-      await new Promise(r => setTimeout(r, 2000)); // Mock delay
-      const commitHash = "0xmocked_tx_hash_" + Date.now();
 
       // 3. SAVE METADATA TO SUPABASE
       const anonymous_alias = `Supplier-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;

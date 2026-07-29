@@ -46,6 +46,17 @@ export async function POST(
       console.error("Failed to update winning bid status:", bidUpdateError);
       // We log but don't fail, to ensure the notification logic still runs
     }
+
+    // 1.6 Update losing bids to 'rejected'
+    const { error: loserUpdateError } = await supabase
+      .from('bids')
+      .update({ status: 'rejected' })
+      .eq('project_id', projectId)
+      .neq('supplier_id', supplier_id);
+      
+    if (loserUpdateError) {
+      console.error("Failed to update losing bids:", loserUpdateError);
+    }
     
     // 2. Create a notification for the winning supplier
     const { error: notifError } = await supabase

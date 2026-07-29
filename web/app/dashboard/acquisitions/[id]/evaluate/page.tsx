@@ -185,15 +185,22 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
 
         const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
         if (contractAddress) {
-          // For the hackathon, we pass a dummy supplier address and dummy hash since we bypassed the strict hash check in BlockBid.sol
-          const dummySupplierAddress = "0x0000000000000000000000000000000000000001";
-          const dummyHash = "0x" + "0".repeat(64);
+          // Fetch the user's wallet address from Supabase profiles (since bidToAward.supplier_id is the user ID)
+          const profileRes = await fetch(`/api/user/profile?id=${bidToAward.supplier_id}`);
+          const profileData = await profileRes.json();
+          const realSupplierAddress = profileData?.profile?.wallet_address as `0x${string}`;
+
+          if (!realSupplierAddress) {
+             throw new Error("Could not find wallet address for this supplier.");
+          }
+
+          const dummyHash = "0x" + "0".repeat(64); // We still bypass strict hash check if needed
           
           await walletClient.writeContract({
             address: contractAddress,
             abi: BlockBidABI,
             functionName: 'finalizeAward',
-            args: [params.id, dummySupplierAddress, dummyHash]
+            args: [params.id, realSupplierAddress, dummyHash]
           });
         }
       }
