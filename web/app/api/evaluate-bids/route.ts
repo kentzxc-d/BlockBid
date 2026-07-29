@@ -52,7 +52,7 @@ aiSummary should be a professional, 2-3 sentence justification of the total scor
     const userPrompt = `Evaluate the following bids:\n\n${JSON.stringify(bids, null, 2)}`;
 
     const { object } = await generateObject({
-      model: google('models/gemini-1.5-pro-latest'),
+      model: google('gemini-3.5-flash'),
       schema: EvaluationSchema,
       system: systemPrompt,
       prompt: userPrompt,
@@ -63,7 +63,7 @@ aiSummary should be a professional, 2-3 sentence justification of the total scor
     const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     if (supabaseUrl && supabaseKey) {
       const supabase = createClient(supabaseUrl, supabaseKey);
-      
+
       for (const ev of object.evaluations) {
         await supabase
           .from('bids')
