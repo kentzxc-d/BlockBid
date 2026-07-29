@@ -7,8 +7,8 @@ import AcquisitionCard from "@/components/AcquisitionCard";
 export const revalidate = 60; // Revalidate every minute
 
 async function getAwardedAcquisitions() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "dummy_key";
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy_key";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { data, error } = await supabase
