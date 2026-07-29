@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
     // 3. Fetch recent AwardFinalized events (last 1000 blocks ~ 30 minutes)
     const currentBlock = await publicClient.getBlockNumber();
-    const fromBlock = currentBlock - 1000n; // look back 1000 blocks
+    const fromBlock = currentBlock - BigInt(1000); // look back 1000 blocks
 
     console.log(`Cron syncing blocks ${fromBlock} to ${currentBlock}`);
 
