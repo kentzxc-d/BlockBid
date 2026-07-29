@@ -94,7 +94,7 @@ export default function DashboardTopbar() {
       await refreshProfile();
     } catch (error: any) {
       console.error("Avatar upload error:", error);
-      alert(error.message || "Failed to upload avatar.");
+      console.log(error.message || "Failed to upload avatar.");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

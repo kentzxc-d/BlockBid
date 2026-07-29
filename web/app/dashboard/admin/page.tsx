@@ -65,11 +65,11 @@ export default function AdminOverview() {
         // Remove from list
         setPendingProjects(prev => prev.filter(p => p.id !== projectId));
       } else {
-        alert(data.error || "Failed to process project");
+        console.log(data.error || "Failed to process project");
       }
     } catch (err) {
       console.error(err);
-      alert("Network error");
+      console.log("Network error");
     } finally {
       setProcessingId(null);
     }
@@ -198,13 +198,13 @@ export default function AdminOverview() {
                 });
                 const data = await res.json();
                 if (data.success) {
-                  alert(`Success! TX Hash: ${data.hash}`);
+                  console.log(`Success! TX Hash: ${data.hash}`);
                   form.reset();
                 } else {
-                  alert(`Error: ${data.error}`);
+                  console.log(`Error: ${data.error}`);
                 }
               } catch (err) {
-                alert("Network error");
+                console.log("Network error");
               } finally {
                 btn.disabled = false;
                 btn.innerText = "SEND POL";

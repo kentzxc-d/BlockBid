@@ -112,7 +112,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to enhance text.");
+      console.log("Failed to enhance text.");
     } finally {
       setEnhancingFieldId(null);
     }
@@ -214,7 +214,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     } catch (err: any) {
       console.error("Submission Error:", err);
       setError(err.message || "Failed to submit bid");
-      alert(`Error submitting bid: ${err.message || "Unknown error"}`);
+      console.log(`Error submitting bid: ${err.message || "Unknown error"}`);
     } finally {
       setIsSubmitting(false);
     }

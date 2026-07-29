@@ -120,7 +120,7 @@ export default function CreateAcquisitionPage() {
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to enhance text.");
+      console.log("Failed to enhance text.");
     } finally {
       setIsEnhancing(false);
     }
@@ -162,7 +162,7 @@ export default function CreateAcquisitionPage() {
       router.push("/dashboard/agency");
     } catch (err) {
       console.error(err);
-      alert("Error publishing acquisition. Check console.");
+      console.log("Error publishing acquisition. Check console.");
     } finally {
       setIsSubmitting(false);
     }

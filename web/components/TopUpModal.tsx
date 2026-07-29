@@ -19,7 +19,7 @@ export default function TopUpModal() {
   const handleTopUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!amount || Number(amount) < 100) {
-      alert("Minimum top-up amount is ₱100");
+      console.log("Minimum top-up amount is ₱100");
       return;
     }
     
@@ -43,12 +43,12 @@ export default function TopUpModal() {
         // Redirect to Xendit payment link
         window.location.href = data.url;
       } else {
-        alert("Failed to create payment link: " + (data.error || "Unknown error"));
+        console.log("Failed to create payment link: " + (data.error || "Unknown error"));
         setIsLoading(false);
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      console.log("Something went wrong");
       setIsLoading(false);
     }
   };

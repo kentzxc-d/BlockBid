@@ -19,11 +19,11 @@ export default function WithdrawModal() {
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!amount || Number(amount) < 100) {
-      alert("Minimum withdrawal amount is ₱100");
+      console.log("Minimum withdrawal amount is ₱100");
       return;
     }
     if (!accountNumber) {
-      alert("Please enter your account number");
+      console.log("Please enter your account number");
       return;
     }
     
@@ -43,16 +43,16 @@ export default function WithdrawModal() {
       
       const data = await response.json();
       if (data.success) {
-        alert("Withdrawal requested successfully! The funds will arrive shortly.");
+        console.log("Withdrawal requested successfully! The funds will arrive shortly.");
         setIsOpen(false);
         setAmount("");
         setAccountNumber("");
       } else {
-        alert("Withdrawal failed: " + (data.error || "Unknown error"));
+        console.log("Withdrawal failed: " + (data.error || "Unknown error"));
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      console.log("Something went wrong");
     } finally {
       setIsLoading(false);
     }

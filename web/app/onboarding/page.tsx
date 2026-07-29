@@ -56,12 +56,12 @@ export default function OnboardingPage() {
         router.push("/dashboard");
       } else {
         const error = await response.json();
-        alert(`Failed to save profile: ${error.error}`);
+        console.log(`Failed to save profile: ${error.error}`);
         setIsSubmitting(false);
       }
     } catch (error) {
       console.error(error);
-      alert("Network error occurred.");
+      console.log("Network error occurred.");
       setIsSubmitting(false);
     }
   };

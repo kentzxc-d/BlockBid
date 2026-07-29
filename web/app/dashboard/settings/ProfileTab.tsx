@@ -59,11 +59,11 @@ export default function ProfileTab({ user, profile, loadingProfile, refreshProfi
         }, 3000);
       } else {
         const error = await response.json();
-        alert(`Failed to save profile: ${error.error}`);
+        console.log(`Failed to save profile: ${error.error}`);
       }
     } catch (error) {
       console.error(error);
-      alert("Network error occurred.");
+      console.log("Network error occurred.");
     } finally {
       setIsSaving(false);
     }
@@ -108,7 +108,7 @@ export default function ProfileTab({ user, profile, loadingProfile, refreshProfi
       await refreshProfile();
     } catch (error: any) {
       console.error("Avatar upload error:", error);
-      alert(error.message || "Failed to upload avatar. Ensure the bucket exists and RLS allows inserts.");
+      console.log(error.message || "Failed to upload avatar. Ensure the bucket exists and RLS allows inserts.");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

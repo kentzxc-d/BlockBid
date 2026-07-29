@@ -218,7 +218,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
       });
       if (!res.ok) {
         const errorData = await res.json();
-        alert(`Warning: Blockchain award succeeded, but database update failed: ${errorData.error}`);
+        console.log(`Warning: Blockchain award succeeded, but database update failed: ${errorData.error}`);
       }
       
       setRevealedBidder(bidId);
@@ -226,7 +226,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
 
     } catch (err: any) {
       console.error("Failed to finalize award:", err);
-      alert(`Transaction failed or cancelled: ${err.message || "Unknown error"}`);
+      console.log(`Transaction failed or cancelled: ${err.message || "Unknown error"}`);
     } finally {
       setIsAwarding(false);
     }

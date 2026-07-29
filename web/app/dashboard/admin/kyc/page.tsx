@@ -133,11 +133,11 @@ export default function AdminKYCPage() {
         .update({ verification_status: "verified" })
         .eq("id", request.id);
 
-      alert("Successfully verified user!");
+      console.log("Successfully verified user!");
       setRequests(requests.filter(r => r.id !== request.id));
     } catch (error: any) {
       console.error(error);
-      alert(`Error approving: ${error.message}`);
+      console.log(`Error approving: ${error.message}`);
     } finally {
       setProcessingId(null);
     }
@@ -151,7 +151,7 @@ export default function AdminKYCPage() {
         .update({ verification_status: "rejected" })
         .eq("id", request.id);
 
-      alert("User verification rejected.");
+      console.log("User verification rejected.");
       setRequests(requests.filter(r => r.id !== request.id));
     } catch (error) {
       console.error(error);

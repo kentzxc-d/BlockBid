@@ -26,11 +26,11 @@ export default function AdminUsersManagement() {
       if (data.success) {
         setUsers(data.users);
       } else {
-        alert(data.error || "Failed to fetch users");
+        console.log(data.error || "Failed to fetch users");
       }
     } catch (err) {
       console.error(err);
-      alert("Network error fetching users");
+      console.log("Network error fetching users");
     } finally {
       setLoading(false);
     }
@@ -49,11 +49,11 @@ export default function AdminUsersManagement() {
       if (data.success) {
         setUsers(users.map(u => u.id === targetUserId ? { ...u, role: newRole } : u));
       } else {
-        alert(data.error || "Failed to update user role");
+        console.log(data.error || "Failed to update user role");
       }
     } catch (err) {
       console.error(err);
-      alert("Network error updating role");
+      console.log("Network error updating role");
     } finally {
       setProcessingId(null);
     }
