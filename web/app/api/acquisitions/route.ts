@@ -7,8 +7,8 @@ import { z } from 'zod';
 export const runtime = 'edge';
 
 // Initialize Supabase client with the Service Role Key to bypass RLS
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "dummy_key";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy_key";
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(request: Request) {
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     const criteriaToInsert = criteria.map((c: any) => ({
       project_id: projectId,
       name: c.name,
-      description: c.description || "",
+      description: c.description || "dummy_key",
       weight_percentage: c.weight
     }));
 
