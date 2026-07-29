@@ -167,10 +167,13 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     fetchData();
   }, [params.id]);
 
+  const [isAwarding, setIsAwarding] = useState(false);
+
   const confirmAward = async (bidId: string) => {
     const bidToAward = bids.find(b => b.id === bidId);
     if (!bidToAward) return;
     
+    setIsAwarding(true);
     try {
       if (wallets && wallets.length > 0) {
         const wallet = wallets[0];
@@ -185,7 +188,6 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
 
         const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
         if (contractAddress) {
-          // Fetch the user's wallet address from Supabase profiles (since bidToAward.supplier_id is the user ID)
           const profileRes = await fetch(`/api/user/profile?id=${bidToAward.supplier_id}`);
           const profileData = await profileRes.json();
           const realSupplierAddress = profileData?.profile?.wallet_address as `0x${string}`;
@@ -194,7 +196,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
              throw new Error("Could not find wallet address for this supplier.");
           }
 
-          const dummyHash = "0x" + "0".repeat(64); // We still bypass strict hash check if needed
+          const dummyHash = "0x" + "0".repeat(64);
           
           await walletClient.writeContract({
             address: contractAddress,
@@ -204,12 +206,8 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
           });
         }
       }
-    } catch (err) {
-      console.error("Failed to finalize award on contract:", err);
-    }
-    
-    // Update Database and trigger notification
-    try {
+      
+      // Only runs if blockchain succeeds
       const res = await fetch(`/api/acquisitions/${params.id}/award`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -222,14 +220,16 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
         const errorData = await res.json();
         alert(`Warning: Blockchain award succeeded, but database update failed: ${errorData.error}`);
       }
+      
+      setRevealedBidder(bidId);
+      setAwardingBidFor(null);
+
     } catch (err: any) {
-      console.error("Failed to update backend award status:", err);
-      alert(`Network error updating backend: ${err.message}`);
+      console.error("Failed to finalize award:", err);
+      alert(`Transaction failed or cancelled: ${err.message || "Unknown error"}`);
+    } finally {
+      setIsAwarding(false);
     }
-    
-    // Reveal the bidder after contract interaction
-    setRevealedBidder(bidId);
-    setAwardingBidFor(null);
   };
 
   const confirmReject = (bidId: string) => {
@@ -500,9 +500,10 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
               </button>
               <button 
                 onClick={() => confirmAward(awardingBidFor)}
-                className="flex-1 py-3 bg-primary text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-hover transition-colors shadow-sm"
+                disabled={isAwarding}
+                className="flex-1 py-3 bg-primary text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-hover transition-colors shadow-sm disabled:opacity-50"
               >
-                CONFIRM_AWARD
+                {isAwarding ? "PROCESSING..." : "CONFIRM_AWARD"}
               </button>
             </div>
           </div>
