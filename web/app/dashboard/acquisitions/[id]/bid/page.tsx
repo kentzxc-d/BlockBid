@@ -205,6 +205,12 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       await refreshProfile();
 
       setShowSuccess(true);
+      
+      // Auto redirect after 3 seconds
+      setTimeout(() => {
+        router.push("/dashboard/my-bids");
+      }, 3000);
+
     } catch (err: any) {
       console.error("Submission Error:", err);
       setError(err.message || "Failed to submit bid");
