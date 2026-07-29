@@ -8,7 +8,7 @@ import { createWalletClient, custom, keccak256, toHex, parseEther, publicActions
 import { activeChain } from "@/utils/network";
 import BlockBidArtifact from "@/lib/BlockBid.json";
 import BlockBidTokenArtifact from "@/lib/BlockBidToken.json";
-import { 
+import {
   ArrowLeftIcon,
   CheckBadgeIcon,
   DocumentTextIcon,
@@ -24,9 +24,10 @@ type FieldData = {
 
 export default function SubmitBidPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
-  const { user } = usePrivy();
-  const { supplierData } = useProfile();
   const router = useRouter();
+  const { user } = usePrivy();
+  const { wallets } = useWallets();
+  const { refreshProfile } = useProfile();
 
   const [project, setProject] = useState<any>(null);
   const [fields, setFields] = useState<FieldData[]>([]);
@@ -38,7 +39,6 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const [enhancingFieldId, setEnhancingFieldId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [onChainBalance, setOnChainBalance] = useState<number>(0);
-  const { wallets } = useWallets();
 
   useEffect(() => {
     fetch(`/api/acquisitions/${params.id}`)
@@ -129,7 +129,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     setIsSubmitting(true);
     setShowConfirmModal(false);
     setError("");
-    
+
     try {
       // Setup Viem Client
       const wallet = wallets[0];
@@ -140,13 +140,14 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         chain: activeChain,
         transport: custom(provider)
       }).extend(publicActions);
-      
+
       const bidBondAmount = project.budget * 0.01;
       const bondWei = parseEther(bidBondAmount.toString());
       const escrowAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
       const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
 
-      // 1. APPROVE PHPB (Infinite Approve)
+      // 1. APPROVE PHPB (Infinite Approve) [MOCKED FOR TESTING]
+      /*
       const allowance = await walletClient.readContract({
         address: tokenAddress,
         abi: BlockBidTokenArtifact.abi,
@@ -164,10 +165,14 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         });
         await walletClient.waitForTransactionReceipt({ hash: approveHash });
       }
+      */
+      await new Promise(r => setTimeout(r, 1000)); // Mock delay
 
-      // 2. COMMIT BID ON-CHAIN
+      // 2. COMMIT BID ON-CHAIN [MOCKED FOR TESTING]
       console.log("Committing Bid...");
       const payloadHash = keccak256(toHex(JSON.stringify(fields)));
+      
+      /*
       const commitHash = await walletClient.writeContract({
         address: escrowAddress,
         abi: BlockBidArtifact.abi,
@@ -175,10 +180,13 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         args: [params.id, payloadHash, bondWei]
       });
       await walletClient.waitForTransactionReceipt({ hash: commitHash });
+      */
+      await new Promise(r => setTimeout(r, 2000)); // Mock delay
+      const commitHash = "0xmocked_tx_hash_" + Date.now();
 
       // 3. SAVE METADATA TO SUPABASE
       const anonymous_alias = `Supplier-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
-      
+
       const payload = {
         project_id: params.id,
         supplier_id: user.id,
@@ -199,6 +207,9 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         const data = await res.json();
         throw new Error(data.error || "Failed to save bid metadata off-chain");
       }
+
+      // Force profile context to refresh so My Bids page gets the new bid
+      await refreshProfile();
 
       setShowSuccess(true);
     } catch (err: any) {
@@ -236,8 +247,8 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     <div className="py-6 px-4 md:py-10 md:px-8 max-w-5xl mx-auto w-full">
       {/* Header */}
       <div className="mb-8 border-b border-border pb-6">
-        <Link 
-          href="/dashboard/acquisitions" 
+        <Link
+          href="/dashboard/acquisitions"
           className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors mb-4"
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_SOLICITATIONS
@@ -253,7 +264,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
 
 
       <div className="bg-surface rounded-md p-6 md:p-8 border border-border shadow-sm mb-8">
-        
+
         <div className="mb-8 p-5 bg-gray-50 rounded-md border border-border">
           <h3 className="font-heading font-bold text-text-main text-lg mb-2 uppercase">{project.title}</h3>
           <p className="font-mono text-xs text-text-muted leading-relaxed mb-4">{project.description}</p>
@@ -275,7 +286,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
               <h4 className="font-mono text-sm font-bold tracking-widest text-orange-600 uppercase">Bid Security Required</h4>
             </div>
             <p className="font-mono text-xs text-text-muted leading-relaxed pl-7">
-              A Bid Bond equivalent to 1% of the Estimated Budget is required to participate. Upon submission, 
+              A Bid Bond equivalent to 1% of the Estimated Budget is required to participate. Upon submission,
               <span className="font-bold text-text-main"> ₱{(project.budget * 0.01).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> will be locked from your Wallet Balance. This will be automatically returned if you do not win the bid.
             </p>
           </div>
@@ -285,14 +296,14 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
           <h2 className="text-lg font-bold text-text-main font-heading uppercase tracking-tight border-b border-border pb-3">
             Evaluation Matrix Payload
           </h2>
-          
+
           {fields.map((field) => (
             <div key={field.id} className="relative bg-surface p-5 rounded-md border border-border group transition-colors focus-within:border-text-main hover:border-text-muted">
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-xs font-mono font-bold tracking-widest text-text-main uppercase">
                   {field.label} <span className="text-primary">*</span>
                 </label>
-                <button 
+                <button
                   type="button"
                   onClick={() => handleEnhanceField(field.id, field.value)}
                   disabled={enhancingFieldId === field.id || !field.value.trim()}
@@ -301,7 +312,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
                   ✨ {enhancingFieldId === field.id ? "ENHANCING..." : "ENHANCE"}
                 </button>
               </div>
-              
+
               <textarea
                 value={field.value}
                 onChange={(e) => handleFieldChange(field.id, e.target.value)}
@@ -335,12 +346,12 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
                 Confirm Bid Submission
               </h3>
             </div>
-            
+
             <div className="p-6 bg-background space-y-4">
               <p className="font-mono text-xs text-text-muted leading-relaxed">
                 You are about to submit a formal proposal for <span className="font-bold text-text-main">"{project.title}"</span>.
               </p>
-              
+
               <div className="bg-surface border border-border rounded-md p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">Required Bid Bond (1%)</span>
@@ -358,16 +369,16 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
                 By confirming, the Bid Bond will be held in escrow. If you win and subsequently withdraw, these funds will be permanently forfeited as a penalty.
               </p>
             </div>
-            
+
             <div className="p-4 bg-surface border-t border-border flex justify-end gap-3">
-              <button 
+              <button
                 onClick={() => setShowConfirmModal(false)}
                 className="px-6 py-2.5 bg-background border border-border text-text-main rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-gray-50 transition-colors"
                 disabled={isSubmitting}
               >
                 CANCEL
               </button>
-              <button 
+              <button
                 onClick={executeSubmit}
                 disabled={isSubmitting || onChainBalance < (project.budget * 0.01)}
                 className="px-6 py-2.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-50"
@@ -396,13 +407,13 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
               <p className="font-mono text-xs text-text-muted mb-8 leading-relaxed uppercase tracking-widest">
                 Payload formatted and transmitted to acquisition ledger.
               </p>
-              
-              <a 
-                href="/dashboard/my-bids" 
+
+              <Link
+                href="/dashboard/my-bids"
                 className="inline-flex w-full justify-center py-3.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors shadow-sm"
               >
                 VIEW_MY_BIDS
-              </a>
+              </Link>
             </div>
           </div>
         </div>
