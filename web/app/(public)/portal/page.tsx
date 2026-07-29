@@ -24,10 +24,7 @@ async function getAwardedAcquisitions() {
       bids (
         id,
         supplier_id,
-        on_chain_hash,
-        bid_values (
-          total_price
-        )
+        on_chain_hash
       )
     `)
     .eq("status", "awarded")
@@ -41,7 +38,7 @@ async function getAwardedAcquisitions() {
   // Map the data to find the winning bid
   return data.map((project: any) => {
     const winningBid = project.bids?.find((b: any) => b.supplier_id === project.awarded_supplier_id);
-    const totalPrice = winningBid?.bid_values?.total_price || 0;
+    const totalPrice = 0;
     const onChainHash = winningBid?.on_chain_hash || null;
 
     return {
