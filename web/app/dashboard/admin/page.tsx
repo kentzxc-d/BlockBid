@@ -169,6 +169,74 @@ export default function AdminOverview() {
 
         </div>
 
+        {/* Temporary Funding Section */}
+        <div className="mb-12 bg-surface rounded-md p-6 border-2 border-primary/30 shadow-[4px_4px_0px_0px_rgba(59,130,246,0.1)]">
+          <div className="flex items-center gap-2 mb-4">
+            <TrophyIcon className="w-6 h-6 text-primary" />
+            <h3 className="font-bold text-text-main font-heading text-lg uppercase tracking-tight">[ QUICK_FUND_TEST_WALLET ]</h3>
+          </div>
+          <p className="text-text-muted font-mono text-xs mb-6 uppercase tracking-widest leading-relaxed">
+            Send POL directly from the main Admin wallet to any test wallet. Useful for giving testnet gas to suppliers.
+          </p>
+          
+          <form 
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const addr = form.walletAddress.value;
+              const amt = form.amount.value;
+              const btn = form.submitBtn as HTMLButtonElement;
+              
+              btn.disabled = true;
+              btn.innerText = "SENDING...";
+              
+              try {
+                const res = await fetch('/api/admin/fund-wallet', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ recipientAddress: addr, amount: amt })
+                });
+                const data = await res.json();
+                if (data.success) {
+                  alert(`Success! TX Hash: ${data.hash}`);
+                  form.reset();
+                } else {
+                  alert(`Error: ${data.error}`);
+                }
+              } catch (err) {
+                alert("Network error");
+              } finally {
+                btn.disabled = false;
+                btn.innerText = "SEND POL";
+              }
+            }}
+            className="flex flex-col md:flex-row gap-4"
+          >
+            <input 
+              type="text" 
+              name="walletAddress" 
+              placeholder="Test Wallet Address (0x...)" 
+              required 
+              className="flex-1 bg-background border border-border rounded-md p-3 text-sm font-mono text-text-main focus:outline-none focus:border-primary"
+            />
+            <input 
+              type="number" 
+              name="amount" 
+              placeholder="Amount (e.g. 3)" 
+              step="0.1"
+              required 
+              className="w-full md:w-32 bg-background border border-border rounded-md p-3 text-sm font-mono text-text-main focus:outline-none focus:border-primary"
+            />
+            <button 
+              name="submitBtn"
+              type="submit" 
+              className="px-6 py-3 bg-primary text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-hover transition-colors shadow-sm"
+            >
+              SEND POL
+            </button>
+          </form>
+        </div>
+
         {/* Analytics Section */}
         <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
           <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">
