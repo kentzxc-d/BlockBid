@@ -352,7 +352,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             
             <div className="flex justify-between items-start mb-6">
               <h3 className="font-heading text-xl font-black text-primary uppercase tracking-widest">
-                [ ESCROW_AUTH ]
+                [ MULTI-SIG_AUTH ]
               </h3>
               <button onClick={() => setShowSignOffModal(false)} className="text-text-inverse-muted hover:text-primary transition-colors">
                 <XMarkIcon className="w-6 h-6 stroke-2" />
@@ -377,8 +377,8 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                   <p className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-1">{requestor?.nickname || 'Agency'}</p>
                   <p className="font-mono text-[10px] text-text-inverse-muted uppercase tracking-widest">Procuring Entity</p>
                 </div>
-                <div className={`font-mono text-lg font-black ${hasRequestorSigned ? 'text-primary' : 'text-text-inverse-muted'}`}>
-                  {hasRequestorSigned ? '[ X ]' : '[   ]'}
+                <div className={`font-mono text-xs font-black tracking-widest ${hasRequestorSigned ? 'text-primary' : 'text-text-inverse-muted'}`}>
+                  {hasRequestorSigned ? '[ SIGNED ]' : '[ AWAITING ]'}
                 </div>
               </div>
 
@@ -388,8 +388,8 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                   <p className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-1">{supplier?.nickname || 'Supplier'}</p>
                   <p className="font-mono text-[10px] text-text-inverse-muted uppercase tracking-widest">Awarded Supplier</p>
                 </div>
-                <div className={`font-mono text-lg font-black ${hasSupplierSigned ? 'text-primary' : 'text-text-inverse-muted'}`}>
-                  {hasSupplierSigned ? '[ X ]' : '[   ]'}
+                <div className={`font-mono text-xs font-black tracking-widest ${hasSupplierSigned ? 'text-primary' : 'text-text-inverse-muted'}`}>
+                  {hasSupplierSigned ? '[ SIGNED ]' : '[ AWAITING ]'}
                 </div>
               </div>
             </div>
