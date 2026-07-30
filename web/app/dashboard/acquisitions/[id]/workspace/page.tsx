@@ -2,7 +2,7 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 import { useEffect, useState, useRef, use } from "react";
-import { ArrowLeftIcon, LockClosedIcon, DocumentArrowDownIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, LockClosedIcon, DocumentArrowDownIcon, PaperAirplaneIcon, XMarkIcon, FingerPrintIcon, CheckBadgeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Avatar from "boring-avatars";
 import { useProfile } from "@/contexts/ProfileContext";
@@ -37,6 +37,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [signingOff, setSigningOff] = useState(false);
+  const [showSignOffModal, setShowSignOffModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fetchWorkspace = async () => {
@@ -91,12 +92,8 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
     }
   };
 
-  const handleSignOff = async () => {
+  const executeSignOff = async () => {
     if (!profile?.id || signingOff) return;
-    
-    if (!confirm("Are you sure you want to sign off on this project's completion? Once both parties sign off, the workspace will be locked.")) {
-      return;
-    }
 
     setSigningOff(true);
     try {
@@ -178,15 +175,14 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
 
           {project.status === 'awarded' && !isProjectClosed && (
             <button
-              onClick={handleSignOff}
-              disabled={haveISigned || signingOff}
+              onClick={() => setShowSignOffModal(true)}
               className={`flex items-center justify-center px-6 py-3 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 shrink-0 ${
                 haveISigned 
-                  ? 'bg-gray-100 border border-border text-text-muted cursor-not-allowed'
+                  ? 'bg-gray-100 border border-border text-text-muted hover:bg-gray-200'
                   : 'bg-primary text-white hover:bg-primary-light hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/40'
               }`}
             >
-              {haveISigned ? 'SIGNED_OFF (WAITING FOR PARTNER)' : (signingOff ? 'PROCESSING...' : 'MARK AS COMPLETED')}
+              {haveISigned ? 'VIEW SIGNATURES' : 'MARK AS COMPLETED'}
             </button>
           )}
           {isProjectClosed && (
@@ -348,6 +344,77 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
         </div>
 
       </div>
+
+      {/* Multi-Sig Completion Modal */}
+      {showSignOffModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
+          <div className="bg-[#0f172a] w-full max-w-md border border-slate-700/50 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-white relative overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/20 blur-[60px] rounded-full pointer-events-none" />
+            
+            <button onClick={() => setShowSignOffModal(false)} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-colors">
+              <XMarkIcon className="w-4 h-4 stroke-2" />
+            </button>
+
+            <div className="flex items-center gap-4 mb-8 relative z-10">
+              <div className="w-12 h-12 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center shrink-0">
+                <LockClosedIcon className="w-5 h-5 text-primary stroke-2" />
+              </div>
+              <div>
+                <h3 className="font-heading font-bold text-lg text-white leading-tight">Multi-Sig Auth</h3>
+                <p className="font-mono text-[10px] text-white/50 tracking-widest uppercase">Smart Contract Escrow</p>
+              </div>
+            </div>
+
+            <div className="text-center mb-8 relative z-10">
+              <div className="text-5xl font-black font-heading tracking-tight mb-2">
+                {Number(hasRequestorSigned) + Number(hasSupplierSigned)}<span className="text-white/40">/2</span>
+              </div>
+              <p className="font-mono text-[11px] font-bold tracking-widest text-primary uppercase">Signatures Required</p>
+            </div>
+
+            <div className="space-y-4 mb-8 relative z-10">
+              {/* Procuring Agency Signer */}
+              <div className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${hasRequestorSigned ? 'bg-primary/10 border-primary/30' : 'bg-white/5 border-white/10'}`}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasRequestorSigned ? 'bg-primary/20 text-primary' : 'bg-white/5 text-white/40'}`}>
+                    {hasRequestorSigned ? <CheckBadgeIcon className="w-5 h-5" /> : <FingerPrintIcon className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white/90">{requestor?.nickname || 'Procuring Agency'}</p>
+                    <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase">Procuring Agency</p>
+                  </div>
+                </div>
+                <div className={`w-2 h-2 rounded-full ${hasRequestorSigned ? 'bg-primary shadow-[0_0_8px_rgba(197,160,89,0.8)]' : 'bg-white/20'}`} />
+              </div>
+
+              {/* Supplier Signer */}
+              <div className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${hasSupplierSigned ? 'bg-primary/10 border-primary/30' : 'bg-white/5 border-white/10'}`}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasSupplierSigned ? 'bg-primary/20 text-primary' : 'bg-white/5 text-white/40'}`}>
+                    {hasSupplierSigned ? <CheckBadgeIcon className="w-5 h-5" /> : <FingerPrintIcon className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white/90">{supplier?.nickname || 'Awarded Supplier'}</p>
+                    <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase">Awarded Supplier</p>
+                  </div>
+                </div>
+                <div className={`w-2 h-2 rounded-full ${hasSupplierSigned ? 'bg-primary shadow-[0_0_8px_rgba(197,160,89,0.8)]' : 'bg-white/20'}`} />
+              </div>
+            </div>
+
+            <button 
+              onClick={executeSignOff}
+              disabled={haveISigned || signingOff || isProjectClosed}
+              className="relative z-10 w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-xl font-mono text-xs font-bold tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {haveISigned 
+                ? 'SIGNATURE RECORDED' 
+                : (signingOff ? 'PROCESSING ON-CHAIN...' : 'AUTHORIZE & SIGN')}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
