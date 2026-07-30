@@ -24,6 +24,33 @@ export default function MyBidsPage() {
   const [viewingBid, setViewingBid] = useState<any | null>(null);
   const [bids, setBids] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const [awardResults, setAwardResults] = useState<any | null>(null);
+  const [isLoadingAwardResults, setIsLoadingAwardResults] = useState(false);
+
+  useEffect(() => {
+    if (viewingBid && viewingBid.status === "CLOSED") {
+      setIsLoadingAwardResults(true);
+      fetch(`/api/acquisitions/${viewingBid.acquisitionId}/award-results`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setAwardResults(data.data);
+          } else {
+            setAwardResults(null);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          setAwardResults(null);
+        })
+        .finally(() => {
+          setIsLoadingAwardResults(false);
+        });
+    } else {
+      setAwardResults(null);
+    }
+  }, [viewingBid]);
 
   useEffect(() => {
     if (supplierData?.bids) {
@@ -239,6 +266,41 @@ export default function MyBidsPage() {
                   </span>
                 </div>
               </div>
+
+              {viewingBid.status === "CLOSED" && (
+                <div className="mt-6 border-t border-border pt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <h3 className="font-heading font-bold text-text-main uppercase mb-4 flex items-center gap-2">
+                    <span className="text-primary">[</span> AWARD_RESULTS <span className="text-primary">]</span>
+                  </h3>
+                  
+                  {isLoadingAwardResults ? (
+                    <div className="flex items-center gap-2 text-text-muted font-mono text-xs tracking-widest uppercase bg-surface border border-border p-4 rounded-md">
+                      <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      FETCHING_PUBLIC_RECORDS...
+                    </div>
+                  ) : awardResults ? (
+                    <div className="bg-surface border border-border p-4 rounded-md space-y-3 relative overflow-hidden">
+                      <div className="absolute -top-4 -right-4 w-16 h-16 bg-emerald-500/10 rounded-full blur-xl pointer-events-none" />
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-mono font-bold text-text-muted mb-1">AWARDED_TO</span>
+                        <span className="font-bold text-text-main text-sm">{awardResults.winnerName}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-mono font-bold text-text-muted mb-1">WINNING_PROPOSAL</span>
+                        <span className="font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-1.5 rounded-md inline-block w-fit text-[10px] border border-emerald-500/20">{awardResults.bidSummary}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-mono font-bold text-text-muted mb-1">ON_CHAIN_PROOF</span>
+                        <span className="font-mono font-bold text-primary truncate max-w-full">{awardResults.onChainHash}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-text-muted font-mono text-[10px] tracking-widest bg-gray-50 p-3 rounded-md border border-border">
+                      PUBLIC RECORDS NOT YET AVAILABLE
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             
             <div className="p-4 border-t border-border flex justify-end bg-gray-50">
