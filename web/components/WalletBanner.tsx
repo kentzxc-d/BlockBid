@@ -18,7 +18,12 @@ export default function WalletBanner() {
   const [greeting, setGreeting] = useState("WELCOME BACK");
   const [currentTime, setCurrentTime] = useState("");
   const [blockHeight, setBlockHeight] = useState(18239012);
-  const [balance, setBalance] = useState<string | null>(null);
+  const [balance, setBalance] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('cached_wallet_balance');
+    }
+    return null;
+  });
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -40,7 +45,9 @@ export default function WalletBanner() {
           args: [wallet.address]
         }) as bigint;
 
-        setBalance(Number(formatEther(rawBalance)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        const formattedBalance = Number(formatEther(rawBalance)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        setBalance(formattedBalance);
+        localStorage.setItem('cached_wallet_balance', formattedBalance);
       } catch (err) {
         console.error("Failed to fetch balance:", err);
       }
@@ -48,8 +55,8 @@ export default function WalletBanner() {
 
     fetchBalance();
     
-    // Poll balance every 10 seconds
-    const balanceInterval = setInterval(fetchBalance, 10000);
+    // Poll balance every 5 seconds instead of 10
+    const balanceInterval = setInterval(fetchBalance, 5000);
     return () => clearInterval(balanceInterval);
   }, [wallets]);
 
