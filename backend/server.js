@@ -12,6 +12,7 @@ app.use(express.json());
 // Routes
 const evaluateBidsRouter = require('./routes/evaluate-bids');
 const aiEnhanceRouter = require('./routes/ai-enhance');
+const { syncEvents } = require('./services/syncEvents');
 
 app.use('/api/evaluate-bids', evaluateBidsRouter);
 app.use('/api/ai/enhance', aiEnhanceRouter);
@@ -23,4 +24,9 @@ app.get('/health', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Backend server running on http://localhost:${port}`);
+  
+  // Start the background blockchain sync (runs immediately, then every 15 seconds)
+  console.log("Starting background blockchain sync...");
+  syncEvents();
+  setInterval(syncEvents, 15 * 1000);
 });
