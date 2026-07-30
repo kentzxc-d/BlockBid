@@ -18,12 +18,7 @@ export default function WalletBanner() {
   const [greeting, setGreeting] = useState("WELCOME BACK");
   const [currentTime, setCurrentTime] = useState("");
   const [blockHeight, setBlockHeight] = useState(18239012);
-  const [balance, setBalance] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('cached_wallet_balance');
-    }
-    return null;
-  });
+  const [balance, setBalance] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -32,7 +27,7 @@ export default function WalletBanner() {
         const wallet = wallets[0];
         const client = createPublicClient({
           chain: activeChain,
-          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
+          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://rpc-amoy.polygon.technology/")
         });
 
         const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
@@ -47,7 +42,6 @@ export default function WalletBanner() {
 
         const formattedBalance = Number(formatEther(rawBalance)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         setBalance(formattedBalance);
-        localStorage.setItem('cached_wallet_balance', formattedBalance);
       } catch (err) {
         console.error("Failed to fetch balance:", err);
       }
