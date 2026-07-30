@@ -27,7 +27,7 @@ export default function WalletBanner() {
         const wallet = wallets[0];
         const client = createPublicClient({
           chain: activeChain,
-          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy.drpc.org")
+          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
         });
 
         const tokenAddress = process.env.NEXT_PUBLIC_PHPB_ADDRESS as `0x${string}`;
