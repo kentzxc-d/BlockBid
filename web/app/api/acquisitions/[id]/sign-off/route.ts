@@ -1,5 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { createWalletClient, http, publicActions } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { polygonAmoy } from "viem/chains";
+import { BlockBidABI } from "@/lib/abi";
 
 export const dynamic = 'force-dynamic';
 
@@ -72,16 +76,52 @@ export async function POST(
     let isCompleted = false;
 
     if (hasRequestorSigned && hasSupplierSigned) {
-      // Both signed off! Update project status to closed
+      // --- BLOCKCHAIN TRANSACTION (Admin Relayer) ---
+      const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY || "";
+      if (adminPrivateKey) {
+        try {
+          const account = privateKeyToAccount(`0x${adminPrivateKey.replace(/^0x/, '')}`);
+          const client = createWalletClient({
+            account,
+            chain: polygonAmoy,
+            transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
+          }).extend(publicActions);
+
+          const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+          
+          if (contractAddress) {
+            console.log(`Executing confirmDelivery for project ${projectId} on-chain...`);
+            const hash = await client.writeContract({
+              address: contractAddress,
+              abi: BlockBidABI,
+              functionName: 'confirmDelivery',
+              args: [projectId]
+            });
+            
+            await client.waitForTransactionReceipt({ hash });
+            console.log(`Blockchain delivery confirmed. Tx Hash: ${hash}`);
+            
+            // Add system message for blockchain tx
+            await supabase.from('workspace_messages').insert({
+              project_id: projectId,
+              sender_id, // System
+              content: `[SYSTEM_BLOCKCHAIN_RECEIPT]\nTX_HASH: ${hash}`
+            });
+          }
+        } catch (blockchainErr: any) {
+          console.error("Blockchain Confirm Delivery Failed:", blockchainErr);
+          // If blockchain fails, we should abort the completion process
+          return NextResponse.json({ error: "Blockchain transaction failed: " + (blockchainErr.shortMessage || blockchainErr.message) }, { status: 500 });
+        }
+      }
+
+      // Both signed off AND blockchain succeeded! Update project status to closed
       const { error: updateError } = await supabase
         .from('projects')
         .update({ status: 'closed' })
         .eq('id', projectId);
         
       if (updateError) throw updateError;
-      
-      // Also update the winning bid's status to reflect finalization?
-      // Not strictly necessary as 'won' is final, but we update project to 'closed'
       
       // Optional: Add a final system message
       await supabase

@@ -300,6 +300,12 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                         {msg.content === '[SYSTEM_SIGNOFF_REQUESTOR]' && 'REQUESTOR HAS SIGNED OFF ON COMPLETION'}
                         {msg.content === '[SYSTEM_SIGNOFF_SUPPLIER]' && 'SUPPLIER HAS SIGNED OFF ON COMPLETION'}
                         {msg.content === '[SYSTEM_TRANSACTION_COMPLETED]' && 'TRANSACTION HAS BEEN MARKED AS COMPLETED. WORKSPACE LOCKED.'}
+                        {msg.content.startsWith('[SYSTEM_BLOCKCHAIN_RECEIPT]') && (
+                          <div className="flex flex-col items-center gap-1">
+                            <span className="text-blue-600">ON-CHAIN PAYMENT GUARANTEE ISSUED</span>
+                            <span className="text-[9px] text-gray-500 break-all">{msg.content.split('\n')[1]}</span>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div 
