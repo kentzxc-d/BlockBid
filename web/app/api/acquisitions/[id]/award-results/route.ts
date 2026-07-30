@@ -20,7 +20,7 @@ export async function GET(
       return NextResponse.json({ error: "Missing project ID" }, { status: 400 });
     }
 
-    // First check if the project is actually awarded
+    // First check if the project is actually awarded or closed
     const { data: projectData, error: projError } = await supabase
       .from('projects')
       .select('status, awarded_supplier_id')
@@ -31,8 +31,8 @@ export async function GET(
       return NextResponse.json({ error: "Project not found or error fetching project" }, { status: 404 });
     }
     
-    if (projectData.status !== 'awarded') {
-      return NextResponse.json({ error: "Project is not yet awarded" }, { status: 400 });
+    if (projectData.status !== 'awarded' && projectData.status !== 'closed') {
+      return NextResponse.json({ error: "Project is not yet awarded or closed" }, { status: 400 });
     }
 
     // Get the winning bid
@@ -56,15 +56,31 @@ export async function GET(
       
     const winnerName = profileData?.nickname || "Undisclosed Supplier";
     
-    // Extract a summary from the bid values (e.g., total price, delivery time)
-    // We don't want to expose every single detail, just a summary.
+    // Extract a summary from the bid values
     let bidSummary = "N/A";
     if (winningBid.bid_values && Array.isArray(winningBid.bid_values)) {
-      // Find a value that looks like the price/budget or combine them
       const values = winningBid.bid_values.map((v: any) => v.value).filter(Boolean);
       if (values.length > 0) {
-        // Just take the first two values for the summary to not leak everything
         bidSummary = values.slice(0, 2).join(" | ");
+      }
+    }
+
+    // If the project is closed, check for the final transaction hash in workspace_messages
+    let finalTxHash = null;
+    if (projectData.status === 'closed') {
+      const { data: receiptMessage, error: receiptError } = await supabase
+        .from('workspace_messages')
+        .select('content')
+        .eq('project_id', projectId)
+        .like('content', '[SYSTEM_BLOCKCHAIN_RECEIPT]%')
+        .maybeSingle();
+
+      if (!receiptError && receiptMessage) {
+        // Extract TX_HASH: 0x...
+        const match = receiptMessage.content.match(/TX_HASH:\s*(0x[a-fA-F0-9]+)/);
+        if (match && match[1]) {
+          finalTxHash = match[1];
+        }
       }
     }
 
@@ -73,7 +89,8 @@ export async function GET(
       data: {
         winnerName,
         bidSummary,
-        onChainHash: winningBid.on_chain_hash || "N/A"
+        onChainHash: winningBid.on_chain_hash || "N/A",
+        finalTxHash
       }
     });
 

@@ -24,16 +24,21 @@ export default function MyAcquisitionsPage() {
       .then(res => res.json())
       .then(data => {
         if (data.projects) {
-          const mappedProjects = data.projects.map((p: any) => ({
-            id: p.id,
-            title: p.title,
-            createdAt: new Date(p.created_at).toLocaleDateString(),
-            status: p.status.toUpperCase(),
-            bidsCount: p.bids?.[0]?.count || 0,
-            statusColor: p.status === 'open' ? "text-primary bg-primary/10 border-primary/20" : 
-                         (p.status === 'awarded' ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" : "text-amber-500 bg-amber-500/10 border-amber-500/20"),
-            icon: p.status === 'open' ? ClockIcon : (p.status === 'awarded' ? CheckBadgeIcon : FolderOpenIcon)
-          }));
+          const mappedProjects = data.projects.map((p: any) => {
+            const isClosed = p.status === 'closed';
+            return {
+              id: p.id,
+              title: p.title,
+              createdAt: new Date(p.created_at).toLocaleDateString(),
+              status: isClosed ? 'COMPLETED' : p.status.toUpperCase(),
+              originalStatus: p.status,
+              bidsCount: p.bids?.[0]?.count || 0,
+              statusColor: p.status === 'open' ? "text-primary bg-primary/10 border-primary/20" : 
+                           (p.status === 'awarded' ? "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" : 
+                           (isClosed ? "text-blue-500 bg-blue-500/10 border-blue-500/20" : "text-amber-500 bg-amber-500/10 border-amber-500/20")),
+              icon: p.status === 'open' ? ClockIcon : (p.status === 'awarded' ? CheckBadgeIcon : (isClosed ? CheckBadgeIcon : FolderOpenIcon))
+            };
+          });
           setAcquisitions(mappedProjects);
         }
       })
@@ -65,7 +70,7 @@ export default function MyAcquisitionsPage() {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
         <div className="bg-surface rounded-none p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">TOTAL_REQUESTS</span>
           <span className="text-3xl font-mono font-bold text-text-main">{acquisitions.length.toString().padStart(2, '0')}</span>
@@ -79,7 +84,13 @@ export default function MyAcquisitionsPage() {
         <div className="bg-surface rounded-none p-6 border border-border flex flex-col hover:border-text-main transition-colors">
           <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">SUCCESSFULLY_AWARDED</span>
           <span className="text-3xl font-mono font-bold text-emerald-500">
-            {acquisitions.filter(p => p.status === 'AWARDED').length.toString().padStart(2, '0')}
+            {acquisitions.filter(p => p.originalStatus === 'awarded').length.toString().padStart(2, '0')}
+          </span>
+        </div>
+        <div className="bg-surface rounded-none p-6 border border-border flex flex-col hover:border-text-main transition-colors">
+          <span className="text-xs font-mono font-bold tracking-widest text-text-muted uppercase mb-2">COMPLETED</span>
+          <span className="text-3xl font-mono font-bold text-blue-500">
+            {acquisitions.filter(p => p.originalStatus === 'closed').length.toString().padStart(2, '0')}
           </span>
         </div>
       </div>
@@ -119,7 +130,7 @@ export default function MyAcquisitionsPage() {
                 </div>
 
                 <div className="flex sm:flex-col gap-3">
-                  {req.status === 'AWARDED' ? (
+                  {req.originalStatus === 'awarded' ? (
                     <>
                       <Link 
                         href={`/dashboard/acquisitions/${req.id}/workspace`} 
@@ -134,6 +145,13 @@ export default function MyAcquisitionsPage() {
                         <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_WINNER
                       </Link>
                     </>
+                  ) : req.originalStatus === 'closed' ? (
+                    <Link 
+                      href={`/dashboard/acquisitions/${req.id}/workspace`} 
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-blue-700 hover:text-white transition-colors whitespace-nowrap shadow-sm w-full"
+                    >
+                      <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_RECORD
+                    </Link>
                   ) : (
                     <Link 
                       href={`/dashboard/acquisitions/${req.id}/evaluate`} 

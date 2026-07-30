@@ -29,7 +29,7 @@ export default function MyBidsPage() {
   const [isLoadingAwardResults, setIsLoadingAwardResults] = useState(false);
 
   useEffect(() => {
-    if (viewingBid && viewingBid.status === "LOST") {
+    if (viewingBid && (viewingBid.status === "LOST" || viewingBid.status === "COMPLETED")) {
       setIsLoadingAwardResults(true);
       fetch(`/api/acquisitions/${viewingBid.acquisitionId}/award-results`)
         .then(res => res.json())
@@ -58,10 +58,14 @@ export default function MyBidsPage() {
         let baseStatus = b.status;
         if (b.projects?.status === 'awarded' && baseStatus === 'submitted') {
           baseStatus = 'lost';
+        } else if (b.projects?.status === 'closed') {
+          // If project is closed, the winning bid is completed, losing bids are still lost
+          baseStatus = baseStatus === 'won' ? 'completed' : 'lost';
         }
         
         const isSubmitted = baseStatus === "submitted" || baseStatus === "evaluated";
         const isWon = baseStatus === "won";
+        const isCompleted = baseStatus === "completed";
 
         return {
           id: b.id,
@@ -70,10 +74,10 @@ export default function MyBidsPage() {
           submittedAt: new Date(b.created_at).toLocaleDateString(),
           proposalSummary: b.bid_values && b.bid_values.length > 0 ? b.bid_values.map((v:any) => v.value).join("\n\n") : "N/A",
           status: baseStatus.toUpperCase(),
-          statusIcon: isSubmitted ? ClockIcon : (isWon ? CheckCircleIcon : XCircleIcon),
-          statusColor: isSubmitted ? "text-amber-500" : (isWon ? "text-emerald-500" : "text-red-500"),
-          statusBg: isSubmitted ? "bg-amber-500/10" : (isWon ? "bg-emerald-500/10" : "bg-red-500/10"),
-          statusBorder: isSubmitted ? "border-amber-500/20" : (isWon ? "border-emerald-500/20" : "border-red-500/20"),
+          statusIcon: isCompleted ? CheckCircleIcon : (isSubmitted ? ClockIcon : (isWon ? CheckCircleIcon : XCircleIcon)),
+          statusColor: isCompleted ? "text-blue-500" : (isSubmitted ? "text-amber-500" : (isWon ? "text-emerald-500" : "text-red-500")),
+          statusBg: isCompleted ? "bg-blue-500/10" : (isSubmitted ? "bg-amber-500/10" : (isWon ? "bg-emerald-500/10" : "bg-red-500/10")),
+          statusBorder: isCompleted ? "border-blue-500/20" : (isSubmitted ? "border-amber-500/20" : (isWon ? "border-emerald-500/20" : "border-red-500/20")),
           projectBudget: b.projects?.budget || "TBD",
           projectLocation: b.projects?.location || "Various",
           projectDescription: b.projects?.description || "This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met.",
@@ -99,6 +103,7 @@ export default function MyBidsPage() {
       if (activeTab === "PENDING") matchesTab = bid.status === "SUBMITTED" || bid.status === "EVALUATED";
       if (activeTab === "AWARDED") matchesTab = bid.status === "WON";
       if (activeTab === "REJECTED") matchesTab = bid.status === "LOST" || bid.status === "REJECTED";
+      if (activeTab === "COMPLETED") matchesTab = bid.status === "COMPLETED";
 
       return matchesSearch && matchesTab;
     });
@@ -109,6 +114,7 @@ export default function MyBidsPage() {
     pending: bids.filter(b => b.status === "SUBMITTED" || b.status === "EVALUATED").length,
     awarded: bids.filter(b => b.status === "WON").length,
     rejected: bids.filter(b => b.status === "LOST" || b.status === "REJECTED").length,
+    completed: bids.filter(b => b.status === "COMPLETED").length,
   };
 
   return (
@@ -170,6 +176,12 @@ export default function MyBidsPage() {
         >
           REJECTED [{counts.rejected.toString().padStart(2, '0')}]
         </button>
+        <button 
+          onClick={() => setActiveTab("COMPLETED")}
+          className={`pb-3 text-xs font-mono font-bold tracking-widest uppercase whitespace-nowrap transition-colors ${activeTab === "COMPLETED" ? "text-primary border-b-2 border-primary" : "text-text-muted hover:text-text-main border-b-2 border-transparent"}`}
+        >
+          COMPLETED [{counts.completed.toString().padStart(2, '0')}]
+        </button>
       </div>
 
       {/* Bids List */}
@@ -198,7 +210,7 @@ export default function MyBidsPage() {
                   onClick={() => setViewingBid(bid)}
                   className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
                 >
-                  <EyeIcon className="w-4 h-4 stroke-2" /> {bid.status === "LOST" ? "VIEW_AWARD_RESULTS" : "VIEW_DETAILS"}
+                  <EyeIcon className="w-4 h-4 stroke-2" /> {(bid.status === "LOST" || bid.status === "COMPLETED") ? "VIEW_AWARD_RESULTS" : "VIEW_DETAILS"}
                 </button>
               </div>
             );
@@ -267,7 +279,7 @@ export default function MyBidsPage() {
                 </div>
               </div>
 
-              {viewingBid.status === "LOST" && (
+              {(viewingBid.status === "LOST" || viewingBid.status === "COMPLETED") && (
                 <div className="mt-6 border-t border-border pt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <h3 className="font-heading font-bold text-text-main uppercase mb-4 flex items-center gap-2">
                     <span className="text-primary">[</span> AWARD_RESULTS <span className="text-primary">]</span>
@@ -290,8 +302,8 @@ export default function MyBidsPage() {
                         <span className="font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-1.5 rounded-md inline-block w-fit text-[10px] border border-emerald-500/20">{awardResults.bidSummary}</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-mono font-bold text-text-muted mb-1">ON_CHAIN_PROOF</span>
-                        <span className="font-mono font-bold text-primary truncate max-w-full">{awardResults.onChainHash}</span>
+                        <span className="text-[10px] font-mono font-bold text-text-muted mb-1">{viewingBid.status === "COMPLETED" ? 'FINAL_CONTRACT_HASH' : 'ON_CHAIN_PROOF'}</span>
+                        <span className="font-mono font-bold text-primary truncate max-w-full">{awardResults.finalTxHash || awardResults.onChainHash}</span>
                       </div>
                     </div>
                   ) : (
