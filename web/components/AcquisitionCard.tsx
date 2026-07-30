@@ -29,8 +29,10 @@ export default function AcquisitionCard({
   actionButton,
 }: AcquisitionCardProps) {
   const statusUpper = status.toUpperCase();
+  const displayStatus = statusUpper === 'CLOSED' ? 'COMPLETED' : statusUpper;
   const isStatusGreen = statusUpper === 'OPEN' || statusUpper === 'WON';
-  const isStatusRed = statusUpper === 'LOST' || statusUpper === 'REJECTED' || statusUpper === 'CLOSED';
+  const isStatusRed = statusUpper === 'LOST' || statusUpper === 'REJECTED';
+  const isStatusBlue = statusUpper === 'CLOSED' || statusUpper === 'COMPLETED';
   
   const [copiedHash, setCopiedHash] = useState(false);
   const [copiedCustom, setCopiedCustom] = useState(false);
@@ -59,10 +61,10 @@ export default function AcquisitionCard({
         </h3>
         <span 
           className={`px-3 py-1 text-xs font-mono font-bold tracking-widest text-white rounded-none shrink-0 ${
-            isStatusGreen ? 'bg-green-600' : isStatusRed ? 'bg-red-600' : 'bg-secondary'
+            isStatusGreen ? 'bg-green-600' : isStatusRed ? 'bg-red-600' : isStatusBlue ? 'bg-blue-600' : 'bg-secondary'
           }`}
         >
-          STATUS: {statusUpper}
+          STATUS: {displayStatus}
         </span>
       </div>
       

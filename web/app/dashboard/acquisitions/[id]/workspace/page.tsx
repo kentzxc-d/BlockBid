@@ -36,6 +36,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
   const [loading, setLoading] = useState(true);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [signingOff, setSigningOff] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fetchWorkspace = async () => {
@@ -90,6 +91,34 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
     }
   };
 
+  const handleSignOff = async () => {
+    if (!profile?.id || signingOff) return;
+    
+    if (!confirm("Are you sure you want to sign off on this project's completion? Once both parties sign off, the workspace will be locked.")) {
+      return;
+    }
+
+    setSigningOff(true);
+    try {
+      const res = await fetch(`/api/acquisitions/${params.id}/sign-off`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          sender_id: profile.id, 
+          role: amIRequestor ? 'requestor' : 'supplier'
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchWorkspace();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSigningOff(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
@@ -120,6 +149,11 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
   const otherParty = amIRequestor ? supplier : requestor;
   const myParty = amIRequestor ? requestor : supplier;
 
+  const hasRequestorSigned = messages.some(m => m.content === '[SYSTEM_SIGNOFF_REQUESTOR]');
+  const hasSupplierSigned = messages.some(m => m.content === '[SYSTEM_SIGNOFF_SUPPLIER]');
+  const isProjectClosed = project?.status === 'closed' || messages.some(m => m.content === '[SYSTEM_TRANSACTION_COMPLETED]');
+  const haveISigned = amIRequestor ? hasRequestorSigned : hasSupplierSigned;
+
   return (
     <div className="py-6 px-4 md:py-8 md:px-8 max-w-6xl mx-auto w-full flex flex-col h-[calc(100vh-100px)]">
       
@@ -131,14 +165,35 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_DASHBOARD
         </Link>
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">
-            [ WORKSPACE: <span className="text-primary">{project.title}</span> ]
-          </h1>
-          <div className="flex items-center gap-2 text-green-500 bg-green-500/10 px-3 py-1.5 rounded-none border border-green-500/20">
-            <LockClosedIcon className="w-4 h-4" />
-            <span className="text-xs font-mono font-bold tracking-widest uppercase">E2E_Encrypted_Channel</span>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase">
+              [ WORKSPACE: <span className="text-primary">{project.title}</span> ]
+            </h1>
+            <div className="flex items-center gap-2 text-green-500 bg-green-500/10 px-3 py-1.5 rounded-none border border-green-500/20">
+              <LockClosedIcon className="w-4 h-4" />
+              <span className="text-xs font-mono font-bold tracking-widest uppercase hidden md:inline">E2E_Encrypted_Channel</span>
+            </div>
           </div>
+
+          {project.status === 'awarded' && !isProjectClosed && (
+            <button
+              onClick={handleSignOff}
+              disabled={haveISigned || signingOff}
+              className={`flex items-center justify-center px-5 py-2.5 rounded-none border font-mono text-xs font-bold tracking-widest uppercase transition-colors shrink-0 ${
+                haveISigned 
+                  ? 'bg-gray-100 border-border text-text-muted cursor-not-allowed'
+                  : 'bg-primary text-white border-primary hover:bg-primary-dark'
+              }`}
+            >
+              {haveISigned ? 'SIGNED_OFF (WAITING FOR PARTNER)' : (signingOff ? 'PROCESSING...' : 'MARK AS COMPLETED')}
+            </button>
+          )}
+          {isProjectClosed && (
+            <div className="flex items-center justify-center px-5 py-2.5 rounded-none border border-blue-500/30 bg-blue-500/10 text-blue-600 font-mono text-xs font-bold tracking-widest uppercase shrink-0">
+              PROJECT COMPLETED
+            </div>
+          )}
         </div>
       </div>
 
@@ -240,15 +295,23 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div 
-                      className={`max-w-[85%] px-4 py-2.5 rounded-none text-sm border ${
-                        isMe 
-                          ? 'bg-primary/10 border-primary/20 text-text-main' 
-                          : 'bg-white border-border text-text-main shadow-sm'
-                      }`}
-                    >
-                      <p className="whitespace-pre-wrap font-sans">{msg.content}</p>
-                    </div>
+                    {msg.content.startsWith('[SYSTEM_') ? (
+                      <div className="max-w-[85%] px-4 py-2.5 rounded-none text-xs font-mono font-bold tracking-widest uppercase border bg-gray-100 border-border text-text-muted text-center shadow-sm">
+                        {msg.content === '[SYSTEM_SIGNOFF_REQUESTOR]' && 'REQUESTOR HAS SIGNED OFF ON COMPLETION'}
+                        {msg.content === '[SYSTEM_SIGNOFF_SUPPLIER]' && 'SUPPLIER HAS SIGNED OFF ON COMPLETION'}
+                        {msg.content === '[SYSTEM_TRANSACTION_COMPLETED]' && 'TRANSACTION HAS BEEN MARKED AS COMPLETED. WORKSPACE LOCKED.'}
+                      </div>
+                    ) : (
+                      <div 
+                        className={`max-w-[85%] px-4 py-2.5 rounded-none text-sm border ${
+                          isMe 
+                            ? 'bg-primary/10 border-primary/20 text-text-main' 
+                            : 'bg-white border-border text-text-main shadow-sm'
+                        }`}
+                      >
+                        <p className="whitespace-pre-wrap font-sans">{msg.content}</p>
+                      </div>
+                    )}
                   </div>
                 );
               })
@@ -262,13 +325,13 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="[ TYPE_MESSAGE_HERE... ]"
-                className="flex-1 bg-surface border border-border px-4 py-3 rounded-none text-sm font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                disabled={sending}
+                placeholder={isProjectClosed ? "[ WORKSPACE LOCKED. COMPLETED. ]" : "[ TYPE_MESSAGE_HERE... ]"}
+                className="flex-1 bg-surface border border-border px-4 py-3 rounded-none text-sm font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50 disabled:bg-gray-50"
+                disabled={sending || isProjectClosed}
               />
               <button
                 type="submit"
-                disabled={!input.trim() || sending}
+                disabled={!input.trim() || sending || isProjectClosed}
                 className="bg-primary hover:bg-primary-dark text-white px-5 py-3 rounded-none font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {sending ? 'SENDING...' : 'TRANSMIT'} <PaperAirplaneIcon className="w-4 h-4" />
