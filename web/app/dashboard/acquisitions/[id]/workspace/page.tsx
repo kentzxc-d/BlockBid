@@ -176,11 +176,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
           {project.status === 'awarded' && !isProjectClosed && (
             <button
               onClick={() => setShowSignOffModal(true)}
-              className={`flex items-center justify-center px-6 py-3 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 shrink-0 ${
-                haveISigned 
-                  ? 'bg-gray-100 border border-border text-text-muted hover:bg-gray-200'
-                  : 'bg-primary text-white hover:bg-primary-light hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/40'
-              }`}
+              className="flex items-center justify-center px-6 py-3 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 shrink-0 bg-primary text-white hover:bg-primary-light hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/40"
             >
               {haveISigned ? 'VIEW SIGNATURES' : 'MARK AS COMPLETED'}
             </button>
