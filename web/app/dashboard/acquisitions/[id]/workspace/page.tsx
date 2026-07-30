@@ -194,7 +194,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
         {/* Left Sidebar - Contact Info Reveal */}
         <div className="w-full lg:w-80 flex-shrink-0 flex flex-col gap-6 overflow-y-auto">
           
-          <div className="bg-surface border border-border p-5 rounded-none shadow-sm relative overflow-hidden">
+          <div className="bg-surface border border-border p-5 rounded-none shadow-sm relative overflow-hidden shrink-0">
             <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
             <h3 className="font-mono text-xs text-text-muted uppercase tracking-widest mb-4">[ YOUR_PROFILE ]</h3>
             <div className="flex items-center gap-3 mb-4">
@@ -219,7 +219,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             </div>
           </div>
 
-          <div className="bg-surface border border-primary/30 p-5 rounded-none shadow-sm relative overflow-hidden">
+          <div className="bg-surface border border-primary/30 p-5 rounded-none shadow-sm relative overflow-hidden shrink-0">
             <div className="absolute top-0 left-0 w-1 h-full bg-secondary" />
             <h3 className="font-mono text-xs text-secondary uppercase tracking-widest mb-4 font-bold flex items-center justify-between">
               [ COUNTERPARTY_INFO ]
