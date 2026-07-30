@@ -180,10 +180,10 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             <button
               onClick={handleSignOff}
               disabled={haveISigned || signingOff}
-              className={`flex items-center justify-center px-5 py-2.5 rounded-none border font-mono text-xs font-bold tracking-widest uppercase transition-colors shrink-0 ${
+              className={`flex items-center justify-center px-6 py-3 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 shrink-0 ${
                 haveISigned 
-                  ? 'bg-gray-100 border-border text-text-muted cursor-not-allowed'
-                  : 'bg-primary text-white border-primary hover:bg-primary-dark'
+                  ? 'bg-gray-100 border border-border text-text-muted cursor-not-allowed'
+                  : 'bg-primary text-white hover:bg-primary-light hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/40'
               }`}
             >
               {haveISigned ? 'SIGNED_OFF (WAITING FOR PARTNER)' : (signingOff ? 'PROCESSING...' : 'MARK AS COMPLETED')}
@@ -338,7 +338,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
               <button
                 type="submit"
                 disabled={!input.trim() || sending || isProjectClosed}
-                className="bg-primary hover:bg-primary-dark text-white px-5 py-3 rounded-none font-mono text-xs font-bold tracking-widest uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-primary text-white px-6 py-3 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 hover:bg-primary-light hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none flex items-center gap-2"
               >
                 {sending ? 'SENDING...' : 'TRANSMIT'} <PaperAirplaneIcon className="w-4 h-4" />
               </button>
