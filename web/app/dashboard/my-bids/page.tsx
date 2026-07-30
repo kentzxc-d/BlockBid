@@ -226,8 +226,8 @@ export default function MyBidsPage() {
       {/* View Details Modal */}
       {viewingBid && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-surface rounded-md w-full max-w-lg shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center p-6 border-b border-border bg-gray-50">
+          <div className="bg-surface rounded-md w-full max-w-lg shadow-2xl border border-border flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-6 border-b border-border bg-gray-50 shrink-0">
               <div>
                 <h2 className="text-lg font-bold font-heading uppercase text-text-main tracking-tight">[ BID_DETAILS ]</h2>
                 <p className="text-[10px] font-mono font-bold text-text-muted tracking-widest mt-1 uppercase">{viewingBid.id}</p>
@@ -240,7 +240,7 @@ export default function MyBidsPage() {
               </button>
             </div>
             
-            <div className="p-6 max-h-[75vh] overflow-y-auto">
+            <div className="p-6 overflow-y-auto flex-1">
               <div className="bg-surface p-4 rounded-md border border-border mb-6 hover:border-text-main transition-colors">
                 <p className="text-[10px] font-mono font-bold text-text-muted mb-2 uppercase tracking-widest">TARGET_ACQUISITION</p>
                 <p className="font-heading font-bold text-text-main text-lg leading-tight uppercase">{viewingBid.acquisitionTitle}</p>
@@ -303,7 +303,7 @@ export default function MyBidsPage() {
               )}
             </div>
             
-            <div className="p-4 border-t border-border flex justify-end bg-gray-50">
+            <div className="p-4 border-t border-border flex justify-end bg-gray-50 shrink-0">
               <button 
                 onClick={() => setViewingBid(null)}
                 className="px-8 py-2.5 bg-text-main text-white border border-transparent rounded-md font-mono text-xs font-bold tracking-widest hover:bg-primary transition-colors uppercase"
