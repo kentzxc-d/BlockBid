@@ -345,68 +345,59 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
 
       </div>
 
-      {/* Multi-Sig Completion Modal */}
+      {/* Brutalist Multi-Sig Completion Modal */}
       {showSignOffModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-[#0f172a] w-full max-w-md border border-slate-700/50 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 p-8 text-white relative overflow-hidden">
-            {/* Background Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-primary/20 blur-[60px] rounded-full pointer-events-none" />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <div className="bg-secondary border-2 border-primary p-6 md:p-8 max-w-md w-full shadow-[8px_8px_0_0_theme(colors.primary)] animate-in fade-in zoom-in duration-200">
             
-            <button onClick={() => setShowSignOffModal(false)} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-colors">
-              <XMarkIcon className="w-4 h-4 stroke-2" />
-            </button>
-
-            <div className="flex items-center gap-4 mb-8 relative z-10">
-              <div className="w-12 h-12 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center shrink-0">
-                <LockClosedIcon className="w-5 h-5 text-primary stroke-2" />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-lg text-white leading-tight">Multi-Sig Auth</h3>
-                <p className="font-mono text-[10px] text-white/50 tracking-widest uppercase">Smart Contract Escrow</p>
-              </div>
+            <div className="flex justify-between items-start mb-6">
+              <h3 className="font-heading text-xl font-black text-primary uppercase tracking-widest">
+                [ ESCROW_AUTH ]
+              </h3>
+              <button onClick={() => setShowSignOffModal(false)} className="text-text-inverse-muted hover:text-primary transition-colors">
+                <XMarkIcon className="w-6 h-6 stroke-2" />
+              </button>
             </div>
 
-            <div className="text-center mb-8 relative z-10">
-              <div className="text-5xl font-black font-heading tracking-tight mb-2">
-                {Number(hasRequestorSigned) + Number(hasSupplierSigned)}<span className="text-white/40">/2</span>
+            <div className="w-full h-px bg-border-inverse/30 mb-6"></div>
+
+            <div className="bg-surface-inverse border border-border-inverse p-4 mb-6 text-center">
+              <div className="font-mono text-3xl font-bold text-white tracking-widest mb-1">
+                {Number(hasRequestorSigned) + Number(hasSupplierSigned)} / 2
               </div>
-              <p className="font-mono text-[11px] font-bold tracking-widest text-primary uppercase">Signatures Required</p>
+              <p className="font-mono text-[10px] text-primary uppercase tracking-widest">
+                Signatures Secured
+              </p>
             </div>
 
-            <div className="space-y-4 mb-8 relative z-10">
-              {/* Procuring Agency Signer */}
-              <div className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${hasRequestorSigned ? 'bg-primary/10 border-primary/30' : 'bg-white/5 border-white/10'}`}>
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasRequestorSigned ? 'bg-primary/20 text-primary' : 'bg-white/5 text-white/40'}`}>
-                    {hasRequestorSigned ? <CheckBadgeIcon className="w-5 h-5" /> : <FingerPrintIcon className="w-5 h-5" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-white/90">{requestor?.nickname || 'Procuring Agency'}</p>
-                    <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase">Procuring Agency</p>
-                  </div>
+            <div className="space-y-3 mb-8">
+              {/* Requestor */}
+              <div className={`p-4 border-2 transition-colors flex items-center justify-between ${hasRequestorSigned ? 'border-primary bg-primary/5' : 'border-border-inverse bg-surface-inverse'}`}>
+                <div>
+                  <p className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-1">{requestor?.nickname || 'Agency'}</p>
+                  <p className="font-mono text-[10px] text-text-inverse-muted uppercase tracking-widest">Procuring Entity</p>
                 </div>
-                <div className={`w-2 h-2 rounded-full ${hasRequestorSigned ? 'bg-primary shadow-[0_0_8px_rgba(197,160,89,0.8)]' : 'bg-white/20'}`} />
+                <div className={`font-mono text-lg font-black ${hasRequestorSigned ? 'text-primary' : 'text-text-inverse-muted'}`}>
+                  {hasRequestorSigned ? '[ X ]' : '[   ]'}
+                </div>
               </div>
 
-              {/* Supplier Signer */}
-              <div className={`p-4 rounded-xl border flex items-center justify-between transition-colors ${hasSupplierSigned ? 'bg-primary/10 border-primary/30' : 'bg-white/5 border-white/10'}`}>
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasSupplierSigned ? 'bg-primary/20 text-primary' : 'bg-white/5 text-white/40'}`}>
-                    {hasSupplierSigned ? <CheckBadgeIcon className="w-5 h-5" /> : <FingerPrintIcon className="w-5 h-5" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-white/90">{supplier?.nickname || 'Awarded Supplier'}</p>
-                    <p className="font-mono text-[10px] text-white/40 tracking-widest uppercase">Awarded Supplier</p>
-                  </div>
+              {/* Supplier */}
+              <div className={`p-4 border-2 transition-colors flex items-center justify-between ${hasSupplierSigned ? 'border-primary bg-primary/5' : 'border-border-inverse bg-surface-inverse'}`}>
+                <div>
+                  <p className="font-mono text-xs font-bold text-white uppercase tracking-wider mb-1">{supplier?.nickname || 'Supplier'}</p>
+                  <p className="font-mono text-[10px] text-text-inverse-muted uppercase tracking-widest">Awarded Supplier</p>
                 </div>
-                <div className={`w-2 h-2 rounded-full ${hasSupplierSigned ? 'bg-primary shadow-[0_0_8px_rgba(197,160,89,0.8)]' : 'bg-white/20'}`} />
+                <div className={`font-mono text-lg font-black ${hasSupplierSigned ? 'text-primary' : 'text-text-inverse-muted'}`}>
+                  {hasSupplierSigned ? '[ X ]' : '[   ]'}
+                </div>
               </div>
             </div>
 
             <button 
               onClick={executeSignOff}
               disabled={haveISigned || signingOff || isProjectClosed}
-              className="relative z-10 w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-xl font-mono text-xs font-bold tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-4 bg-primary hover:bg-primary-light text-secondary font-mono text-xs font-black tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed text-center flex items-center justify-center gap-2"
             >
               {haveISigned 
                 ? 'SIGNATURE RECORDED' 
