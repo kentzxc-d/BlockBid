@@ -27,23 +27,33 @@ export default function MyBidsPage() {
 
   useEffect(() => {
     if (supplierData?.bids) {
-      const mappedBids = supplierData.bids.map((b: any) => ({
-        id: b.id,
-        acquisitionTitle: b.projects?.title || "Unknown Project",
-        acquisitionId: b.project_id,
-        submittedAt: new Date(b.created_at).toLocaleDateString(),
-        proposalSummary: b.bid_values && b.bid_values.length > 0 ? b.bid_values.map((v:any) => v.value).join("\n\n") : "N/A",
-        status: b.status.toUpperCase(),
-        statusIcon: b.status === "submitted" ? ClockIcon : (b.status === "won" ? CheckCircleIcon : XCircleIcon),
-        statusColor: b.status === "submitted" ? "text-amber-500" : (b.status === "won" ? "text-emerald-500" : "text-red-500"),
-        statusBg: b.status === "submitted" ? "bg-amber-500/10" : (b.status === "won" ? "bg-emerald-500/10" : "bg-red-500/10"),
-        statusBorder: b.status === "submitted" ? "border-amber-500/20" : (b.status === "won" ? "border-emerald-500/20" : "border-red-500/20"),
-        projectBudget: b.projects?.budget || "TBD",
-        projectLocation: b.projects?.location || "Various",
-        projectDescription: b.projects?.description || "This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met.",
-        projectDeadline: b.projects?.deadline || null,
-        on_chain_hash: b.on_chain_hash
-      }));
+      const mappedBids = supplierData.bids.map((b: any) => {
+        let baseStatus = b.status;
+        if (b.projects?.status === 'awarded' && baseStatus === 'submitted') {
+          baseStatus = 'closed';
+        }
+        
+        const isSubmitted = baseStatus === "submitted" || baseStatus === "evaluated";
+        const isWon = baseStatus === "won";
+
+        return {
+          id: b.id,
+          acquisitionTitle: b.projects?.title || "Unknown Project",
+          acquisitionId: b.project_id,
+          submittedAt: new Date(b.created_at).toLocaleDateString(),
+          proposalSummary: b.bid_values && b.bid_values.length > 0 ? b.bid_values.map((v:any) => v.value).join("\n\n") : "N/A",
+          status: baseStatus.toUpperCase(),
+          statusIcon: isSubmitted ? ClockIcon : (isWon ? CheckCircleIcon : XCircleIcon),
+          statusColor: isSubmitted ? "text-amber-500" : (isWon ? "text-emerald-500" : "text-red-500"),
+          statusBg: isSubmitted ? "bg-amber-500/10" : (isWon ? "bg-emerald-500/10" : "bg-red-500/10"),
+          statusBorder: isSubmitted ? "border-amber-500/20" : (isWon ? "border-emerald-500/20" : "border-red-500/20"),
+          projectBudget: b.projects?.budget || "TBD",
+          projectLocation: b.projects?.location || "Various",
+          projectDescription: b.projects?.description || "This project requires qualified suppliers to submit their best proposals for the specified items. Ensure all compliance requirements are met.",
+          projectDeadline: b.projects?.deadline || null,
+          on_chain_hash: b.on_chain_hash
+        };
+      });
       setBids(mappedBids);
       setIsLoading(false);
     } else if (supplierData) {
@@ -61,7 +71,7 @@ export default function MyBidsPage() {
       let matchesTab = true;
       if (activeTab === "PENDING") matchesTab = bid.status === "SUBMITTED" || bid.status === "EVALUATED";
       if (activeTab === "AWARDED") matchesTab = bid.status === "WON";
-      if (activeTab === "REJECTED") matchesTab = bid.status === "LOST";
+      if (activeTab === "REJECTED") matchesTab = bid.status === "LOST" || bid.status === "REJECTED" || bid.status === "CLOSED";
 
       return matchesSearch && matchesTab;
     });
@@ -71,7 +81,7 @@ export default function MyBidsPage() {
     all: bids.length,
     pending: bids.filter(b => b.status === "SUBMITTED" || b.status === "EVALUATED").length,
     awarded: bids.filter(b => b.status === "WON").length,
-    rejected: bids.filter(b => b.status === "LOST").length,
+    rejected: bids.filter(b => b.status === "LOST" || b.status === "REJECTED" || b.status === "CLOSED").length,
   };
 
   return (

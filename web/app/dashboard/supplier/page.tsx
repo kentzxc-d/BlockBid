@@ -13,7 +13,8 @@ import {
   ClockIcon,
   DocumentChartBarIcon,
   TrophyIcon,
-  CheckBadgeIcon
+  CheckBadgeIcon,
+  XCircleIcon
 } from "@heroicons/react/24/outline";
 import TopBidsCarousel from "@/components/TopBidsCarousel";
 import LocationModal from "@/components/LocationModal";
@@ -73,9 +74,15 @@ export default function UserDashboard() {
         .then(res => res.json())
         .then(data => {
           if (data.bids) {
-            setMyBids(data.bids.slice(0, 3));
-            setAllMyBidProjectIds(data.bids.map((b: any) => b.project_id));
-            const wonBids = data.bids.filter((b: any) => b.status === 'won').length;
+            const mappedBids = data.bids.map((b: any) => {
+              if (b.projects?.status === 'awarded' && b.status === 'submitted') {
+                return { ...b, status: 'closed' };
+              }
+              return b;
+            });
+            setMyBids(mappedBids.slice(0, 3));
+            setAllMyBidProjectIds(mappedBids.map((b: any) => b.project_id));
+            const wonBids = mappedBids.filter((b: any) => b.status === 'won').length;
             setWonBidsCount(wonBids);
           }
         });
@@ -247,6 +254,7 @@ export default function UserDashboard() {
                   }`}>
                     {bid.status === "submitted" && <ClockIcon className="w-3 h-3 stroke-2" />}
                     {bid.status === "won" && <CheckCircleIcon className="w-3 h-3 stroke-2" />}
+                    {bid.status !== "submitted" && bid.status !== "won" && <XCircleIcon className="w-3 h-3 stroke-2" />}
                     {bid.status}
                   </span>
                 </div>
