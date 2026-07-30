@@ -10,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { project_id, supplier_id, anonymous_alias, bid_values } = body;
+    const { project_id, supplier_id, anonymous_alias, bid_values, on_chain_hash } = body;
 
     if (!project_id || !supplier_id || !anonymous_alias || !bid_values || bid_values.length === 0) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -29,6 +29,7 @@ export async function POST(request: Request) {
           project_id,
           supplier_id,
           anonymous_alias,
+          on_chain_hash,
           status: "submitted"
         }
       ])

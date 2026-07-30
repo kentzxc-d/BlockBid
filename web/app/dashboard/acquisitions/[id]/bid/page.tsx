@@ -184,6 +184,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         project_id: params.id,
         supplier_id: user.id,
         anonymous_alias,
+        on_chain_hash: commitHash,
         bid_values: fields.map(f => ({
           criteria_id: f.id,
           value: f.value
