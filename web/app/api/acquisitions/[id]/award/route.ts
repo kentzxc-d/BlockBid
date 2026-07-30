@@ -1,10 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { createWalletClient, http, publicActions } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { polygonAmoy } from "viem/chains";
+import { BlockBidABI } from "@/lib/abi";
 
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
+const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY || "";
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -19,6 +24,45 @@ export async function POST(
     
     if (!supplier_id || !projectId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // --- BLOCKCHAIN TRANSACTION (Admin Relayer) ---
+    if (adminPrivateKey) {
+      try {
+        const account = privateKeyToAccount(`0x${adminPrivateKey.replace(/^0x/, '')}`);
+        const client = createWalletClient({
+          account,
+          chain: polygonAmoy,
+          transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
+        }).extend(publicActions);
+
+        const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+        
+        // Get supplier wallet address
+        const { data: profileData } = await supabase.from('profiles').select('wallet_address').eq('id', supplier_id).single();
+        const realSupplierAddress = profileData?.wallet_address;
+
+        if (contractAddress && realSupplierAddress) {
+          console.log(`Executing finalizeAward for project ${projectId} on-chain...`);
+          const dummyHash = "0x" + "0".repeat(64);
+          
+          const hash = await client.writeContract({
+            address: contractAddress,
+            abi: BlockBidABI,
+            functionName: 'finalizeAward',
+            args: [projectId, realSupplierAddress as `0x${string}`, dummyHash]
+          });
+          
+          // Wait for receipt
+          await client.waitForTransactionReceipt({ hash });
+          console.log(`Blockchain award finalized. Tx Hash: ${hash}`);
+        } else {
+           console.error("Missing contractAddress or supplier wallet_address for blockchain tx.");
+        }
+      } catch (blockchainErr: any) {
+        console.error("Blockchain Award Failed:", blockchainErr);
+        return NextResponse.json({ error: "Blockchain transaction failed: " + blockchainErr.message }, { status: 500 });
+      }
     }
     
     // 1. Update project status and awarded supplier
@@ -42,10 +86,7 @@ export async function POST(
       .eq('project_id', projectId)
       .eq('supplier_id', supplier_id);
 
-    if (bidUpdateError) {
-      console.error("Failed to update winning bid status:", bidUpdateError);
-      // We log but don't fail, to ensure the notification logic still runs
-    }
+    if (bidUpdateError) console.error("Failed to update winning bid status:", bidUpdateError);
 
     // 1.6 Update losing bids to 'rejected'
     const { error: loserUpdateError } = await supabase
@@ -54,9 +95,7 @@ export async function POST(
       .eq('project_id', projectId)
       .neq('supplier_id', supplier_id);
       
-    if (loserUpdateError) {
-      console.error("Failed to update losing bids:", loserUpdateError);
-    }
+    if (loserUpdateError) console.error("Failed to update losing bids:", loserUpdateError);
     
     // 2. Create a notification for the winning supplier
     const { error: notifError } = await supabase
@@ -69,10 +108,7 @@ export async function POST(
         link: `/dashboard/acquisitions/${projectId}/workspace`
       });
       
-    if (notifError) {
-      console.error("Failed to insert notification:", notifError);
-      // We don't fail the whole request just because notif failed, but it's good to log
-    }
+    if (notifError) console.error("Failed to insert notification:", notifError);
     
     return NextResponse.json({ success: true });
   } catch (err: any) {

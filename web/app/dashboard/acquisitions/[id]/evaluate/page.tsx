@@ -175,39 +175,6 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     
     setIsAwarding(true);
     try {
-      if (wallets && wallets.length > 0) {
-        const wallet = wallets[0];
-        await wallet.switchChain(activeChain.id);
-        const provider = await wallet.getEthereumProvider();
-        
-        const walletClient = createWalletClient({
-          account: wallet.address as `0x${string}`,
-          chain: activeChain,
-          transport: custom(provider)
-        });
-
-        const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
-        if (contractAddress) {
-          const profileRes = await fetch(`/api/user/profile?id=${bidToAward.supplier_id}`);
-          const profileData = await profileRes.json();
-          const realSupplierAddress = profileData?.profile?.wallet_address as `0x${string}`;
-
-          if (!realSupplierAddress) {
-             throw new Error("Could not find wallet address for this supplier.");
-          }
-
-          const dummyHash = "0x" + "0".repeat(64);
-          
-          await walletClient.writeContract({
-            address: contractAddress,
-            abi: BlockBidABI,
-            functionName: 'finalizeAward',
-            args: [params.id, realSupplierAddress, dummyHash]
-          });
-        }
-      }
-      
-      // Only runs if blockchain succeeds
       const res = await fetch(`/api/acquisitions/${params.id}/award`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -216,9 +183,10 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
           project_title: project?.title 
         })
       });
+
       if (!res.ok) {
         const errorData = await res.json();
-        console.log(`Warning: Blockchain award succeeded, but database update failed: ${errorData.error}`);
+        throw new Error(errorData.error || "Failed to process award");
       }
       
       setRevealedBidder(bidId);
@@ -226,7 +194,8 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
 
     } catch (err: any) {
       console.error("Failed to finalize award:", err);
-      console.log(`Transaction failed or cancelled: ${err.message || "Unknown error"}`);
+      console.log(`Transaction failed: ${err.message || "Unknown error"}`);
+      setError(`Failed to award: ${err.message}`);
     } finally {
       setIsAwarding(false);
     }
