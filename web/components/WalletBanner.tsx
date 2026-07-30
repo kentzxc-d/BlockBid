@@ -18,7 +18,7 @@ export default function WalletBanner() {
   const [greeting, setGreeting] = useState("WELCOME BACK");
   const [currentTime, setCurrentTime] = useState("");
   const [blockHeight, setBlockHeight] = useState(18239012);
-  const [balance, setBalance] = useState("0.00");
+  const [balance, setBalance] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -112,7 +112,12 @@ export default function WalletBanner() {
               Wallet Balance
             </div>
             <div className="text-5xl font-heading font-black text-text-main mb-5 tracking-tighter">
-              <span className="text-primary/70 mr-2 text-4xl font-bold">₱</span>{balance}
+              <span className="text-primary/70 mr-2 text-4xl font-bold">₱</span>
+              {balance === null ? (
+                <span className="animate-pulse text-text-muted/50 text-4xl tracking-widest">...</span>
+              ) : (
+                balance
+              )}
             </div>
             <div className="flex items-center gap-3">
               <button 
