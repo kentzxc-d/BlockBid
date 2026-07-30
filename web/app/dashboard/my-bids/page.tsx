@@ -29,7 +29,7 @@ export default function MyBidsPage() {
   const [isLoadingAwardResults, setIsLoadingAwardResults] = useState(false);
 
   useEffect(() => {
-    if (viewingBid && viewingBid.status === "CLOSED") {
+    if (viewingBid && viewingBid.status === "LOST") {
       setIsLoadingAwardResults(true);
       fetch(`/api/acquisitions/${viewingBid.acquisitionId}/award-results`)
         .then(res => res.json())
@@ -57,7 +57,7 @@ export default function MyBidsPage() {
       const mappedBids = supplierData.bids.map((b: any) => {
         let baseStatus = b.status;
         if (b.projects?.status === 'awarded' && baseStatus === 'submitted') {
-          baseStatus = 'closed';
+          baseStatus = 'lost';
         }
         
         const isSubmitted = baseStatus === "submitted" || baseStatus === "evaluated";
@@ -98,7 +98,7 @@ export default function MyBidsPage() {
       let matchesTab = true;
       if (activeTab === "PENDING") matchesTab = bid.status === "SUBMITTED" || bid.status === "EVALUATED";
       if (activeTab === "AWARDED") matchesTab = bid.status === "WON";
-      if (activeTab === "REJECTED") matchesTab = bid.status === "LOST" || bid.status === "REJECTED" || bid.status === "CLOSED";
+      if (activeTab === "REJECTED") matchesTab = bid.status === "LOST" || bid.status === "REJECTED";
 
       return matchesSearch && matchesTab;
     });
@@ -108,7 +108,7 @@ export default function MyBidsPage() {
     all: bids.length,
     pending: bids.filter(b => b.status === "SUBMITTED" || b.status === "EVALUATED").length,
     awarded: bids.filter(b => b.status === "WON").length,
-    rejected: bids.filter(b => b.status === "LOST" || b.status === "REJECTED" || b.status === "CLOSED").length,
+    rejected: bids.filter(b => b.status === "LOST" || b.status === "REJECTED").length,
   };
 
   return (
@@ -198,7 +198,7 @@ export default function MyBidsPage() {
                   onClick={() => setViewingBid(bid)}
                   className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-none hover:border-text-main hover:bg-gray-50 transition-colors whitespace-nowrap"
                 >
-                  <EyeIcon className="w-4 h-4 stroke-2" /> VIEW_DETAILS
+                  <EyeIcon className="w-4 h-4 stroke-2" /> {bid.status === "LOST" ? "VIEW_AWARD_RESULTS" : "VIEW_DETAILS"}
                 </button>
               </div>
             );
@@ -240,7 +240,7 @@ export default function MyBidsPage() {
               </button>
             </div>
             
-            <div className="p-6">
+            <div className="p-6 max-h-[75vh] overflow-y-auto">
               <div className="bg-surface p-4 rounded-md border border-border mb-6 hover:border-text-main transition-colors">
                 <p className="text-[10px] font-mono font-bold text-text-muted mb-2 uppercase tracking-widest">TARGET_ACQUISITION</p>
                 <p className="font-heading font-bold text-text-main text-lg leading-tight uppercase">{viewingBid.acquisitionTitle}</p>
@@ -267,7 +267,7 @@ export default function MyBidsPage() {
                 </div>
               </div>
 
-              {viewingBid.status === "CLOSED" && (
+              {viewingBid.status === "LOST" && (
                 <div className="mt-6 border-t border-border pt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <h3 className="font-heading font-bold text-text-main uppercase mb-4 flex items-center gap-2">
                     <span className="text-primary">[</span> AWARD_RESULTS <span className="text-primary">]</span>

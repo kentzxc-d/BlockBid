@@ -76,7 +76,7 @@ export default function UserDashboard() {
           if (data.bids) {
             const mappedBids = data.bids.map((b: any) => {
               if (b.projects?.status === 'awarded' && b.status === 'submitted') {
-                return { ...b, status: 'closed' };
+                return { ...b, status: 'lost' };
               }
               return b;
             });
