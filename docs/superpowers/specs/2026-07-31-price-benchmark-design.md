@@ -12,6 +12,7 @@ To support this feature, we need to track benchmark items and supplier proposals
 - `id` (uuid, primary key)
 - `name` (string) - e.g., "Laptop", "A4 Bond Paper"
 - `category` (string) - e.g., "IT Equipment", "Office Supplies"
+- `specs_description` (string, optional) - Key specs that justify the price, e.g., "Intel i5, 8GB RAM, 256GB SSD"
 - `base_srp` (numeric, nullable) - Official government SRP or base reference.
 - `platform_average` (numeric, nullable) - The BlockBid average or approved market price.
 - `created_at`, `updated_at` (timestamps)
@@ -21,6 +22,7 @@ To support this feature, we need to track benchmark items and supplier proposals
 - `supplier_id` (uuid) - Reference to the supplier profile.
 - `item_name` (string)
 - `category` (string)
+- `specs_description` (string, optional) - Proposed specs for the item.
 - `proposed_price` (numeric)
 - `proof_link` (string, optional) - Link to a retailer or documentation.
 - `status` (string) - 'pending', 'approved', 'rejected'
@@ -33,9 +35,9 @@ To support this feature, we need to track benchmark items and supplier proposals
 - **Theme:** Standard clean dashboard UI (no brutalist elements, consistent with main dashboard pages).
 - **Features:**
   - **Data Table:** Lists items searchable by category or name.
-  - **Columns:** Item Name, Base SRP (DTI), BlockBid Average.
+  - **Columns:** Item Name, Specs (Sub-text under Item Name), Base SRP (DTI), BlockBid Average.
   - **No Trend Lines:** Keeping the interface simple and focused on current benchmark prices.
-  - **Supplier Action:** If a supplier is logged in, a "Propose Market Price" button is visible, opening a standard modal form.
+  - **Supplier Action:** If a supplier is logged in, a "Propose Market Price" button is visible, opening a standard modal form that includes a `Specs Description` field.
 
 #### Admin Approval Portal
 - **Access:** Admin only. Added as a new tab or section in the Admin Dashboard.
