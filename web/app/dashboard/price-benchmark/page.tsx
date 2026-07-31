@@ -195,6 +195,19 @@ export default function PriceBenchmarkPage() {
         </div>
       )}
 
+      {/* Data Sources Disclaimer */}
+      <div className="bg-surface border border-border border-l-4 border-l-primary p-5 mb-6 flex flex-col justify-center">
+        <p className="font-mono font-bold text-text-main mb-2 uppercase tracking-widest text-xs">[ DATA_SOURCES ]</p>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm">
+          <p className="text-text-muted">
+            <strong className="text-text-main font-heading">Official SRP (DTI):</strong> Government-mandated baseline prices for essential and common commodities.
+          </p>
+          <p className="text-text-muted">
+            <strong className="text-primary font-heading">BlockBid Average:</strong> Real-time, crowdsourced market rates derived from active platform bids and verified supplier proposals.
+          </p>
+        </div>
+      </div>
+
       {/* Table */}
       <div className="bg-surface border border-border rounded-none shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
