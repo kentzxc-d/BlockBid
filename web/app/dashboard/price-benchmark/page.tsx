@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useProfile } from "@/contexts/ProfileContext";
-import { MagnifyingGlassIcon, PlusIcon, XMarkIcon, CheckCircleIcon, ArrowTrendingUpIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, PlusIcon, XMarkIcon, CheckCircleIcon, ArrowTrendingUpIcon, FunnelIcon } from "@heroicons/react/24/outline";
 
 type BenchmarkItem = {
   id: string;
@@ -124,46 +124,55 @@ export default function PriceBenchmarkPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
-      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      {/* Header */}
+      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <h1 className="text-3xl text-text-main font-mono font-bold tracking-widest uppercase mb-2">
+          <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
             [ PRICE_BENCHMARK ]
           </h1>
-          <p className="text-text-muted">A composite market index combining official SRPs and BlockBid historical data.</p>
+          <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+            A composite market index combining official SRPs and BlockBid historical data.
+          </p>
         </div>
         
-        {isSupplier && (
-          <button 
-            onClick={() => setShowModal(true)}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-primary-light transition-colors shadow-sm"
-          >
-            <PlusIcon className="w-4 h-4 stroke-2" /> Propose Market Price
-          </button>
-        )}
-      </div>
-
-      {/* Main Filter */}
-      <div className="bg-surface border border-border p-4 rounded-none shadow-sm mb-6 flex flex-col md:flex-row gap-4">
-        <div className="flex-1 relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-          <input
-            type="text"
-            placeholder="Search items..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-          />
-        </div>
-        <div className="w-full md:w-64">
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-border rounded-md text-sm font-mono tracking-wider focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white cursor-pointer uppercase"
-          >
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{cat === "ALL" ? "[ ALL_CATEGORIES ]" : `[ ${cat.toUpperCase()} ]`}</option>
-            ))}
-          </select>
+        {/* Search, Filter & Propose Button */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full sm:w-auto">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted stroke-2" />
+            <input 
+              type="text" 
+              placeholder="SEARCH_BENCHMARK..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2.5 rounded-md border border-border focus:border-text-main outline-none transition-colors text-xs font-mono font-bold tracking-widest w-full md:w-64 placeholder:text-text-muted uppercase"
+            />
+          </div>
+          <div className="relative group w-full sm:w-auto flex">
+            <button className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-md text-xs font-mono font-bold tracking-widest text-text-main hover:bg-gray-50 transition-colors uppercase whitespace-nowrap">
+              <FunnelIcon className="w-4 h-4 stroke-2 text-text-main" />
+              {categoryFilter === "ALL" ? "Filter" : categoryFilter}
+            </button>
+            <div className="absolute right-0 top-full mt-2 w-48 bg-surface border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 py-1 overflow-hidden">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategoryFilter(cat)}
+                  className={`w-full text-left px-4 py-3 text-xs font-mono font-bold tracking-widest uppercase hover:bg-gray-50 transition-colors ${categoryFilter === cat ? 'text-primary bg-primary/5' : 'text-text-main'}`}
+                >
+                  {cat === "ALL" ? "ALL_CATEGORIES" : cat}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {isSupplier && (
+            <button 
+              onClick={() => setShowModal(true)}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-primary-light transition-colors shadow-sm w-full sm:w-auto sm:ml-2"
+            >
+              <PlusIcon className="w-4 h-4 stroke-2" /> Propose
+            </button>
+          )}
         </div>
       </div>
 
@@ -218,16 +227,6 @@ export default function PriceBenchmarkPage() {
                   <tr key={item.id} className="border-b border-border hover:bg-gray-50 transition-colors">
                     <td className="p-4">
                       <p className="font-bold text-text-main text-base">{item.name}</p>
-                      <div className="mt-2 flex gap-2">
-                        <span className="inline-block px-2 py-0.5 bg-secondary text-white text-[10px] font-mono tracking-widest rounded-sm uppercase">
-                          {item.category}
-                        </span>
-                        {item.subcategory && (
-                          <span className="inline-block px-2 py-0.5 bg-gray-100 border border-border text-[10px] font-mono tracking-widest text-text-muted rounded-sm uppercase">
-                            {item.subcategory}
-                          </span>
-                        )}
-                      </div>
                     </td>
                     
                     {showSpecsColumn && (
@@ -246,13 +245,8 @@ export default function PriceBenchmarkPage() {
                       </p>
                     </td>
                     
-                    <td className="p-4 text-right bg-primary/5 relative">
-                      {showTrendMarks && item.platform_average && (
-                        <div className="absolute top-4 left-4 text-emerald-500 opacity-20">
-                          <ArrowTrendingUpIcon className="w-8 h-8" />
-                        </div>
-                      )}
-                      <p className="font-mono text-lg font-bold text-primary relative z-10">
+                    <td className="p-4 text-right bg-primary/5">
+                      <p className="font-mono text-lg font-bold text-primary">
                         {formatPrice(item.platform_average)}
                       </p>
                     </td>
