@@ -15,6 +15,8 @@ import {
   ArrowsRightLeftIcon,
   UserGroupIcon,
   CheckBadgeIcon,
+  ChartBarIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import { useProfile } from "@/contexts/ProfileContext";
 
@@ -63,6 +65,7 @@ export default function DashboardSidebar() {
   // Base items everyone sees
   const navItems: { name: string; href: string; icon: React.ElementType; onClick?: React.MouseEventHandler<HTMLAnchorElement> }[] = [
     { name: "Active Solicitations", href: "/dashboard/acquisitions", icon: DocumentTextIcon },
+    { name: "Price Benchmark", href: "/dashboard/price-benchmark", icon: ChartBarIcon },
   ];
 
   // If in supplier mode
@@ -82,6 +85,7 @@ export default function DashboardSidebar() {
     navItems.unshift({ name: "Platform Overview", href: "/dashboard/admin", icon: HomeIcon, onClick: undefined });
     navItems.push({ name: "User Management", href: "/dashboard/admin/users", icon: UserGroupIcon, onClick: undefined });
     navItems.push({ name: "Identity Verification", href: "/dashboard/admin/kyc", icon: CheckBadgeIcon, onClick: undefined });
+    navItems.push({ name: "Price Proposals", href: "/dashboard/admin/price-proposals", icon: BanknotesIcon, onClick: undefined });
   }
 
   // Always at bottom
