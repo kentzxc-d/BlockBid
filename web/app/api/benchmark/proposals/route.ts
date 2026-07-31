@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { supplier_id, item_name, category, specs_description, proposed_price, proof_link } = body;
+    const { supplier_id, item_name, category, subcategory, specs_description, proposed_price, proof_link } = body;
 
     if (!supplier_id || !item_name || !category || !proposed_price) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -48,6 +48,7 @@ export async function POST(request: Request) {
         supplier_id,
         item_name,
         category,
+        subcategory,
         specs_description,
         proposed_price,
         proof_link,
@@ -105,7 +106,8 @@ export async function PUT(request: Request) {
           .from('benchmark_items')
           .update({ 
             platform_average: proposal.proposed_price,
-            specs_description: proposal.specs_description // overwrite with new specs if provided
+            specs_description: proposal.specs_description, // overwrite with new specs if provided
+            subcategory: proposal.subcategory // update subcategory if new
           })
           .eq('id', existingItem.id);
       } else {
@@ -115,6 +117,7 @@ export async function PUT(request: Request) {
           .insert([{
             name: proposal.item_name,
             category: proposal.category,
+            subcategory: proposal.subcategory,
             specs_description: proposal.specs_description,
             platform_average: proposal.proposed_price
             // base_srp is null since it's user proposed

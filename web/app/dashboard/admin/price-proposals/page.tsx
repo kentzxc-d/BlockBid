@@ -9,6 +9,7 @@ type Proposal = {
   id: string;
   item_name: string;
   category: string;
+  subcategory?: string;
   specs_description?: string;
   proposed_price: number;
   proof_link?: string;
@@ -112,7 +113,12 @@ export default function PriceProposalsAdminPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-1">
                     <h3 className="font-bold text-lg text-text-main">{proposal.item_name}</h3>
-                    <span className="bg-gray-100 border border-border text-[10px] font-mono px-2 py-0.5 rounded-md text-text-muted uppercase tracking-wider">{proposal.category}</span>
+                    <div className="flex gap-2">
+                      <span className="bg-secondary text-white text-[10px] font-mono px-2 py-0.5 rounded-sm uppercase tracking-wider">{proposal.category}</span>
+                      {proposal.subcategory && (
+                        <span className="bg-gray-100 border border-border text-[10px] font-mono px-2 py-0.5 rounded-sm text-text-muted uppercase tracking-wider">{proposal.subcategory}</span>
+                      )}
+                    </div>
                   </div>
                   <p className="text-sm text-text-muted flex items-center gap-2">
                     Proposed by <span className="font-mono text-text-main">{proposal.profiles?.nickname}</span>

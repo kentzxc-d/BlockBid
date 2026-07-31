@@ -8,6 +8,7 @@ type BenchmarkItem = {
   id: string;
   name: string;
   category: string;
+  subcategory?: string;
   specs_description?: string;
   base_srp?: number;
   platform_average?: number;
@@ -19,6 +20,7 @@ export default function PriceBenchmarkPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
+  const [subCategoryFilter, setSubCategoryFilter] = useState("ALL");
   
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -27,6 +29,7 @@ export default function PriceBenchmarkPage() {
   const [formData, setFormData] = useState({
     itemName: "",
     category: "IT Equipment",
+    subcategory: "",
     specsDescription: "",
     proposedPrice: "",
     proofLink: ""
@@ -50,12 +53,23 @@ export default function PriceBenchmarkPage() {
     fetchBenchmarks();
   }, []);
 
+  // Reset subcategory when main category changes
+  useEffect(() => {
+    setSubCategoryFilter("ALL");
+  }, [categoryFilter]);
+
   const categories = ["ALL", ...Array.from(new Set(items.map(i => i.category)))];
+  
+  // Get available subcategories for the current selected category
+  const availableSubcategories = categoryFilter === "ALL" 
+    ? [] 
+    : ["ALL", ...Array.from(new Set(items.filter(i => i.category === categoryFilter && i.subcategory).map(i => i.subcategory as string)))];
 
   const filteredItems = items.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === "ALL" || item.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesSubCategory = subCategoryFilter === "ALL" || item.subcategory === subCategoryFilter;
+    return matchesSearch && matchesCategory && matchesSubCategory;
   });
 
   const formatPrice = (price?: number) => {
@@ -76,6 +90,7 @@ export default function PriceBenchmarkPage() {
           supplier_id: profile.id,
           item_name: formData.itemName,
           category: formData.category,
+          subcategory: formData.subcategory || null,
           specs_description: formData.specsDescription,
           proposed_price: parseFloat(formData.proposedPrice),
           proof_link: formData.proofLink
@@ -87,7 +102,7 @@ export default function PriceBenchmarkPage() {
         setTimeout(() => {
           setShowModal(false);
           setSuccessMsg("");
-          setFormData({ itemName: "", category: "IT Equipment", specsDescription: "", proposedPrice: "", proofLink: "" });
+          setFormData({ itemName: "", category: "IT Equipment", subcategory: "", specsDescription: "", proposedPrice: "", proofLink: "" });
         }, 3000);
       } else {
         alert(data.error);
@@ -101,13 +116,19 @@ export default function PriceBenchmarkPage() {
   };
 
   const isSupplier = profile?.role === "supplier";
-  const needsSpecs = formData.category === "IT Equipment" || formData.category === "Heavy Machinery";
+  const needsSpecsForm = formData.category === "IT Equipment" || formData.category === "Heavy Machinery";
+  
+  // Smart Columns Logic
+  const showSpecsColumn = categoryFilter !== "ALL" && filteredItems.some(i => i.specs_description);
+  const showTrendMarks = categoryFilter !== "ALL";
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight mb-2">Price Benchmark</h1>
+          <h1 className="text-3xl text-text-main font-mono font-bold tracking-widest uppercase mb-2">
+            [ PRICE_BENCHMARK ]
+          </h1>
           <p className="text-text-muted">A composite market index combining official SRPs and BlockBid historical data.</p>
         </div>
         
@@ -121,7 +142,7 @@ export default function PriceBenchmarkPage() {
         )}
       </div>
 
-      {/* Filters */}
+      {/* Main Filter */}
       <div className="bg-surface border border-border p-4 rounded-none shadow-sm mb-6 flex flex-col md:flex-row gap-4">
         <div className="flex-1 relative">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
@@ -137,14 +158,33 @@ export default function PriceBenchmarkPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-border rounded-md text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white cursor-pointer"
+            className="w-full px-4 py-2 border border-border rounded-md text-sm font-mono tracking-wider focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white cursor-pointer uppercase"
           >
             {categories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>{cat === "ALL" ? "[ ALL_CATEGORIES ]" : `[ ${cat.toUpperCase()} ]`}</option>
             ))}
           </select>
         </div>
       </div>
+
+      {/* Sub-Category Tabs (Only shown if a specific category is selected and has subcategories) */}
+      {categoryFilter !== "ALL" && availableSubcategories.length > 1 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {availableSubcategories.map(sub => (
+            <button
+              key={sub}
+              onClick={() => setSubCategoryFilter(sub)}
+              className={`px-4 py-1.5 text-xs font-mono tracking-widest uppercase rounded-md border transition-colors ${
+                subCategoryFilter === sub 
+                  ? "bg-secondary text-white border-secondary" 
+                  : "bg-white text-text-muted border-border hover:border-text-muted"
+              }`}
+            >
+              {sub === "ALL" ? "ALL" : sub}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Table */}
       <div className="bg-surface border border-border rounded-none shadow-sm overflow-hidden">
@@ -152,22 +192,24 @@ export default function PriceBenchmarkPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/50 border-b border-border">
-                <th className="p-4 font-mono text-[10px] font-bold tracking-widest uppercase text-text-muted">Item / Category</th>
-                <th className="p-4 font-mono text-[10px] font-bold tracking-widest uppercase text-text-muted w-1/3">Specs Reference</th>
-                <th className="p-4 font-mono text-[10px] font-bold tracking-widest uppercase text-text-muted text-right">Official SRP (DTI)</th>
-                <th className="p-4 font-mono text-[10px] font-bold tracking-widest uppercase text-primary text-right bg-primary/5">BlockBid Average</th>
+                <th className="p-4 font-mono text-xs font-bold tracking-widest uppercase text-text-muted">Item / Category</th>
+                {showSpecsColumn && (
+                  <th className="p-4 font-mono text-xs font-bold tracking-widest uppercase text-text-muted w-1/3">Specs Reference</th>
+                )}
+                <th className="p-4 font-mono text-xs font-bold tracking-widest uppercase text-text-muted text-right">Official SRP (DTI)</th>
+                <th className="p-4 font-mono text-xs font-bold tracking-widest uppercase text-primary text-right bg-primary/5">BlockBid Average</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="p-8 text-center text-text-muted font-mono text-sm animate-pulse">
+                  <td colSpan={showSpecsColumn ? 4 : 3} className="p-8 text-center text-text-muted font-mono text-sm animate-pulse">
                     LOADING_BENCHMARK_DATA...
                   </td>
                 </tr>
               ) : filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="p-8 text-center text-text-muted">
+                  <td colSpan={showSpecsColumn ? 4 : 3} className="p-8 text-center text-text-muted">
                     No items found matching your filters.
                   </td>
                 </tr>
@@ -175,30 +217,42 @@ export default function PriceBenchmarkPage() {
                 filteredItems.map((item) => (
                   <tr key={item.id} className="border-b border-border hover:bg-gray-50 transition-colors">
                     <td className="p-4">
-                      <p className="font-bold text-text-main text-sm">{item.name}</p>
-                      <span className="inline-block px-2 py-0.5 mt-1 bg-gray-100 border border-border text-[10px] font-mono tracking-wider text-text-muted rounded-md uppercase">
-                        {item.category}
-                      </span>
+                      <p className="font-bold text-text-main text-base">{item.name}</p>
+                      <div className="mt-2 flex gap-2">
+                        <span className="inline-block px-2 py-0.5 bg-secondary text-white text-[10px] font-mono tracking-widest rounded-sm uppercase">
+                          {item.category}
+                        </span>
+                        {item.subcategory && (
+                          <span className="inline-block px-2 py-0.5 bg-gray-100 border border-border text-[10px] font-mono tracking-widest text-text-muted rounded-sm uppercase">
+                            {item.subcategory}
+                          </span>
+                        )}
+                      </div>
                     </td>
-                    <td className="p-4">
-                      {item.specs_description ? (
-                        <p className="text-xs text-text-muted">{item.specs_description}</p>
-                      ) : (
-                        <span className="text-[10px] font-mono text-gray-300">N/A</span>
-                      )}
-                    </td>
+                    
+                    {showSpecsColumn && (
+                      <td className="p-4">
+                        {item.specs_description ? (
+                          <p className="text-sm text-text-muted">{item.specs_description}</p>
+                        ) : (
+                          <span className="text-xs font-mono text-gray-300">N/A</span>
+                        )}
+                      </td>
+                    )}
+                    
                     <td className="p-4 text-right">
-                      <p className="font-mono text-sm font-medium text-text-muted">
+                      <p className="font-mono text-base font-medium text-text-muted">
                         {formatPrice(item.base_srp)}
                       </p>
                     </td>
+                    
                     <td className="p-4 text-right bg-primary/5 relative">
-                      {item.platform_average && (
-                        <div className="absolute top-4 left-2 text-emerald-500 opacity-20">
-                          <ArrowTrendingUpIcon className="w-6 h-6" />
+                      {showTrendMarks && item.platform_average && (
+                        <div className="absolute top-4 left-4 text-emerald-500 opacity-20">
+                          <ArrowTrendingUpIcon className="w-8 h-8" />
                         </div>
                       )}
-                      <p className="font-mono text-sm font-bold text-primary relative z-10">
+                      <p className="font-mono text-lg font-bold text-primary relative z-10">
                         {formatPrice(item.platform_average)}
                       </p>
                     </td>
@@ -247,19 +301,24 @@ export default function PriceBenchmarkPage() {
                   </div>
                   
                   <div className="space-y-1.5 col-span-1">
+                    <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Subcategory</label>
+                    <input type="text" value={formData.subcategory} onChange={e => setFormData({...formData, subcategory: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. Laptop" />
+                  </div>
+                  
+                  <div className="space-y-1.5 col-span-2">
                     <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Proposed Price (₱) *</label>
                     <input required type="number" min="0" step="0.01" value={formData.proposedPrice} onChange={e => setFormData({...formData, proposedPrice: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="0.00" />
                   </div>
                 </div>
 
-                {needsSpecs && (
+                {needsSpecsForm && (
                   <div className="space-y-1.5 animate-in slide-in-from-top-2">
                     <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Specs Description *</label>
                     <textarea required rows={2} value={formData.specsDescription} onChange={e => setFormData({...formData, specsDescription: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. Intel Core i5, 16GB RAM, 512GB SSD, Windows 11 Pro" />
                     <p className="text-[10px] text-text-muted">Required for {formData.category} to justify the proposed price.</p>
                   </div>
                 )}
-                {!needsSpecs && (
+                {!needsSpecsForm && (
                   <div className="space-y-1.5">
                     <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Specs Description (Optional)</label>
                     <input type="text" value={formData.specsDescription} onChange={e => setFormData({...formData, specsDescription: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="Optional brief description" />
