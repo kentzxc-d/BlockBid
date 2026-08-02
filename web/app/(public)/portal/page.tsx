@@ -1,8 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import Link from "next/link";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
-import styles from "../page.module.css";
-import AcquisitionCard from "@/components/AcquisitionCard";
+import PortalClient from "./PortalClient";
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -27,7 +24,7 @@ async function getAwardedAcquisitions() {
         on_chain_hash
       )
     `)
-    .eq("status", "awarded")
+    .in("status", ["awarded", "closed"])
     .order("awarded_at", { ascending: false });
 
   if (error) {
@@ -58,67 +55,7 @@ export default async function TransparencyPortal() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto py-20 px-6">
-        <div className="mb-16 border-b-2 border-border-inverse pb-6 flex justify-between items-end">
-          <div>
-            <h1 className="text-4xl font-heading font-black tracking-tighter uppercase mb-2 text-text-main">
-              Public Transparency Portal
-            </h1>
-            <p className="text-sm font-mono font-bold tracking-widest uppercase text-text-muted">
-              Blockchain-verified government acquisitions
-            </p>
-          </div>
-          <div className="font-mono text-xs font-bold text-text-muted uppercase tracking-widest">
-            {acquisitions.length} AWARDED
-          </div>
-        </div>
-
-        {acquisitions.length === 0 ? (
-          <div className="p-12 border border-dashed border-border flex flex-col items-center justify-center text-center">
-            <p className="text-sm font-mono font-bold tracking-widest text-text-muted uppercase">
-              No awarded acquisitions found.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-6">
-            {acquisitions.map((item) => {
-              const actionButton = item.on_chain_hash ? (
-                <div className="flex w-full justify-between items-center text-xs font-mono font-bold uppercase tracking-widest">
-                  <span className="text-text-muted">Verification</span>
-                  <a
-                    href={`https://amoy.polygonscan.com/tx/${item.on_chain_hash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-primary hover:underline bg-primary/10 px-4 py-2"
-                  >
-                    <span>View on Polygon</span>
-                    <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                  </a>
-                </div>
-              ) : (
-                <div className="flex w-full justify-between items-center text-xs font-mono font-bold uppercase tracking-widest">
-                  <span className="text-text-muted">Verification</span>
-                  <span className="text-text-muted px-4 py-2 border border-dashed border-border">Syncing to Blockchain...</span>
-                </div>
-              );
-
-              return (
-                <AcquisitionCard
-                  key={item.id}
-                  title={item.title}
-                  description={`Public record of awarded contract.`}
-                  status="AWARDED"
-                  location={item.location || "Various"}
-                  estBudget={item.budget || item.total_price}
-                  closingDate={`Awarded: ${new Date(item.awarded_at).toLocaleDateString()}`}
-                  contractHash={item.on_chain_hash || "Pending..."}
-                  actionButton={actionButton}
-                />
-              );
-            })}
-          </div>
-        )}
-      </div>
+      <PortalClient acquisitions={acquisitions} />
     </div>
   );
 }
