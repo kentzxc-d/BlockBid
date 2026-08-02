@@ -112,6 +112,16 @@
     uploaded_at timestamp with time zone default timezone('utc'::text, now()) not null
   );
   alter table verification_documents enable row level security;
+
+  -- 8. Workspace Messages Table
+  create table workspace_messages (
+    id uuid default uuid_generate_v4() primary key,
+    project_id uuid references projects(id) on delete cascade not null,
+    sender_id text references profiles(id) on delete cascade not null,
+    content text not null,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+  );
+  alter table workspace_messages enable row level security;
   
   create policy "Users can view own verification docs" on verification_documents for select using (auth.uid()::text = profile_id);
   create policy "Users can insert own verification docs" on verification_documents for insert with check (auth.uid()::text = profile_id);
@@ -133,3 +143,17 @@
   create policy "Admins can view all KYC documents." on storage.objects for select using ( 
     bucket_id = 'kyc_documents' and exists (select 1 from profiles where id = auth.uid()::text and role = 'admin')
   );
+
+  -- Workspace Messages Policies
+  create policy "Requestors can view workspace messages for their projects" on workspace_messages for select using (
+    exists (select 1 from projects where id = workspace_messages.project_id and requestor_id = auth.uid()::text)
+  );
+
+  create policy "Awarded suppliers can view workspace messages" on workspace_messages for select using (
+    exists (select 1 from projects where id = workspace_messages.project_id and awarded_supplier_id = auth.uid()::text)
+  );
+
+  -- Enable Realtime for workspace_messages
+  alter publication supabase_realtime add table workspace_messages;
+  
+  -- Price Reference Additions (already in migrations, but keeping schema up to date is good)
