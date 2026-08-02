@@ -3,9 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = 'force-dynamic';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "dummy_key_for_build";
 // Using the service key here to allow Admin operations if needed, or fallback to publishable
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "dummy_key_for_build";
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function GET(request: Request) {

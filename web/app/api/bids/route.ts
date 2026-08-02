@@ -3,8 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 
 // Initialize Supabase client with the Service Role Key to bypass RLS
 export const dynamic = 'force-dynamic';
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "dummy_key_for_build";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "dummy_key_for_build";
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(request: Request) {

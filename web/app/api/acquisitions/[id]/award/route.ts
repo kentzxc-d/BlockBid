@@ -7,9 +7,9 @@ import { BlockBidABI } from "@/lib/abi";
 
 export const dynamic = 'force-dynamic';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
-const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "dummy_key_for_build";
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "dummy_key_for_build";
+const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY || "dummy_key_for_build";
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
