@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Limit reached: You can only have up to 5 active or pending projects at a time." }, { status: 400 });
     }
 
-    let projectStatus = "open";
+    const projectStatus = "open";
 
     // 3. Insert Project into the database
     const { data: projectData, error: projectError } = await supabase

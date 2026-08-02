@@ -1,9 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { createWalletClient, http, publicActions } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy } from "viem/chains";
-import { BlockBidABI } from "@/lib/abi";
 
 export const dynamic = 'force-dynamic';
 
@@ -81,13 +78,6 @@ export async function POST(
       const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY || "dummy_key_for_build";
       if (adminPrivateKey) {
         try {
-          const account = privateKeyToAccount(`0x${adminPrivateKey.replace(/^0x/, '')}`);
-          const client = createWalletClient({
-            account,
-            chain: polygonAmoy,
-            transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
-          }).extend(publicActions);
-
           const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
           
           if (contractAddress) {

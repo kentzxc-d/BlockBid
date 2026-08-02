@@ -113,7 +113,7 @@ export default function PortalClient({ acquisitions }: { acquisitions: any[] }) 
                 status={item.status.toUpperCase()}
                 location={item.location || "Various"}
                 estBudget={item.budget || item.total_price}
-                closingDate={`${item.status === 'awarded' ? 'Awarded' : 'Completed'}: ${new Date(item.awarded_at || Date.now()).toLocaleDateString()}`}
+                closingDate={`${item.status === 'awarded' ? 'Awarded' : 'Completed'}: ${item.awarded_at ? new Date(item.awarded_at).toLocaleDateString() : 'N/A'}`}
                 contractHash={item.on_chain_hash || "Pending..."}
                 actionButton={actionButton}
               />
