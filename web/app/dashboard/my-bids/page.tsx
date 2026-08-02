@@ -143,10 +143,7 @@ export default function MyBidsPage() {
               className="pl-10 pr-4 py-2.5 rounded-md border border-border focus:border-text-main outline-none transition-colors text-xs font-mono font-bold tracking-widest w-full md:w-64 placeholder:text-text-muted uppercase"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-border rounded-md text-xs font-mono font-bold tracking-widest text-text-main hover:bg-gray-50 transition-colors uppercase">
-            <FunnelIcon className="w-4 h-4 stroke-2 text-text-main" />
-            FILTER
-          </button>
+
         </div>
       </div>
 

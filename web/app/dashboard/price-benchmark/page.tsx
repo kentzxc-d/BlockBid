@@ -168,9 +168,9 @@ export default function PriceBenchmarkPage() {
           {isSupplier && (
             <button 
               onClick={() => setShowModal(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-primary-light transition-colors shadow-sm w-full sm:w-auto sm:ml-2"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white font-mono text-xs font-bold tracking-widest uppercase rounded-md hover:bg-primary-light transition-all shadow-sm w-full sm:w-auto sm:ml-2 hover:-translate-y-0.5 hover:shadow-md"
             >
-              <PlusIcon className="w-4 h-4 stroke-2" /> Propose
+              <PlusIcon className="w-4 h-4 stroke-2" /> PROPOSE
             </button>
           )}
         </div>
@@ -274,9 +274,9 @@ export default function PriceBenchmarkPage() {
       {/* Propose Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-surface w-full max-w-lg border border-border rounded-none shadow-xl animate-in fade-in zoom-in duration-200">
-            <div className="flex justify-between items-center p-5 border-b border-border">
-              <h3 className="font-heading text-lg font-bold text-text-main uppercase">Propose Market Price</h3>
+          <div className="bg-surface rounded-md w-full max-w-lg border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-6 border-b border-border bg-surface">
+              <h3 className="font-heading font-bold text-lg text-text-main uppercase tracking-tight">Propose Market Price</h3>
               <button onClick={() => setShowModal(false)} className="text-text-muted hover:text-text-main transition-colors">
                 <XMarkIcon className="w-5 h-5 stroke-2" />
               </button>
@@ -288,8 +288,9 @@ export default function PriceBenchmarkPage() {
                 <p className="font-mono font-bold text-text-main">{successMsg}</p>
               </div>
             ) : (
-              <form onSubmit={handlePropose} className="p-6 space-y-5">
-                <div className="grid grid-cols-2 gap-4">
+              <form onSubmit={handlePropose} className="flex flex-col">
+                <div className="p-6 bg-background space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5 col-span-2">
                     <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Item Name *</label>
                     <input required type="text" value={formData.itemName} onChange={e => setFormData({...formData, itemName: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. ThinkPad T14 Gen 3" />
@@ -336,13 +337,13 @@ export default function PriceBenchmarkPage() {
                   <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Proof / Source Link</label>
                   <input type="url" value={formData.proofLink} onChange={e => setFormData({...formData, proofLink: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="https://store.link/item" />
                 </div>
-
-                <div className="pt-4 border-t border-border flex justify-end gap-3">
-                  <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-sm font-mono font-bold tracking-widest uppercase text-text-muted hover:text-text-main transition-colors">
+                </div>
+                <div className="p-4 bg-surface border-t border-border flex justify-end gap-3">
+                  <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 bg-background border border-border text-text-main rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-gray-50 transition-colors">
                     CANCEL
                   </button>
-                  <button type="submit" disabled={submitting} className="px-6 py-2.5 bg-primary text-white text-xs font-mono font-bold tracking-widest uppercase rounded-md hover:bg-primary-light transition-colors disabled:opacity-50 flex items-center gap-2">
-                    {submitting ? 'SUBMITTING...' : 'SUBMIT PROPOSAL'}
+                  <button type="submit" disabled={submitting} className="px-6 py-2.5 bg-text-main text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary transition-colors flex items-center gap-2 disabled:opacity-50">
+                    {submitting ? 'PROCESSING...' : 'SUBMIT_PROPOSAL'}
                   </button>
                 </div>
               </form>

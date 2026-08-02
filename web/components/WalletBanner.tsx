@@ -129,9 +129,9 @@ export default function WalletBanner() {
               </button>
               <button 
                 onClick={() => window.dispatchEvent(new Event('open-withdraw-modal'))}
-                className="flex items-center gap-1.5 px-6 py-2 bg-transparent border border-border text-text-main hover:bg-surface transition-colors rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm"
+                className="flex items-center gap-1.5 px-6 py-2 bg-transparent border border-border text-text-main rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm transition-all hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-md"
               >
-                <ArrowUpIcon className="w-3.5 h-3.5" /> Withdraw
+                <ArrowUpIcon className="w-3.5 h-3.5 stroke-2" /> WITHDRAW
               </button>
             </div>
           </div>
