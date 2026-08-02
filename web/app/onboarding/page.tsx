@@ -299,7 +299,7 @@ export default function OnboardingPage() {
               </button>
             </div>
             
-            <div className="p-8 bg-secondary space-y-6 max-h-[60vh] overflow-y-auto font-mono text-xs text-white leading-relaxed">
+            <div className="p-8 bg-secondary space-y-6 max-h-[60vh] overflow-y-auto font-mono text-xs text-white leading-relaxed [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <p className="text-text-inverse-muted italic">By interacting with this cryptographic ledger, you agree to the following conditions:</p>
               
               <div>
