@@ -13,7 +13,8 @@ import {
   HeartIcon,
   WrenchScrewdriverIcon,
   PaperClipIcon,
-  TruckIcon
+  TruckIcon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
 import { useProfile } from "@/contexts/ProfileContext";
 
@@ -29,6 +30,14 @@ export default function OnboardingPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowTerms(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
 
   useEffect(() => {
     if (ready && !user) {
@@ -278,14 +287,20 @@ export default function OnboardingPage() {
 
       {/* TERMS MODAL */}
       {showTerms && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-secondary/80 backdrop-blur-sm">
-          <div className="bg-surface rounded-none w-full max-w-xl border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-border bg-surface">
-              <h3 className="font-heading font-bold text-lg text-text-main uppercase tracking-tight">BLOCKBID TERMS OF PARTICIPATION</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-secondary rounded-none w-full max-w-xl border border-primary/30 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-primary/20 bg-secondary flex justify-between items-center">
+              <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-tight">BLOCKBID TERMS OF PARTICIPATION</h3>
+              <button 
+                onClick={() => setShowTerms(false)} 
+                className="text-text-inverse-muted hover:text-white transition-colors"
+              >
+                <XMarkIcon className="w-6 h-6" />
+              </button>
             </div>
             
-            <div className="p-8 bg-background space-y-6 max-h-[60vh] overflow-y-auto font-mono text-xs text-text-main leading-relaxed">
-              <p className="text-text-muted italic">By interacting with this cryptographic ledger, you agree to the following conditions:</p>
+            <div className="p-8 bg-secondary space-y-6 max-h-[60vh] overflow-y-auto font-mono text-xs text-white leading-relaxed">
+              <p className="text-text-inverse-muted italic">By interacting with this cryptographic ledger, you agree to the following conditions:</p>
               
               <div>
                 <h4 className="font-bold text-primary mb-2 uppercase tracking-widest">1. ON-CHAIN LIABILITY</h4>
@@ -294,7 +309,7 @@ export default function OnboardingPage() {
 
               <div>
                 <h4 className="font-bold text-primary mb-2 uppercase tracking-widest">2. BID BOND FORFEITURE</h4>
-                <p>Submitting a formal proposal requires a 1% Bid Bond locked in escrow via smart contract. If you are awarded the contract but fail to deliver or withdraw your bid, this bond is <span className="text-danger font-bold">permanently forfeited</span> as a penalty.</p>
+                <p>Submitting a formal proposal requires a 1% Bid Bond locked in escrow via smart contract. If you are awarded the contract but fail to deliver or withdraw your bid, this bond is <span className="text-red-400 font-bold">permanently forfeited</span> as a penalty.</p>
               </div>
 
               <div>
@@ -302,13 +317,13 @@ export default function OnboardingPage() {
                 <p>The Procuring Agency retains the final authority to evaluate and award contracts based on the AI-assisted Evaluation Matrix. BlockBid is not liable for awarding outcomes.</p>
               </div>
               
-              <p className="text-text-muted italic pt-4 border-t border-border/50">I acknowledge that blockchain transactions are final and cannot be reversed.</p>
+              <p className="text-text-inverse-muted italic pt-4 border-t border-primary/20">I acknowledge that blockchain transactions are final and cannot be reversed.</p>
             </div>
 
-            <div className="p-4 bg-surface border-t border-border flex justify-end">
+            <div className="p-4 bg-secondary border-t border-primary/20 flex justify-end">
               <button 
                 onClick={() => setShowTerms(false)} 
-                className="px-6 py-2.5 bg-primary text-white rounded-none font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-light transition-all hover:-translate-y-0.5 hover:shadow-md"
+                className="px-6 py-2.5 bg-primary text-secondary rounded-none font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-light transition-all hover:-translate-y-0.5 shadow-[4px_4px_0_0_rgba(234,179,8,0.2)]"
               >
                 ACKNOWLEDGE
               </button>
