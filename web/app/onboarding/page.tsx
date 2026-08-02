@@ -322,7 +322,7 @@ export default function OnboardingPage() {
 
             <div className="p-4 bg-secondary border-t border-primary/20 flex justify-end">
               <button 
-                onClick={() => setShowTerms(false)} 
+                onClick={() => { setAcceptedTerms(true); setShowTerms(false); }} 
                 className="px-6 py-2.5 bg-primary text-secondary rounded-none font-mono text-xs font-bold tracking-widest uppercase hover:bg-primary-light transition-all hover:-translate-y-0.5 shadow-[4px_4px_0_0_rgba(234,179,8,0.2)]"
               >
                 ACKNOWLEDGE
