@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 export const dynamic = 'force-dynamic';
 
 
-async function isAdmin(adminId: string) {
+async function isAdmin(adminId: string, supabase: any) {
   if (!adminId) return false;
   const { data: profile } = await supabase
     .from('profiles')
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const adminId = searchParams.get("admin_id");
 
-    if (!adminId || !(await isAdmin(adminId))) {
+    if (!adminId || !(await isAdmin(adminId, supabase))) {
       return NextResponse.json({ error: "Forbidden: Not an admin" }, { status: 403 });
     }
 
@@ -54,7 +54,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    if (!(await isAdmin(admin_id))) {
+    if (!(await isAdmin(admin_id, supabase))) {
       return NextResponse.json({ error: "Forbidden: Not an admin" }, { status: 403 });
     }
 
