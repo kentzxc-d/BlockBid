@@ -20,6 +20,8 @@
     description text,
     status text check (status in ('open', 'evaluating', 'awarded', 'closed')) default 'open',
     deadline timestamp with time zone not null,
+    awarded_supplier_id text references profiles(id),
+    awarded_at timestamp with time zone,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
   );
 
