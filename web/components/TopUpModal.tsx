@@ -28,8 +28,8 @@ export default function TopUpModal() {
       // Get the user's embedded wallet address if available, otherwise use their user ID
       const userAddress = user?.wallet?.address || user?.id;
 
-      // We call the API route to generate the Xendit Invoice
-      const response = await fetch('/api/checkout/xendit', {
+      // We call the API route to generate the PayMongo Link
+      const response = await fetch('/api/checkout/paymongo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -40,7 +40,7 @@ export default function TopUpModal() {
       
       const data = await response.json();
       if (data.url) {
-        // Redirect to Xendit payment link
+        // Redirect to PayMongo payment link
         window.location.href = data.url;
       } else {
         console.log("Failed to create payment link: " + (data.error || "Unknown error"));
@@ -118,7 +118,7 @@ export default function TopUpModal() {
             disabled={isLoading || !amount}
             className="w-full flex items-center justify-center gap-2 bg-secondary text-white disabled:opacity-50 disabled:cursor-not-allowed py-3.5 rounded-md font-mono text-xs font-bold uppercase tracking-widest transition-all shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5"
           >
-            {isLoading ? "PROCESSING_LINK..." : "PROCEED_TO_XENDIT_CHECKOUT"} 
+            {isLoading ? "PROCESSING_LINK..." : "PROCEED_TO_PAYMONGO (QRPh)"} 
             {!isLoading && <ArrowRightIcon className="w-4 h-4 stroke-2" />}
           </button>
         </form>
