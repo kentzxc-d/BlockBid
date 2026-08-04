@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyUser } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
-
 
 async function isAdmin(adminId: string, supabase: any) {
   if (!adminId) return false;
@@ -20,10 +20,15 @@ export async function GET(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
+    const verifiedUserId = await verifyUser(request);
+    if (!verifiedUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const adminId = searchParams.get("admin_id");
 
-    if (!adminId || !(await isAdmin(adminId, supabase))) {
+    if (!adminId || adminId !== verifiedUserId || !(await isAdmin(adminId, supabase))) {
       return NextResponse.json({ error: "Forbidden: Not an admin" }, { status: 403 });
     }
 
@@ -47,6 +52,11 @@ export async function PATCH(request: Request) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
+    const verifiedUserId = await verifyUser(request);
+    if (!verifiedUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { admin_id, target_user_id, new_role } = body;
 
@@ -54,7 +64,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    if (!(await isAdmin(admin_id, supabase))) {
+    if (admin_id !== verifiedUserId || !(await isAdmin(admin_id, supabase))) {
       return NextResponse.json({ error: "Forbidden: Not an admin" }, { status: 403 });
     }
 

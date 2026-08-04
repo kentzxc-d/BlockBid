@@ -1,12 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { verifyUser } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
-
 
 // Use admin client for server-side trusted operations to bypass RLS
 
 export async function POST(req: Request) {
+  const verifiedUserId = await verifyUser(req);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -16,6 +21,10 @@ export async function POST(req: Request) {
     
     if (!id || !role || !entity_type || !nickname) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot update another user's profile" }, { status: 403 });
     }
     
     // Upsert to handle cases where they might update it later
@@ -38,6 +47,11 @@ export async function POST(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const verifiedUserId = await verifyUser(req);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -48,6 +62,10 @@ export async function PATCH(req: Request) {
     
     if (!id) {
       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+    }
+
+    if (id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot update another user's profile" }, { status: 403 });
     }
     
     const { data, error } = await supabase

@@ -19,7 +19,7 @@ import {
 import { useProfile } from "@/contexts/ProfileContext";
 
 export default function OnboardingPage() {
-  const { user, ready } = usePrivy();
+  const { user, ready, getAccessToken } = usePrivy();
   const { refreshProfile } = useProfile();
   const router = useRouter();
 
@@ -53,9 +53,13 @@ export default function OnboardingPage() {
 
     setIsSubmitting(true);
     try {
+      const token = await getAccessToken();
       const response = await fetch("/api/user/profile", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({
           id: getPrivyId(),
           role: "supplier",

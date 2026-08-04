@@ -6,7 +6,7 @@ import RoleGuard from "@/components/RoleGuard";
 import { UserCircleIcon, IdentificationIcon, BuildingOfficeIcon, GlobeAltIcon, ShieldCheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function AdminUsersManagement() {
-  const { user, ready } = usePrivy();
+  const { user, ready, getAccessToken } = usePrivy();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -21,7 +21,12 @@ export default function AdminUsersManagement() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/admin/users?admin_id=${user?.id}`);
+      const token = await getAccessToken();
+      const res = await fetch(`/api/admin/users?admin_id=${user?.id}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       const data = await res.json();
       if (data.success) {
         setUsers(data.users);
@@ -40,9 +45,13 @@ export default function AdminUsersManagement() {
     if (!user) return;
     setProcessingId(targetUserId);
     try {
+      const token = await getAccessToken();
       const res = await fetch("/api/admin/users", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ admin_id: user.id, target_user_id: targetUserId, new_role: newRole })
       });
       const data = await res.json();

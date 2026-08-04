@@ -47,6 +47,7 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
   const [revealedBidder, setRevealedBidder] = useState<string | null>(null);
   const [expandedBidId, setExpandedBidId] = useState<string | null>(null);
   const { wallets } = useWallets();
+  const { getAccessToken } = usePrivy();
 
   // Modal States
   const [viewingProposalFor, setViewingProposalFor] = useState<string | null>(null);
@@ -175,9 +176,13 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
     
     setIsAwarding(true);
     try {
+      const token = await getAccessToken();
       const res = await fetch(`/api/acquisitions/${params.id}/award`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ 
           supplier_id: bidToAward.supplier_id, 
           project_title: project?.title 

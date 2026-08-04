@@ -4,6 +4,7 @@ import { createWalletClient, http, publicActions } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy } from "viem/chains";
 import { BlockBidABI } from "@/lib/abi";
+import { verifyUser } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,19 @@ export async function POST(
     
     if (!supplier_id || !projectId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const verifiedUserId = await verifyUser(req);
+    if (!verifiedUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify if the user is authorized to award this project (must be the requestor or an admin)
+    const { data: project } = await supabase.from('projects').select('requestor_id').eq('id', projectId).single();
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', verifiedUserId).single();
+    
+    if (project?.requestor_id !== verifiedUserId && profile?.role !== 'admin' && profile?.role !== 'ict_head') {
+      return NextResponse.json({ error: "Forbidden: Not authorized to award this project" }, { status: 403 });
     }
 
     // --- BLOCKCHAIN TRANSACTION (Admin Relayer) ---
