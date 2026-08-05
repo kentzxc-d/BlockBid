@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import InvalidAccessModal from "./InvalidAccessModal";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function LoginButton({ isLanding = true }: { isLanding?: boolean }) {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
   
   const [invalidAccessMessage, setInvalidAccessMessage] = useState('');
   const [isInvalidModalOpen, setIsInvalidModalOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const { login } = useLogin({
     onComplete: async ({ user }) => {
@@ -61,53 +63,102 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
           </button>
         </div>
       ) : (
-        <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-          <button 
-            onClick={() => router.push("/portal")}
-            style={{ 
-              background: 'transparent', 
-              border: 'none', 
-              color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-muted)', 
-              cursor: 'pointer', 
-              fontFamily: 'var(--font-mono)', 
-              fontSize: '12px',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase'
-            }}
-          >
-            [ Public Portal ]
-          </button>
-          <button 
-            onClick={() => {
-              sessionStorage.setItem('loginIntent', 'officer');
-              sessionStorage.setItem('targetRoute', '/dashboard');
-              login();
-            }}
-            style={{ 
-              background: 'transparent', 
-              border: 'none', 
-              color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-muted)', 
-              cursor: 'pointer', 
-              fontFamily: 'var(--font-mono)', 
-              fontSize: '12px',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase'
-            }}
-          >
-            [ Officer Access ]
-          </button>
-          <button 
-            className="btn btn-primary" 
-            onClick={() => {
-              sessionStorage.setItem('loginIntent', 'supplier');
-              sessionStorage.setItem('targetRoute', '/dashboard');
-              login();
-            }}
-            style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
-          >
-            Supplier Login
-          </button>
-        </div>
+        <>
+          <div className="hidden md:flex gap-6 items-center">
+            <button 
+              onClick={() => router.push("/portal")}
+              style={{ 
+                background: 'transparent', 
+                border: 'none', 
+                color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-muted)', 
+                cursor: 'pointer', 
+                fontFamily: 'var(--font-mono)', 
+                fontSize: '12px',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}
+            >
+              [ Public Portal ]
+            </button>
+            <button 
+              onClick={() => {
+                sessionStorage.setItem('loginIntent', 'officer');
+                sessionStorage.setItem('targetRoute', '/dashboard');
+                login();
+              }}
+              style={{ 
+                background: 'transparent', 
+                border: 'none', 
+                color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-muted)', 
+                cursor: 'pointer', 
+                fontFamily: 'var(--font-mono)', 
+                fontSize: '12px',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase'
+              }}
+            >
+              [ Officer Access ]
+            </button>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => {
+                sessionStorage.setItem('loginIntent', 'supplier');
+                sessionStorage.setItem('targetRoute', '/dashboard');
+                login();
+              }}
+              style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, borderRadius: '4px' }}
+            >
+              Supplier Login
+            </button>
+          </div>
+
+          <div className="flex md:hidden items-center">
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+              className={`p-2 rounded-md transition-colors ${isLanding ? 'text-white hover:bg-white/10' : 'text-slate-800 hover:bg-slate-100'}`}
+            >
+              {mobileMenuOpen ? (
+                <XMarkIcon className="w-6 h-6 stroke-2" />
+              ) : (
+                <Bars3Icon className="w-6 h-6 stroke-2" />
+              )}
+            </button>
+          </div>
+
+          {mobileMenuOpen && (
+            <div className={`absolute top-[72px] left-0 w-full p-6 flex flex-col gap-6 shadow-xl border-t z-50 ${isLanding ? 'bg-[#0B132B] border-slate-800' : 'bg-white border-slate-200'}`}>
+              <button 
+                onClick={() => { setMobileMenuOpen(false); router.push("/portal"); }}
+                className={`text-left font-mono text-sm tracking-wider uppercase ${isLanding ? 'text-white' : 'text-slate-600'}`}
+              >
+                [ Public Portal ]
+              </button>
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  sessionStorage.setItem('loginIntent', 'officer');
+                  sessionStorage.setItem('targetRoute', '/dashboard');
+                  login();
+                }}
+                className={`text-left font-mono text-sm tracking-wider uppercase ${isLanding ? 'text-white' : 'text-slate-600'}`}
+              >
+                [ Officer Access ]
+              </button>
+              <button 
+                className="btn btn-primary w-full py-3" 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  sessionStorage.setItem('loginIntent', 'supplier');
+                  sessionStorage.setItem('targetRoute', '/dashboard');
+                  login();
+                }}
+                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600 }}
+              >
+                Supplier Login
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       <InvalidAccessModal 

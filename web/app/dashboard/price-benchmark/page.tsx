@@ -290,7 +290,7 @@ export default function PriceBenchmarkPage() {
             ) : (
               <form onSubmit={handlePropose} className="flex flex-col">
                 <div className="p-6 bg-background space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5 col-span-2">
                     <label className="text-xs font-mono font-bold tracking-widest uppercase text-text-muted">Item Name *</label>
                     <input required type="text" value={formData.itemName} onChange={e => setFormData({...formData, itemName: e.target.value})} className="w-full px-3 py-2.5 border border-border rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none" placeholder="e.g. ThinkPad T14 Gen 3" />

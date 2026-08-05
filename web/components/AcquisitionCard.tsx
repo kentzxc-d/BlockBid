@@ -55,8 +55,8 @@ export default function AcquisitionCard({
 
   return (
     <div className="bg-surface border border-border rounded-none p-8 flex flex-col gap-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-secondary)]">
-      <div className="flex justify-between items-start gap-4">
-        <h3 className="text-xl md:text-[22px] font-semibold mb-3 text-secondary font-heading tracking-tight leading-tight">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+        <h3 className="text-xl md:text-[22px] font-semibold mb-3 sm:mb-0 text-secondary font-heading tracking-tight leading-tight">
           {title}
         </h3>
         <span 
