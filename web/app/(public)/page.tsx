@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import Link from "next/link";
 import HeroAuthButtons from "@/components/HeroAuthButtons";
+import AcquisitionCard from "@/components/AcquisitionCard";
 
 export default function Home() {
   return (
@@ -53,68 +54,34 @@ export default function Home() {
       <section className={styles.recentProjectsSection}>
         <div className="container">
           <div className={styles.recentProjectsHeader}>
-            <h2>Recent Solicitations</h2>
-            <Link href="/portal" className="btn btn-outline" style={{ borderRadius: 0, fontWeight: 600 }}>View Transparency Portal</Link>
+            <h2>Recent Acquisitions</h2>
+            <Link href="/portal" className="btn bg-secondary text-white hover:bg-secondary-hover hover:text-primary transition-colors shadow-sm" style={{ borderRadius: 0, fontWeight: 600 }}>
+              View Transparency Portal
+            </Link>
           </div>
           
           <div style={{ display: 'grid', gap: '24px' }}>
             {/* Mock Acquisition 1 */}
-            <div className={styles.projectCard}>
-              <div className={styles.projectCardHeader}>
-                <h3 className={styles.projectCardTitle}>Acquisition of Medical Supplies (Q3 2026)</h3>
-                <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: OPEN</span>
-              </div>
-              <p style={{ color: 'var(--color-text-muted)' }}>
-                Looking for verified suppliers of medical-grade face masks, PPEs, and surgical gloves for public hospitals. Must have FDA clearance.
-              </p>
-              <div className={styles.projectMeta}>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Location</span>
-                  <span className={styles.metaValue}>DOH Region 7</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Est. Budget</span>
-                  <span className={styles.metaValue}>5,000,000 PHP</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Closing Date</span>
-                  <span className={styles.metaValue}>T-12 Days</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Contract Hash</span>
-                  <span className={styles.metaValue} style={{ color: 'var(--color-primary)' }}>0x8f2...4a1</span>
-                </div>
-              </div>
-            </div>
+            <AcquisitionCard
+              title="Acquisition of Medical Supplies (Q3 2026)"
+              description="Looking for verified suppliers of medical-grade face masks, PPEs, and surgical gloves for public hospitals. Must have FDA clearance."
+              status="OPEN"
+              location="DOH Region 7"
+              estBudget={5000000}
+              closingDate="T-12 Days"
+              contractHash="0x8f2a...4a1c"
+            />
 
             {/* Mock Project 2 */}
-            <div className={styles.projectCard}>
-              <div className={styles.projectCardHeader}>
-                <h3 className={styles.projectCardTitle}>IT Equipment Supply for Public Schools</h3>
-                <span className="badge" style={{ backgroundColor: '#1E293B', color: '#F9F9F6', borderRadius: '0', fontFamily: 'var(--font-mono)' }}>STATUS: OPEN</span>
-              </div>
-              <p style={{ color: 'var(--color-text-muted)' }}>
-                Acquisition of 500 desktop computers and 50 network switches for the public high schools in the district.
-              </p>
-              <div className={styles.projectMeta}>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Location</span>
-                  <span className={styles.metaValue}>DepEd Central</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Est. Budget</span>
-                  <span className={styles.metaValue}>15,000,000 PHP</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Closing Date</span>
-                  <span className={styles.metaValue}>T-03 Days</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaLabel}>Contract Hash</span>
-                  <span className={styles.metaValue} style={{ color: 'var(--color-primary)' }}>0xb41...9c2</span>
-                </div>
-              </div>
-            </div>
+            <AcquisitionCard
+              title="IT Equipment Supply for Public Schools"
+              description="Acquisition of 500 desktop computers and 50 network switches for the public high schools in the district."
+              status="OPEN"
+              location="DepEd Central"
+              estBudget={15000000}
+              closingDate="T-03 Days"
+              contractHash="0xb41f...9c2d"
+            />
           </div>
         </div>
       </section>
