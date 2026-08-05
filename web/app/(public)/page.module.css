@@ -120,6 +120,13 @@
   letter-spacing: 0.05em;
   font-weight: 600;
   margin-bottom: 16px;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .manifestoLabel {
+    font-size: 12px;
+  }
 }
 
 .manifestoCard h3 {
