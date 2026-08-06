@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { createWalletClient, http, publicActions } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy } from "viem/chains";
+import { BlockBidABI } from "@/lib/abi";
 
 export const dynamic = 'force-dynamic';
 
@@ -81,8 +84,26 @@ export async function POST(
           const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
           
           if (contractAddress) {
-            console.log(`Smart contract confirmDelivery not implemented yet. Skipping blockchain tx.`);
+            console.log(`Executing confirmDelivery for project ${projectId} on-chain...`);
             
+            const account = privateKeyToAccount(`0x${adminPrivateKey.replace(/^0x/, '')}`);
+            const client = createWalletClient({
+              account,
+              chain: polygonAmoy,
+              transport: http(process.env.NEXT_PUBLIC_RPC_URL || "https://polygon-amoy-bor-rpc.publicnode.com")
+            }).extend(publicActions);
+
+            const hash = await client.writeContract({
+              address: contractAddress,
+              abi: BlockBidABI,
+              functionName: 'confirmDelivery',
+              args: [projectId]
+            });
+            
+            // Wait for receipt
+            await client.waitForTransactionReceipt({ hash });
+            console.log(`Blockchain confirmDelivery finalized. Tx Hash: ${hash}`);
+
             // Add system message for completion
             await supabase.from('workspace_messages').insert({
               project_id: projectId,

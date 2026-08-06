@@ -27,7 +27,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const router = useRouter();
   const { user } = usePrivy();
   const { wallets } = useWallets();
-  const { refreshProfile } = useProfile();
+  const { refreshProfile, profile, loadingProfile } = useProfile();
 
   const [project, setProject] = useState<any>(null);
   const [fields, setFields] = useState<FieldData[]>([]);
@@ -221,7 +221,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     }
   };
 
-  if (isLoading) {
+  if (isLoading || loadingProfile) {
     return (
       <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
         <div className="animate-pulse font-mono text-sm font-bold tracking-widest text-primary uppercase">
@@ -239,6 +239,23 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         </div>
         <Link href="/dashboard/acquisitions" className="text-primary hover:underline font-mono text-xs uppercase tracking-widest">
           Return to Solicitations
+        </Link>
+      </div>
+    );
+  }
+
+  if (profile?.verification_status !== 'verified') {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center py-20 px-8 w-full">
+        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6 border border-orange-200 shadow-sm">
+          <ExclamationTriangleIcon className="w-8 h-8 text-orange-600 stroke-2" />
+        </div>
+        <h2 className="font-heading font-bold text-2xl text-text-main mb-2 uppercase tracking-tight text-center">Verification Required</h2>
+        <p className="text-text-muted font-mono text-xs uppercase tracking-widest text-center max-w-md mb-8 leading-relaxed">
+          You must be a verified supplier to view bidding details and submit proposals. Please upload your documents for review.
+        </p>
+        <Link href="/dashboard/verify" className="inline-flex items-center gap-2 px-8 py-3 bg-orange-600 text-white rounded-md font-mono text-xs font-bold tracking-widest uppercase hover:bg-orange-700 transition-colors shadow-sm">
+          Get Verified
         </Link>
       </div>
     );

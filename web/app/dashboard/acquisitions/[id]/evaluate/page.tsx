@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
-import { useWallets } from "@privy-io/react-auth";
+import { useWallets, usePrivy } from "@privy-io/react-auth";
 import { createWalletClient, custom } from "viem";
 import { activeChain } from "@/utils/network";
 import { BlockBidABI } from "@/lib/abi";

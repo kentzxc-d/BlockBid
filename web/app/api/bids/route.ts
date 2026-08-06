@@ -17,6 +17,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    // --- VERIFICATION CHECK ---
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('verification_status')
+      .eq('id', supplier_id)
+      .single();
+
+    if (profileError || !profile) {
+      return NextResponse.json({ error: "Failed to verify supplier status." }, { status: 500 });
+    }
+
+    if (profile.verification_status !== 'verified') {
+      return NextResponse.json({ error: "Unauthorized. Only verified suppliers can submit bids." }, { status: 403 });
+    }
+    // --- END VERIFICATION CHECK ---
+
     // --- BID BOND LOGIC ---
     // Removed! Bid Bond deduction is now handled on-chain by the BlockBid Escrow Smart Contract.
     // The Frontend Web3 logic handles the transaction before calling this API route.

@@ -1,6 +1,9 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { createWalletClient, custom } from "viem";
+import { polygonAmoy } from "viem/chains";
+import { BlockBidABI } from "@/lib/abi";
 import { useEffect, useState, useRef, use } from "react";
 import { ArrowLeftIcon, LockClosedIcon, DocumentArrowDownIcon, PaperAirplaneIcon, XMarkIcon, FingerPrintIcon, CheckBadgeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -39,6 +42,10 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
   const [signingOff, setSigningOff] = useState(false);
   const [showSignOffModal, setShowSignOffModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const [claimingRefund, setClaimingRefund] = useState(false);
+  const [refundClaimed, setRefundClaimed] = useState(false);
+  const { wallets } = useWallets();
 
   const fetchWorkspace = async () => {
     try {
@@ -116,6 +123,37 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
     }
   };
 
+  const executeClaimRefund = async () => {
+    if (!wallets.length) {
+      alert("No wallet connected!");
+      return;
+    }
+    const wallet = wallets[0];
+    const provider = await wallet.getEthereumProvider();
+    const client = createWalletClient({
+      account: wallet.address as `0x${string}`,
+      chain: polygonAmoy,
+      transport: custom(provider)
+    });
+
+    setClaimingRefund(true);
+    try {
+      const hash = await client.writeContract({
+        address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+        abi: BlockBidABI,
+        functionName: 'claimWinnerRefund',
+        args: [params.id]
+      });
+      console.log(`Refund claimed. Tx Hash: ${hash}`);
+      setRefundClaimed(true);
+    } catch (err: any) {
+      console.error(err);
+      alert("Failed to claim refund: " + err.message);
+    } finally {
+      setClaimingRefund(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20 px-8 w-full">
@@ -182,8 +220,19 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
             </button>
           )}
           {isProjectClosed && (
-            <div className="flex items-center justify-center px-5 py-2.5 rounded-none border border-blue-500/30 bg-blue-500/10 text-blue-600 font-mono text-xs font-bold tracking-widest uppercase shrink-0">
-              PROJECT COMPLETED
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center px-5 py-2.5 rounded-none border border-blue-500/30 bg-blue-500/10 text-blue-600 font-mono text-xs font-bold tracking-widest uppercase shrink-0">
+                PROJECT COMPLETED
+              </div>
+              {amISupplier && (
+                <button
+                  onClick={executeClaimRefund}
+                  disabled={claimingRefund || refundClaimed}
+                  className="flex items-center justify-center px-6 py-2.5 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 shrink-0 bg-green-500 text-white hover:bg-green-600 shadow-md shadow-green-500/20 disabled:opacity-50"
+                >
+                  {refundClaimed ? "REFUND CLAIMED" : (claimingRefund ? "CLAIMING..." : "CLAIM REFUND")}
+                </button>
+              )}
             </div>
           )}
         </div>

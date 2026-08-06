@@ -155,7 +155,35 @@
     exists (select 1 from projects where id = workspace_messages.project_id and awarded_supplier_id = auth.uid()::text)
   );
 
-  -- Enable Realtime for workspace_messages
+  -- NEW POLICIES FROM AUDIT
+  create policy "Requestors can send messages" on workspace_messages for insert with check (
+    auth.uid()::text = sender_id AND exists (select 1 from projects where id = project_id AND requestor_id = auth.uid()::text)
+  );
+  
+  create policy "Awarded suppliers can send messages" on workspace_messages for insert with check (
+    auth.uid()::text = sender_id AND exists (select 1 from projects where id = project_id AND awarded_supplier_id = auth.uid()::text)
+  );
+
+  create policy "Suppliers can insert their own bid values" on bid_values for insert with check (
+    exists (select 1 from bids where bids.id = bid_values.bid_id AND bids.supplier_id = auth.uid()::text)
+  );
+
+  create policy "Suppliers can view their own bid values" on bid_values for select using (
+    exists (select 1 from bids where bids.id = bid_values.bid_id AND bids.supplier_id = auth.uid()::text)
+  );
+
+  create policy "Requestors can view bid values for their projects" on bid_values for select using (
+    exists (select 1 from bids join projects on projects.id = bids.project_id where bids.id = bid_values.bid_id AND projects.requestor_id = auth.uid()::text)
+  );
+
+  create policy "Suppliers can submit bids" on bids for insert with check (auth.uid()::text = supplier_id);
+
+  create policy "Categories are viewable by everyone" on categories for select using (true);
+  create policy "Price references are viewable by everyone" on price_references for select using (true);
+
+  -- Enable Realtime for workspace_messages and bids
   alter publication supabase_realtime add table workspace_messages;
+  alter publication supabase_realtime add table bids;
+  alter publication supabase_realtime add table bid_values;
   
   -- Price Reference Additions (already in migrations, but keeping schema up to date is good)

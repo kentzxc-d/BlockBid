@@ -18,7 +18,7 @@ import AcquisitionCard from "@/components/AcquisitionCard";
 
 export default function ActiveSolicitationsPage() {
   const { user } = usePrivy();
-  const { supplierData, loadingProfile } = useProfile();
+  const { supplierData, loadingProfile, profile } = useProfile();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSector, setSelectedSector] = useState("All");
   const [activeSolicitations, setActiveSolicitations] = useState<any[]>([]);
@@ -134,6 +134,12 @@ export default function ActiveSolicitationsPage() {
                 <span className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-background border border-border text-text-muted font-mono text-xs font-bold tracking-widest rounded-none uppercase cursor-not-allowed w-full sm:w-auto">
                   ALREADY_BID
                 </span>
+              );
+            } else if (profile?.verification_status !== 'verified') {
+              actionButton = (
+                <Link href={`/dashboard/verify`} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-orange-600 text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-orange-700 hover:shadow-md hover:-translate-y-0.5 uppercase w-full sm:w-auto">
+                  VERIFY_TO_BID <ArrowRightIcon className="w-4 h-4 stroke-2" />
+                </Link>
               );
             } else {
               actionButton = (
