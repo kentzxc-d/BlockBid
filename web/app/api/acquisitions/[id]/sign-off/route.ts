@@ -28,7 +28,7 @@ export async function POST(
     // Verify the project is currently awarded
     const { data: project, error: projError } = await supabase
       .from('projects')
-      .select('status')
+      .select('status, awarded_supplier_id, title')
       .eq('id', projectId)
       .single();
       
@@ -134,6 +134,17 @@ export async function POST(
           sender_id: sender_id, // Or system ID if we had one
           content: '[SYSTEM_TRANSACTION_COMPLETED]'
         });
+
+      // Notify supplier they can claim their refund
+      if (project.awarded_supplier_id) {
+        await supabase.from('notifications').insert({
+          profile_id: project.awarded_supplier_id,
+          type: 'delivery_accepted',
+          title: '[ DELIVERY_ACCEPTED ]',
+          message: `The requestor has signed off on "${project.title || 'the project'}". You can now claim your escrow refund.`,
+          link: `/dashboard/acquisitions/${projectId}/workspace`
+        });
+      }
 
       isCompleted = true;
     }

@@ -79,6 +79,23 @@ export async function POST(request: Request) {
       throw valuesError;
     }
 
+    // 3. Notify the Requestor (Agency)
+    const { data: projectData } = await supabase
+      .from('projects')
+      .select('requestor_id, title')
+      .eq('id', project_id)
+      .single();
+
+    if (projectData && projectData.requestor_id) {
+      await supabase.from('notifications').insert({
+        profile_id: projectData.requestor_id,
+        type: 'bid_received',
+        title: '[ NEW_BID_SUBMITTED ]',
+        message: `A new bid was submitted for "${projectData.title}".`,
+        link: `/dashboard/acquisitions/${project_id}/evaluate`
+      });
+    }
+
     return NextResponse.json({ success: true, bid: bidData }, { status: 201 });
     
   } catch (err: any) {

@@ -51,18 +51,7 @@ export async function POST(req: Request) {
 
         console.log(`[SUCCESS] Tokens successfully minted! TX Hash: ${txHash}`);
 
-        // 4. Send some native POL to the user to cover gas fees
-        // This is funded by the 2.5% top-up fee we collected in Fiat!
-        try {
-          const gasTxHash = await client.sendTransaction({
-            to: userWalletAddress as `0x${string}`,
-            value: parseEther("0.01") // Send 0.01 POL for gas (enough for several transactions on Amoy)
-          });
-          console.log(`[SUCCESS] Gas sponsored! Sent 0.01 POL to ${userWalletAddress}. TX: ${gasTxHash}`);
-        } catch (gasErr) {
-          console.error(`[WARNING] Failed to sponsor gas to ${userWalletAddress}:`, gasErr);
-          // Don't fail the webhook if gas sponsoring fails, as tokens were already minted
-        }
+        // (Gas is now sponsored Just-In-Time via /api/gas-sponsor right before transactions)
 
         return NextResponse.json({ success: true, message: "Tokens minted and Gas sponsored", txHash: txHash });
       } else {

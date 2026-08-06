@@ -39,6 +39,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const [enhancingFieldId, setEnhancingFieldId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [onChainBalance, setOnChainBalance] = useState<number>(0);
+  const [isRequestingGas, setIsRequestingGas] = useState(false);
 
   useEffect(() => {
     fetch(`/api/acquisitions/${params.id}`)
@@ -127,12 +128,29 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
   const executeSubmit = async () => {
     if (!user || !wallets.length) return;
     setIsSubmitting(true);
-    setShowConfirmModal(false);
+    setIsRequestingGas(true);
     setError("");
 
     try {
-      // Setup Viem Client
       const wallet = wallets[0];
+      
+      // 0. JIT Faucet Call
+      try {
+        await fetch('/api/gas-sponsor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            wallet_address: wallet.address,
+            user_id: user.id
+          })
+        });
+      } catch (gasErr) {
+        console.error("Gas sponsor failed, continuing anyway", gasErr);
+      } finally {
+        setIsRequestingGas(false);
+      }
+
+      // Setup Viem Client
       await wallet.switchChain(activeChain.id);
       const provider = await wallet.getEthereumProvider();
       const walletClient = createWalletClient({
@@ -205,6 +223,7 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       // Force profile context to refresh so My Bids page gets the new bid
       await refreshProfile();
 
+      setShowConfirmModal(false);
       setShowSuccess(true);
       
       // Auto redirect after 3 seconds
@@ -403,8 +422,8 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    PROCESSING...
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
+                    {isRequestingGas ? "SECURING GAS FEE..." : "PROCESSING ON-CHAIN..."}
                   </>
                 ) : "CONFIRM_SUBMISSION"}
               </button>

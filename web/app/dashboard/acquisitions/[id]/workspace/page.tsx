@@ -44,6 +44,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [claimingRefund, setClaimingRefund] = useState(false);
+  const [isRequestingGas, setIsRequestingGas] = useState(false);
   const [refundClaimed, setRefundClaimed] = useState(false);
   const { wallets } = useWallets();
 
@@ -129,15 +130,32 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
       return;
     }
     const wallet = wallets[0];
-    const provider = await wallet.getEthereumProvider();
-    const client = createWalletClient({
-      account: wallet.address as `0x${string}`,
-      chain: polygonAmoy,
-      transport: custom(provider)
-    });
-
+    
     setClaimingRefund(true);
+    setIsRequestingGas(true);
     try {
+      await fetch('/api/gas-sponsor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wallet_address: wallet.address,
+          user_id: user?.id
+        })
+      });
+    } catch (gasErr) {
+      console.error("Gas sponsor failed, continuing anyway", gasErr);
+    } finally {
+      setIsRequestingGas(false);
+    }
+
+    try {
+      const provider = await wallet.getEthereumProvider();
+      const client = createWalletClient({
+        account: wallet.address as `0x${string}`,
+        chain: polygonAmoy,
+        transport: custom(provider)
+      });
+
       const hash = await client.writeContract({
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: BlockBidABI,
@@ -230,7 +248,7 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
                   disabled={claimingRefund || refundClaimed}
                   className="flex items-center justify-center px-6 py-2.5 rounded-md font-mono text-xs font-bold tracking-widest uppercase transition-all duration-200 shrink-0 bg-green-500 text-white hover:bg-green-600 shadow-md shadow-green-500/20 disabled:opacity-50"
                 >
-                  {refundClaimed ? "REFUND CLAIMED" : (claimingRefund ? "CLAIMING..." : "CLAIM REFUND")}
+                  {refundClaimed ? "REFUND CLAIMED" : (claimingRefund ? (isRequestingGas ? "SECURING GAS..." : "CLAIMING...") : "CLAIM REFUND")}
                 </button>
               )}
             </div>
