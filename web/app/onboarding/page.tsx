@@ -104,7 +104,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen flex flex-col md:flex-row bg-background">
 
       {/* Left Panel: The Ledger (Signature Element) */}
-      <div className="md:w-1/3 bg-secondary text-white p-10 flex flex-col justify-between border-r border-border-inverse relative overflow-hidden">
+      <div className="w-full md:w-1/3 bg-secondary text-white p-6 md:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-border-inverse relative overflow-hidden shrink-0">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl mix-blend-screen pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent mix-blend-overlay pointer-events-none"></div>
 
@@ -113,18 +113,18 @@ export default function OnboardingPage() {
             <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={56} height={56} className="object-contain" />
             BLOCKBID
           </h1>
-          <p className="text-text-inverse-muted font-medium text-sm max-w-xs">
+          <p className="text-text-inverse-muted font-medium text-sm max-w-xs hidden md:block">
             Acquisition, cryptographically sealed. Authenticate your identity to proceed.
           </p>
         </div>
 
-        <div className="space-y-8 relative z-10 my-16 md:my-0">
+        <div className="flex flex-row md:flex-col gap-6 md:gap-0 md:space-y-8 relative z-10 my-8 md:my-0 overflow-x-auto hide-scrollbar">
           {STEPS.map((s) => (
-            <div key={s.id} className={`flex flex-col transition-all duration-300 ${step === s.id ? "opacity-100" : "opacity-30"}`}>
+            <div key={s.id} className={`flex flex-col shrink-0 transition-all duration-300 ${step === s.id ? "opacity-100" : "opacity-30"}`}>
               <span className="font-mono text-xs tracking-widest mb-1 text-primary">
                 [ 0x0{s.id} ]
               </span>
-              <span className={`font-heading text-2xl font-semibold tracking-tight ${step === s.id ? "text-white" : "text-text-inverse-muted"}`}>
+              <span className={`font-heading text-xl md:text-2xl font-semibold tracking-tight ${step === s.id ? "text-white" : "text-text-inverse-muted"}`}>
                 {s.label}
               </span>
             </div>
@@ -140,12 +140,12 @@ export default function OnboardingPage() {
       </div>
 
       {/* Right Panel: The Form */}
-      <div className="md:w-2/3 p-10 md:p-20 flex flex-col justify-center max-w-4xl mx-auto w-full relative">
+      <div className="md:w-2/3 p-6 py-12 md:p-20 flex flex-col justify-center max-w-4xl mx-auto w-full relative">
         
         {/* STEP 1: SUPPLY CATEGORY */}
         {step === 1 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Declare Supply Category</h2>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Declare Supply Category</h2>
             <p className="text-text-muted mb-10 font-medium max-w-lg">Identify the primary category of goods or services your entity supplies to the network.</p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -172,7 +172,7 @@ export default function OnboardingPage() {
               <button
                 disabled={!supplyCategory}
                 onClick={() => setStep(2)}
-                className="btn btn-primary rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
+                className="btn btn-primary w-full md:w-auto rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
               >
                 Acknowledge & Proceed
               </button>
@@ -183,7 +183,7 @@ export default function OnboardingPage() {
         {/* STEP 2: ENTITY TYPE */}
         {step === 2 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Specify Entity Classification</h2>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Specify Entity Classification</h2>
             <p className="text-text-muted mb-10 font-medium max-w-lg">Identify your legal structure for compliance and auditing purposes.</p>
 
             <div className="grid grid-cols-1 gap-4 max-w-lg">
@@ -204,17 +204,17 @@ export default function OnboardingPage() {
               ))}
             </div>
 
-            <div className="mt-12 flex justify-between items-center border-t border-border pt-8">
+            <div className="mt-12 flex flex-col-reverse md:flex-row gap-6 md:gap-0 justify-between items-center border-t border-border pt-8">
               <button
                 onClick={() => setStep(1)}
-                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5"
+                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5 w-full md:w-auto text-center"
               >
                 ← Return to Previous
               </button>
               <button
                 disabled={!entityType}
                 onClick={() => setStep(3)}
-                className="btn btn-primary rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
+                className="btn btn-primary w-full md:w-auto rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
               >
                 Acknowledge & Proceed
               </button>
@@ -225,7 +225,7 @@ export default function OnboardingPage() {
         {/* STEP 3: NICKNAME & TERMS */}
         {step === 3 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Register Display Name</h2>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-text-main mb-3 tracking-tight">Register Display Name</h2>
             <p className="text-text-muted mb-10 font-medium max-w-lg">This identifier will be visible on the public registry alongside your cryptographic signature.</p>
 
             <div className="max-w-md">
@@ -268,17 +268,17 @@ export default function OnboardingPage() {
               </label>
             </div>
 
-            <div className="mt-12 flex justify-between items-center border-t border-border pt-8">
+            <div className="mt-12 flex flex-col-reverse md:flex-row gap-6 md:gap-0 justify-between items-center border-t border-border pt-8">
               <button
                 onClick={() => setStep(2)}
-                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5"
+                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5 w-full md:w-auto text-center"
               >
                 ← Return to Previous
               </button>
               <button
                 disabled={!nickname || !acceptedTerms || isSubmitting}
                 onClick={handleSubmit}
-                className="btn btn-primary rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5 flex items-center gap-3"
+                className="btn btn-primary w-full md:w-auto rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5 flex items-center justify-center gap-3"
               >
                 {isSubmitting ? "Committing..." : "Finalize Registration"}
                 {!isSubmitting && <CheckIcon className="w-5 h-5 stroke-2" />}

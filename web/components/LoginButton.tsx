@@ -55,10 +55,17 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
         <button className="btn btn-outline" disabled>Loading...</button>
       ) : authenticated ? (
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <span style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
+          <span style={{ fontSize: '14px', color: isLanding ? 'var(--color-text-inverse-muted)' : 'var(--color-text-muted)' }}>
             {user?.email?.address || user?.wallet?.address?.slice(0, 6) + "..." + user?.wallet?.address?.slice(-4)}
           </span>
-          <button className="btn btn-outline" onClick={logout}>
+          <button 
+            className="btn btn-outline transition-all hover:-translate-y-0.5 active:scale-95" 
+            onClick={logout}
+            style={{ 
+              color: isLanding ? 'var(--color-text-inverse)' : 'var(--color-text-main)', 
+              borderColor: isLanding ? 'rgba(249,249,246,0.3)' : 'var(--color-border)' 
+            }}
+          >
             Sign Out
           </button>
         </div>
@@ -129,7 +136,7 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
             <div className={`absolute top-[72px] left-0 w-full p-6 flex flex-col gap-6 shadow-xl border-t z-50 ${isLanding ? 'bg-[#0B132B] border-slate-800' : 'bg-white border-slate-200'}`}>
               <button 
                 onClick={() => { setMobileMenuOpen(false); router.push("/portal"); }}
-                className={`text-left font-mono text-sm tracking-wider uppercase ${isLanding ? 'text-white' : 'text-slate-600'}`}
+                className={`text-left font-mono text-sm tracking-wider uppercase transition-all hover:-translate-y-0.5 hover:opacity-80 active:scale-[0.98] ${isLanding ? 'text-white' : 'text-slate-600'}`}
               >
                 [ Public Portal ]
               </button>
@@ -140,12 +147,12 @@ export default function LoginButton({ isLanding = true }: { isLanding?: boolean 
                   sessionStorage.setItem('targetRoute', '/dashboard');
                   login();
                 }}
-                className={`text-left font-mono text-sm tracking-wider uppercase ${isLanding ? 'text-white' : 'text-slate-600'}`}
+                className={`text-left font-mono text-sm tracking-wider uppercase transition-all hover:-translate-y-0.5 hover:opacity-80 active:scale-[0.98] ${isLanding ? 'text-white' : 'text-slate-600'}`}
               >
                 [ Officer Access ]
               </button>
               <button 
-                className="btn btn-primary w-full py-3" 
+                className="btn btn-primary w-full py-3 transition-all hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]" 
                 onClick={() => {
                   setMobileMenuOpen(false);
                   sessionStorage.setItem('loginIntent', 'supplier');

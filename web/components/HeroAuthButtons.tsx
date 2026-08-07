@@ -37,14 +37,14 @@ export default function HeroAuthButtons() {
     <div className="flex flex-col md:flex-row gap-4 justify-start">
       <button 
         onClick={handleBrowse} 
-        className="btn btn-primary w-full md:w-auto" 
+        className="btn btn-primary w-full md:w-auto transition-all hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]" 
         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-secondary)', fontWeight: 600, fontSize: '16px' }}
       >
         Browse Solicitations
       </button>
       <button 
         onClick={handleSupplier} 
-        className="btn btn-outline w-full md:w-auto" 
+        className="btn btn-outline w-full md:w-auto transition-all hover:-translate-y-1 hover:shadow-lg active:scale-[0.98]" 
         style={{ borderColor: 'rgba(249,249,246,0.3)', color: 'var(--color-text-inverse)', fontSize: '16px' }}
       >
         Enter Supplier Portal

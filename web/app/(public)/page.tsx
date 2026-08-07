@@ -55,7 +55,7 @@ export default function Home() {
         <div className="container">
           <div className={styles.recentProjectsHeader}>
             <h2>Recent Acquisitions</h2>
-            <Link href="/portal" className="btn bg-secondary text-white hover:bg-secondary-hover hover:text-primary transition-colors shadow-sm" style={{ borderRadius: 0, fontWeight: 600 }}>
+            <Link href="/portal" className="btn bg-secondary text-white hover:bg-secondary-hover hover:text-primary transition-all hover:-translate-y-1 hover:shadow-md active:scale-[0.98] shadow-sm" style={{ borderRadius: 0, fontWeight: 600 }}>
               View Transparency Portal
             </Link>
           </div>
