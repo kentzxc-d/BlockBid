@@ -137,7 +137,7 @@ export default function WalletBanner() {
           </div>
 
           {/* RIGHT: NETWORK STATUS */}
-          <div className="flex flex-col items-end space-y-2 relative">
+          <div className="flex flex-col items-center md:items-end mt-6 md:mt-0 space-y-2 relative w-full md:w-auto">
             <div className="text-[10px] font-mono text-text-muted tracking-widest uppercase mb-1 flex items-center gap-1.5 w-[200px] px-3">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Network Status

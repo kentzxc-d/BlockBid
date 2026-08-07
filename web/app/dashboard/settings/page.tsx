@@ -46,10 +46,10 @@ function SettingsPageContent() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Tabs Navigation */}
-          <div className="flex items-center gap-6 border-b border-border">
+          <div className="flex items-center gap-6 border-b border-border overflow-x-auto whitespace-nowrap pb-1">
             <button
               onClick={() => setActiveTab('profile')}
-              className={`pb-4 text-sm font-bold font-mono tracking-widest uppercase transition-colors relative ${
+              className={`pb-3 text-sm font-bold font-mono tracking-widest uppercase transition-colors relative ${
                 activeTab === 'profile' ? 'text-primary' : 'text-text-muted hover:text-text-main'
               }`}
             >
@@ -60,7 +60,7 @@ function SettingsPageContent() {
             </button>
             <button
               onClick={() => setActiveTab('verification')}
-              className={`pb-4 text-sm font-bold font-mono tracking-widest uppercase transition-colors relative ${
+              className={`pb-3 text-sm font-bold font-mono tracking-widest uppercase transition-colors relative ${
                 activeTab === 'verification' ? 'text-primary' : 'text-text-muted hover:text-text-main'
               }`}
             >

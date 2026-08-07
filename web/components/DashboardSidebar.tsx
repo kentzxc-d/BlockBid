@@ -64,7 +64,7 @@ export default function DashboardSidebar() {
 
   // Base items everyone sees
   const navItems: { name: string; href: string; icon: React.ElementType; onClick?: React.MouseEventHandler<HTMLAnchorElement> }[] = [
-    { name: "Active Solicitations", href: "/dashboard/acquisitions", icon: DocumentTextIcon },
+    { name: "Active Acquisitions", href: "/dashboard/acquisitions", icon: DocumentTextIcon },
     { name: "Price Benchmark", href: "/dashboard/price-benchmark", icon: ChartBarIcon },
   ];
 

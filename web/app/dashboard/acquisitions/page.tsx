@@ -55,8 +55,8 @@ export default function ActiveSolicitationsPage() {
       {/* Header */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
-            [ ACTIVE_SOLICITATIONS ]
+          <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+            [ ACTIVE_ACQUISITIONS ]
           </h1>
           <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
             Browse and bid on open item acquisitions across all sectors.
