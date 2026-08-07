@@ -112,6 +112,21 @@ export async function POST(
       
     if (loserUpdateError) console.error("Failed to update losing bids:", loserUpdateError);
     
+    // 1.7 Increase reputation score for winning supplier (Max 100)
+    const { data: supplierProfile } = await supabase
+      .from('profiles')
+      .select('reputation_score')
+      .eq('id', supplier_id)
+      .single();
+
+    if (supplierProfile && supplierProfile.reputation_score !== undefined) {
+      const newScore = Math.min(100, supplierProfile.reputation_score + 5);
+      await supabase
+        .from('profiles')
+        .update({ reputation_score: newScore })
+        .eq('id', supplier_id);
+    }
+    
     // 2. Create a notification for the winning supplier
     const { error: notifError } = await supabase
       .from('notifications')

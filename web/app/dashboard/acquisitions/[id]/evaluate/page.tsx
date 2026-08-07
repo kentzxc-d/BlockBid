@@ -89,16 +89,26 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
               });
             }
           } else {
+            const answers = bid.bid_values.map((v: any) => {
+              const crit = projData.project.criteria.find((c:any) => c.id === v.criteria_id);
+              return {
+                criteria: crit ? crit.name : "Unknown",
+                value: v.value
+              };
+            });
+            
+            // Automatically inject the system-verified reputation score
+            if (bid.profiles?.reputation_score !== undefined) {
+              answers.push({
+                criteria: "System Verified Reputation Score",
+                value: `${bid.profiles.reputation_score}/100`
+              });
+            }
+
             unevaluatedBids.push({
               bidId: bid.id,
               supplierAlias: bid.anonymous_alias,
-              proposalAnswers: bid.bid_values.map((v: any) => {
-                const crit = projData.project.criteria.find((c:any) => c.id === v.criteria_id);
-                return {
-                  criteria: crit ? crit.name : "Unknown",
-                  value: v.value
-                };
-              })
+              proposalAnswers: answers
             });
           }
         });

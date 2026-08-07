@@ -9,6 +9,7 @@
     nickname text,
     wallet_address text, -- Derived from embedded wallet or Metamask
     verification_status text check (verification_status in ('unverified', 'pending', 'verified', 'rejected')) default 'unverified',
+    reputation_score integer default 0,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
   );
 

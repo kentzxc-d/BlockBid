@@ -47,7 +47,13 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       .then(data => {
         if (data.project) {
           setProject(data.project);
-          setFields(data.project.criteria.map((c: any) => ({
+          
+          // Filter out reputation so the supplier can't spoof it. It will be auto-injected during evaluation.
+          const visibleCriteria = data.project.criteria.filter(
+            (c: any) => !c.name.toLowerCase().includes("reputation")
+          );
+
+          setFields(visibleCriteria.map((c: any) => ({
             id: c.id,
             label: c.name,
             value: ""

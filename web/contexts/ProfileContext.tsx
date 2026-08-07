@@ -15,6 +15,7 @@ export interface UserProfile {
   contact_name?: string | null;
   contact_number?: string | null;
   verification_status?: "unverified" | "pending" | "verified" | "rejected";
+  reputation_score?: number;
 }
 
 interface ProfileContextType {

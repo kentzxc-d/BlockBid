@@ -31,6 +31,9 @@ export async function GET(
         bid_values (
           criteria_id,
           value
+        ),
+        profiles:supplier_id (
+          reputation_score
         )
       `)
       .eq("project_id", id);

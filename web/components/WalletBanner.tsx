@@ -97,6 +97,12 @@ export default function WalletBanner() {
               </div>
             </Link>
           )}
+          
+          {profile?.reputation_score !== undefined && (
+            <div className="ml-3 px-3 py-1 bg-background border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md shadow-sm flex items-center gap-1.5 shrink-0">
+              <span className="text-primary">REP:</span> {profile.reputation_score}/100
+            </div>
+          )}
         </h2>
       </div>
 
