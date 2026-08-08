@@ -19,7 +19,7 @@ export default function GetStartedButton({ variant = "gold" }: { variant?: "gold
 
   const buttonClass = variant === "gold" 
     ? "bg-[#FBBF24] text-[#0B132B] hover:text-[#0B132B] hover:bg-[#FCD34D]" 
-    : "bg-[#0B132B] text-white hover:text-white hover:bg-[#1A1625]";
+    : "bg-[#0B132B] text-white hover:text-white hover:bg-slate-800";
 
   return (
     <button 

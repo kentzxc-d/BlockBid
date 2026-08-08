@@ -59,6 +59,16 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-main);
 }
 
+.font-outfit {
+  font-family: var(--font-heading);
+}
+
+.mono-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
 a {
   color: var(--color-primary);
   text-decoration: none;
