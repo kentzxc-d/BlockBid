@@ -25,7 +25,7 @@ export default function GetStartedButton({ variant = "gold" }: { variant?: "gold
     <button 
       onClick={handleAuth}
       id="nav-cta-btn" 
-      className={`${buttonClass} px-6 py-2 rounded-md text-sm font-bold uppercase transition-all transform hover:scale-105`}
+      className={`${buttonClass} px-3 sm:px-6 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-bold uppercase transition-all transform hover:scale-105`}
     >
       GET STARTED
     </button>

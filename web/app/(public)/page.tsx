@@ -84,13 +84,13 @@ export default function Home() {
       <div className="landing-body min-h-screen bg-[#0B132B] text-white flex flex-col">
         {/* Navigation */}
         <header className="sticky top-0 z-50 glass-header border-b border-slate-800/50 bg-[#0B132B]/90 backdrop-blur-md">
-            <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
+            <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between relative">
                 
                 {/* Left: Logo */}
-                <div className="flex items-center gap-3 z-10">
-                    <a href="/" className="flex items-center gap-3 group">
+                <div className="flex items-center gap-2 sm:gap-3 z-10">
+                    <a href="/" className="flex items-center gap-2 sm:gap-3 group">
                         <img src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/brand/56c94a00-09c1-4de7-9ad9-b1855552e0a9/assets/487fd5ae-53ad-44f8-9459-afa4773fbe93.png" alt="BlockBid Logo" className="w-8 h-8 md:w-10 md:h-10 group-hover:scale-105 transition-transform" />
-                        <span className="text-xl md:text-2xl font-black text-white tracking-tight">BLOCK<span className="text-[#FBBF24]">BID</span></span>
+                        <span className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight">BLOCK<span className="text-[#FBBF24]">BID</span></span>
                     </a>
                 </div>
                 
@@ -127,17 +127,17 @@ export default function Home() {
             {/* Hero Section */}
             <section className="relative pt-24 pb-40 overflow-hidden hero-gradient hex-watermark">
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
-                    <div className="w-full lg:w-[50%] xl:w-[55%] relative z-10 pr-8">
+                    <div className="w-full lg:w-[50%] xl:w-[55%] relative z-10 pr-0 lg:pr-8 flex flex-col items-center text-center lg:items-start lg:text-left mx-auto lg:mx-0">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-[#C5A059]/30 bg-[#C5A059]/5 text-[#C5A059] mono-label font-bold uppercase mb-8">
                             [ 0x01. POLYGON AMOY DEPLOYED ]
                         </div>
                         <h1 className="landing-heading text-5xl sm:text-6xl md:text-[75px] font-black text-white mb-6 leading-[1.05] tracking-tight italic [text-wrap:balance] break-words">
                             On-Chain <span className="text-[#FBBF24] not-italic">Acquisition</span> for Government Integrity.
                         </h1>
-                        <p className="text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-light max-w-lg">
+                        <p className="text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-light max-w-lg mx-auto lg:mx-0">
                             Eliminate corruption, bias, and red tape with cryptographically-secured government procurement powered by AI and blockchain.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center w-full">
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center justify-center lg:justify-start w-full">
                             <a href="/bac" id="hero-bac-btn" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#0B132B] border-2 border-[#FBBF24] text-white px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/5 transition-all transform sm:hover:-translate-y-1 gold-glow uppercase">
                                 <iconify-icon icon="lucide:shield-check" className="text-lg text-[#FBBF24]"></iconify-icon>
                                 Access BAC Portal
