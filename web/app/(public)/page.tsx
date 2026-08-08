@@ -102,8 +102,23 @@ export default function Home() {
                 </div>
 
                 {/* Right: Action Buttons */}
-                <div className="flex items-center gap-6 z-10">
+                <div className="flex items-center gap-3 sm:gap-6 z-10">
                     <GetStartedButton />
+                    
+                    {/* Mobile Menu */}
+                    <div className="md:hidden relative">
+                        <details className="group">
+                            <summary className="list-none cursor-pointer p-2 text-slate-300 hover:text-white flex items-center justify-center bg-slate-800/30 hover:bg-slate-800/50 rounded-lg transition-colors">
+                                <iconify-icon icon="lucide:menu" className="text-2xl"></iconify-icon>
+                            </summary>
+                            <div className="absolute right-0 top-full mt-2 w-56 bg-[#1A1625] border border-slate-800 rounded-xl shadow-2xl py-2 flex flex-col gap-1 z-50">
+                                <a href="#features" className="px-4 py-3 text-sm mono-label text-slate-400 hover:text-white hover:bg-slate-800/50 transition-colors">[ TECH ]</a>
+                                <a href="#how-it-works" className="px-4 py-3 text-sm mono-label text-slate-400 hover:text-white hover:bg-slate-800/50 transition-colors">[ WORKFLOWS ]</a>
+                                <a href="/portal" className="px-4 py-3 text-sm mono-label text-[#FBBF24] font-bold hover:text-white hover:bg-slate-800/50 transition-colors">[ PUBLIC PORTAL ]</a>
+                            </div>
+                        </details>
+                        <style dangerouslySetInnerHTML={{__html: `details > summary::-webkit-details-marker { display: none; }`}} />
+                    </div>
                 </div>
             </nav>
         </header>
@@ -116,18 +131,18 @@ export default function Home() {
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-[#C5A059]/30 bg-[#C5A059]/5 text-[#C5A059] mono-label font-bold uppercase mb-8">
                             [ 0x01. POLYGON AMOY DEPLOYED ]
                         </div>
-                        <h1 className="landing-heading text-6xl md:text-[75px] font-black text-white mb-6 leading-[1.05] tracking-tight italic [text-wrap:balance]">
+                        <h1 className="landing-heading text-5xl sm:text-6xl md:text-[75px] font-black text-white mb-6 leading-[1.05] tracking-tight italic [text-wrap:balance] break-words">
                             On-Chain <span className="text-[#FBBF24] not-italic">Acquisition</span> for Government Integrity.
                         </h1>
                         <p className="text-lg md:text-xl text-slate-400 mb-8 leading-relaxed font-light max-w-lg">
                             Eliminate corruption, bias, and red tape with cryptographically-secured government procurement powered by AI and blockchain.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-5 items-center">
-                            <a href="/bac" id="hero-bac-btn" className="flex items-center justify-center gap-3 bg-[#0B132B] border-2 border-[#FBBF24] text-white px-8 py-4 rounded-xl text-base font-bold hover:bg-[#FBBF24]/5 transition-all transform hover:-translate-y-1 gold-glow uppercase">
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center w-full">
+                            <a href="/bac" id="hero-bac-btn" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#0B132B] border-2 border-[#FBBF24] text-white px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/5 transition-all transform sm:hover:-translate-y-1 gold-glow uppercase">
                                 <iconify-icon icon="lucide:shield-check" className="text-lg text-[#FBBF24]"></iconify-icon>
                                 Access BAC Portal
                             </a>
-                            <a href="/suppliers" id="hero-supplier-btn" className="flex items-center justify-center gap-2 bg-transparent border-2 border-[#FBBF24] text-[#FBBF24] px-8 py-4 rounded-xl text-base font-bold hover:bg-[#FBBF24]/10 transition-all uppercase">
+                            <a href="/suppliers" id="hero-supplier-btn" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-transparent border-2 border-[#FBBF24] text-[#FBBF24] px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/10 transition-all uppercase">
                                 Supplier Dashboard
                             </a>
                         </div>
@@ -257,9 +272,9 @@ export default function Home() {
                 <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
                     <h2 className="landing-heading text-4xl md:text-5xl font-black mb-8 tracking-tighter text-white">Ready to Transform Government Acquisition?</h2>
                     <p className="text-lg text-slate-400 mb-10 font-light leading-relaxed">Join the future of transparent, bias-free, and blockchain-secured procurement.</p>
-                    <div className="flex flex-col sm:flex-row justify-center gap-5">
-                        <Link href="/portal" id="final-cta-portal" className="bg-transparent border-2 border-slate-700 hover:bg-slate-800/50 text-white px-8 py-4 rounded-lg text-base font-bold transition-all uppercase">View Transparency Portal</Link>
-                        <a href="#" id="final-cta-demo" className="bg-[#FBBF24] hover:bg-[#FCD34D] text-[#0B132B] hover:text-[#0B132B] px-8 py-4 rounded-lg text-base font-bold transition-all transform hover:scale-105 gold-glow uppercase">Request System Demo</a>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-5 w-full">
+                        <Link href="/portal" id="final-cta-portal" className="w-full sm:w-auto whitespace-nowrap flex justify-center items-center bg-transparent border-2 border-slate-700 hover:bg-slate-800/50 text-white px-4 sm:px-8 py-4 rounded-lg text-sm md:text-base font-bold transition-all uppercase">View Transparency Portal</Link>
+                        <a href="#" id="final-cta-demo" className="w-full sm:w-auto whitespace-nowrap flex justify-center items-center bg-[#FBBF24] hover:bg-[#FCD34D] text-[#0B132B] hover:text-[#0B132B] px-4 sm:px-8 py-4 rounded-lg text-sm md:text-base font-bold transition-all transform sm:hover:scale-105 gold-glow uppercase">Request System Demo</a>
                     </div>
                 </div>
             </section>
