@@ -3,7 +3,7 @@
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 
-export default function GetStartedButton() {
+export default function GetStartedButton({ variant = "gold" }: { variant?: "gold" | "navy" }) {
   const { login, authenticated } = usePrivy();
   const router = useRouter();
 
@@ -17,11 +17,15 @@ export default function GetStartedButton() {
     }
   };
 
+  const buttonClass = variant === "gold" 
+    ? "bg-[#FBBF24] text-[#0B132B] hover:text-[#0B132B] hover:bg-[#FCD34D]" 
+    : "bg-[#0B132B] text-white hover:text-white hover:bg-[#1A1625]";
+
   return (
     <button 
       onClick={handleAuth}
       id="nav-cta-btn" 
-      className="bg-[#FBBF24] text-[#0B132B] hover:text-[#0B132B] hover:bg-[#FCD34D] px-6 py-2 rounded-md text-sm font-bold uppercase transition-all transform hover:scale-105"
+      className={`${buttonClass} px-6 py-2 rounded-md text-sm font-bold uppercase transition-all transform hover:scale-105`}
     >
       GET STARTED
     </button>

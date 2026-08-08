@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LoginButton from "./LoginButton";
+import GetStartedButton from "./GetStartedButton";
 
 export default function PublicHeader() {
   const pathname = usePathname();
@@ -22,9 +22,16 @@ export default function PublicHeader() {
           </Link>
         </div>
 
+        {/* Center: Navigation (Desktop) */}
+        <div className="hidden md:flex items-center gap-12 absolute left-1/2 -translate-x-1/2">
+            <Link href="/#features" className="mono-label text-slate-500 hover:text-[#0B132B] transition-colors">[ TECH ]</Link>
+            <Link href="/#workflow" className="mono-label text-slate-500 hover:text-[#0B132B] transition-colors">[ WORKFLOWS ]</Link>
+            <Link href="/portal" className={`mono-label font-bold transition-colors ${pathname === '/portal' ? 'text-[#FBBF24]' : 'text-slate-500 hover:text-[#0B132B]'}`}>[ PUBLIC PORTAL ]</Link>
+        </div>
+
         {/* Right: Action Buttons */}
         <div className="flex items-center gap-6 z-10">
-          <LoginButton isLanding={false} />
+          <GetStartedButton variant="navy" />
         </div>
       </nav>
     </header>
