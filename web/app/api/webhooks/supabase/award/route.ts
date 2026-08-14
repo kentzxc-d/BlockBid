@@ -55,7 +55,7 @@ export async function POST(req: Request) {
 
       // 4. Send email using Resend
       const { data, error } = await resend.emails.send({
-        from: 'BlockBid <onboarding@resend.dev>', // Use resend.dev for testing, or your own verified domain
+        from: 'BlockBid <onboarding@blockbid.site>',
         to: [supplierEmail],
         subject: `🎉 You've been awarded a contract: ${record.title}`,
         html: `

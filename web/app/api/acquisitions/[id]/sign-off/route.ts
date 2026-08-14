@@ -168,7 +168,7 @@ export async function POST(
             const otherParty = role === 'requestor' ? 'Requestor (ICT)' : 'Supplier';
             
             await resend.emails.send({
-              from: 'BlockBid <onboarding@resend.dev>',
+              from: 'BlockBid <onboarding@blockbid.site>',
               to: [recipientEmail],
               subject: `⚠️ Action Required: Multi-Sig for ${project.title}`,
               html: `
