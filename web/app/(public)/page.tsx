@@ -2,7 +2,7 @@ import React from 'react';
 import Script from 'next/script';
 import Link from 'next/link';
 import HeroAuthButtons from '@/components/HeroAuthButtons';
-import LoginButton from '@/components/LoginButton';
+import AuthLink from '@/components/AuthLink';
 import GetStartedButton from '@/components/GetStartedButton';
 
 export default function Home() {
@@ -130,13 +130,13 @@ export default function Home() {
                                     Eliminate corruption, bias, and red tape with cryptographically-secured government procurement powered by AI and blockchain.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-center justify-center lg:justify-start w-full">
-                                    <a href="/bac" id="hero-bac-btn" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#0B132B] border-2 border-[#FBBF24] text-white px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/5 transition-all transform sm:hover:-translate-y-1 gold-glow uppercase">
+                                    <AuthLink target="/dashboard" intent="officer" id="hero-bac-btn" className="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#0B132B] border-2 border-[#FBBF24] text-white px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/5 transition-all transform sm:hover:-translate-y-1 gold-glow uppercase">
                                         <iconify-icon icon="lucide:shield-check" className="text-lg text-[#FBBF24]"></iconify-icon>
                                         Access BAC Portal
-                                    </a>
-                                    <a href="/suppliers" id="hero-supplier-btn" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-transparent border-2 border-[#FBBF24] text-[#FBBF24] px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/10 transition-all uppercase">
+                                    </AuthLink>
+                                    <AuthLink target="/dashboard" intent="supplier" id="hero-supplier-btn" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-transparent border-2 border-[#FBBF24] text-[#FBBF24] px-8 py-4 rounded-xl text-sm sm:text-base font-bold hover:bg-[#FBBF24]/10 transition-all uppercase">
                                         Supplier Dashboard
-                                    </a>
+                                    </AuthLink>
                                 </div>
                             </div>
                         </div>
@@ -294,8 +294,8 @@ export default function Home() {
                             <div>
                                 <h5 className="font-bold text-white mb-8 mono-label uppercase tracking-widest">[ Solutions ]</h5>
                                 <ul className="space-y-5 text-sm text-slate-500">
-                                    <li><a href="/bac" id="f-link-bac" className="hover:text-white transition-colors">BAC Portal</a></li>
-                                    <li><a href="/suppliers" id="f-link-suppliers" className="hover:text-white transition-colors">Supplier Dashboard</a></li>
+                                    <li><AuthLink target="/dashboard" intent="officer" id="f-link-bac" className="hover:text-white transition-colors">BAC Portal</AuthLink></li>
+                                    <li><AuthLink target="/dashboard" intent="supplier" id="f-link-suppliers" className="hover:text-white transition-colors">Supplier Dashboard</AuthLink></li>
                                     <li><a href="/portal" id="f-link-transparency" className="hover:text-white transition-colors">Transparency Portal</a></li>
                                 </ul>
                             </div>
