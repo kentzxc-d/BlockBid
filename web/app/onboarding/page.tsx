@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BuildingOfficeIcon,
   UserIcon,
@@ -24,6 +24,16 @@ export default function OnboardingPage() {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const activeEl = scrollRef.current.children[step - 1] as HTMLElement;
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      }
+    }
+  }, [step]);
   const [supplyCategory, setSupplyCategory] = useState<string>("");
   const [entityType, setEntityType] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
@@ -118,9 +128,12 @@ export default function OnboardingPage() {
           </p>
         </div>
 
-        <div className="flex flex-row md:flex-col gap-6 md:gap-0 md:space-y-8 relative z-10 my-8 md:my-0 overflow-x-auto hide-scrollbar">
+        <div 
+          ref={scrollRef}
+          className="flex flex-row md:flex-col gap-6 md:gap-0 md:space-y-8 relative z-10 my-8 md:my-0 overflow-x-auto hide-scrollbar scroll-smooth snap-x snap-mandatory"
+        >
           {STEPS.map((s) => (
-            <div key={s.id} className={`flex flex-col shrink-0 transition-all duration-300 ${step === s.id ? "opacity-100" : "opacity-30"}`}>
+            <div key={s.id} className={`flex flex-col shrink-0 snap-start transition-all duration-300 ${step === s.id ? "opacity-100" : "opacity-30"}`}>
               <span className="font-mono text-xs tracking-widest mb-1 text-primary">
                 [ 0x0{s.id} ]
               </span>

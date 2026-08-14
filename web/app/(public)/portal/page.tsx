@@ -42,6 +42,7 @@ async function getAwardedAcquisitions() {
     return {
       id: project.id,
       title: project.title,
+      status: project.status,
       awarded_at: project.awarded_at,
       total_price: totalPrice,
       on_chain_hash: onChainHash,
