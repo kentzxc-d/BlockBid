@@ -1,11 +1,18 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useLogin } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 
 export default function GetStartedButton({ variant = "gold" }: { variant?: "gold" | "navy" }) {
-  const { login, authenticated } = usePrivy();
+  const { authenticated } = usePrivy();
   const router = useRouter();
+
+  const { login } = useLogin({
+    onComplete: () => {
+      const target = sessionStorage.getItem('targetRoute') || '/dashboard';
+      router.push(target);
+    }
+  });
 
   const handleAuth = () => {
     if (authenticated) {
