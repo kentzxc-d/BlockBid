@@ -4,6 +4,8 @@ import { createWalletClient, http, publicActions } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy } from "viem/chains";
 import { BlockBidABI } from "@/lib/abi";
+import { privy } from "@/lib/auth";
+import { Resend } from "resend";
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +30,7 @@ export async function POST(
     // Verify the project is currently awarded
     const { data: project, error: projError } = await supabase
       .from('projects')
-      .select('status, awarded_supplier_id, title')
+      .select('status, awarded_supplier_id, requestor_id, title')
       .eq('id', projectId)
       .single();
       
@@ -147,6 +149,63 @@ export async function POST(
       }
 
       isCompleted = true;
+    } else if (!existingSignOff) {
+      // The other party hasn't signed yet, and this is a new sign-off. Notify them!
+      const recipientId = role === 'requestor' ? project.awarded_supplier_id : project.requestor_id;
+      
+      if (recipientId) {
+        try {
+          const user = await privy.getUser(recipientId);
+          const emailAccount = user.linkedAccounts.find((acc) => acc.type === 'email') as any;
+          const googleAccount = user.linkedAccounts.find((acc) => acc.type === 'google_oauth') as any;
+          
+          let recipientEmail = '';
+          if (emailAccount && emailAccount.address) recipientEmail = emailAccount.address;
+          else if (googleAccount && googleAccount.email) recipientEmail = googleAccount.email;
+
+          if (recipientEmail) {
+            const resend = new Resend(process.env.RESEND_API_KEY || '');
+            const otherParty = role === 'requestor' ? 'Requestor (ICT)' : 'Supplier';
+            
+            await resend.emails.send({
+              from: 'BlockBid <onboarding@resend.dev>',
+              to: [recipientEmail],
+              subject: `⚠️ Action Required: Multi-Sig for ${project.title}`,
+              html: `
+                <div style="font-family: monospace; padding: 24px; max-width: 600px; margin: 0 auto; background: #fafafa; border: 1px solid #eaeaea;">
+                  <div style="text-align: center; margin-bottom: 24px;">
+                    <h1 style="color: #111; font-family: sans-serif; text-transform: uppercase;">[ MULTI-SIG_AUTH_PENDING ]</h1>
+                  </div>
+                  
+                  <p style="color: #333; font-size: 16px;">
+                    The <strong>${otherParty}</strong> has just signed off on the project <strong>"${project.title}"</strong>.
+                  </p>
+                  
+                  <div style="background: #eef2ff; border-left: 4px solid #4f46e5; padding: 16px; margin: 24px 0;">
+                    <p style="margin: 0; color: #4f46e5; font-weight: bold;">YOUR SIGNATURE REQUIRED</p>
+                    <p style="margin: 8px 0 0 0; color: #333;">
+                      Please log in to your BlockBid Workspace and authorize the completion of this project so the smart contract can release the funds.
+                    </p>
+                  </div>
+                  
+                  <a href="https://ck-bid.vercel.app/dashboard/acquisitions/${projectId}/workspace" style="display: inline-block; background: #111; color: #fff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 4px; text-transform: uppercase; letter-spacing: 2px;">
+                    OPEN WORKSPACE
+                  </a>
+                  
+                  <hr style="border: none; border-top: 1px dashed #ccc; margin: 32px 0;" />
+                  <p style="color: #888; font-size: 12px; text-align: center;">
+                    This is an automated security message from BlockBid.
+                  </p>
+                </div>
+              `
+            });
+            console.log(`Sent multi-sig email to ${recipientEmail}`);
+          }
+        } catch (emailErr) {
+          console.error("Failed to send multi-sig email:", emailErr);
+          // We don't throw here because we don't want to break the sign-off process if email fails
+        }
+      }
     }
     
     return NextResponse.json({ 

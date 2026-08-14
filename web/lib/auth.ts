@@ -2,7 +2,7 @@ import { PrivyClient } from '@privy-io/server-auth';
 
 // Initialize the Privy client. 
 // Note: PRIVY_APP_SECRET must be set in your .env.local and Vercel.
-const privy = new PrivyClient(
+export const privy = new PrivyClient(
   process.env.NEXT_PUBLIC_PRIVY_APP_ID || '',
   process.env.PRIVY_APP_SECRET || ''
 );
