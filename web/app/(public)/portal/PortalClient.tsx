@@ -86,22 +86,22 @@ export default function PortalClient({ acquisitions }: { acquisitions: any[] }) 
         <div className="grid gap-6">
           {filteredAcquisitions.map((item) => {
             const actionButton = item.on_chain_hash ? (
-              <div className="flex w-full justify-between items-center text-xs font-mono font-bold uppercase tracking-widest">
-                <span className="text-text-muted">Verification</span>
+              <div className="flex flex-col sm:flex-row w-full sm:justify-between items-start sm:items-center gap-3 sm:gap-0 text-xs font-mono font-bold uppercase tracking-widest mt-4 pt-4 border-t border-border">
+                <span className="text-text-muted mb-1 sm:mb-0">Verification</span>
                 <a
                   href={`https://amoy.polygonscan.com/tx/${item.on_chain_hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-primary hover:underline bg-primary/10 px-4 py-2"
+                  className="flex items-center justify-center gap-2 text-primary hover:underline bg-primary/10 px-4 py-3 w-full sm:w-auto text-center"
                 >
                   <span>View on Polygon</span>
-                  <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                  <ArrowTopRightOnSquareIcon className="w-4 h-4 shrink-0" />
                 </a>
               </div>
             ) : (
-              <div className="flex w-full justify-between items-center text-xs font-mono font-bold uppercase tracking-widest">
-                <span className="text-text-muted">Verification</span>
-                <span className="text-text-muted px-4 py-2 border border-dashed border-border">Syncing to Blockchain...</span>
+              <div className="flex flex-col sm:flex-row w-full sm:justify-between items-start sm:items-center gap-3 sm:gap-0 text-xs font-mono font-bold uppercase tracking-widest mt-4 pt-4 border-t border-border">
+                <span className="text-text-muted mb-1 sm:mb-0">Verification</span>
+                <span className="text-text-muted px-4 py-3 w-full sm:w-auto text-center border border-dashed border-border">Syncing to Blockchain...</span>
               </div>
             );
 

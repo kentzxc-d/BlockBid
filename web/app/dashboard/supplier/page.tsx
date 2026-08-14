@@ -176,7 +176,7 @@ export default function UserDashboard() {
         {/* Main Content Area (Active Solicitations) */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-4 gap-4">
-            <h2 className="text-xl md:text-2xl font-bold text-text-main font-heading tracking-tight uppercase break-words">[ ACTIVE_ACQUISITIONS ]</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-text-main font-heading tracking-tight uppercase break-all sm:break-normal">[&nbsp;ACTIVE_ACQUISITIONS&nbsp;]</h2>
             <Link href="/dashboard/acquisitions" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main flex items-center gap-2 transition-colors uppercase shrink-0">
               View All <ArrowRightIcon className="w-4 h-4 stroke-2" />
             </Link>

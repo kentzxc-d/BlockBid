@@ -173,7 +173,7 @@ export default function AdminOverview() {
         <div className="mb-12 bg-surface rounded-md p-6 border-2 border-primary/30 shadow-[4px_4px_0px_0px_rgba(59,130,246,0.1)]">
           <div className="flex items-center gap-2 mb-4">
             <TrophyIcon className="w-6 h-6 text-primary" />
-            <h3 className="font-bold text-text-main font-heading text-lg uppercase tracking-tight">[ QUICK_FUND_TEST_WALLET ]</h3>
+            <h3 className="font-bold text-text-main font-heading text-base sm:text-lg uppercase tracking-tight break-all sm:break-normal">[&nbsp;QUICK_FUND_TEST_WALLET&nbsp;]</h3>
           </div>
           <p className="text-text-muted font-mono text-xs mb-6 uppercase tracking-widest leading-relaxed">
             Send POL directly from the main Admin wallet to any test wallet. Useful for giving testnet gas to suppliers.
@@ -238,11 +238,11 @@ export default function AdminOverview() {
         </div>
 
         {/* Analytics Section */}
-        <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
           <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">
-            [ ACTIVITY_ANALYTICS ]
+            [&nbsp;ACTIVITY_ANALYTICS&nbsp;]
           </h2>
-          <span className="px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-md font-mono text-xs font-bold tracking-widest uppercase">
+          <span className="w-fit px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-md font-mono text-xs font-bold tracking-widest uppercase">
             Last 30 Days
           </span>
         </div>

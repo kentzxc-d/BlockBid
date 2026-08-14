@@ -102,9 +102,9 @@ export default function VerifyPage() {
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_OVERVIEW
         </button>
-        <h1 className="text-2xl md:text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-center gap-3 uppercase">
-          <CheckBadgeIcon className="w-8 h-8 text-primary" />
-          [ IDENTITY_VERIFICATION ]
+        <h1 className="text-2xl md:text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-start sm:items-center gap-3 uppercase break-all sm:break-normal">
+          <CheckBadgeIcon className="w-8 h-8 text-primary shrink-0 mt-1 sm:mt-0" />
+          <span>[&nbsp;IDENTITY_VERIFICATION&nbsp;]</span>
         </h1>
         <p className="text-text-muted font-mono text-sm tracking-wide">
           Upload your documents to get the Verified Badge and build reputation on BlockBid.
