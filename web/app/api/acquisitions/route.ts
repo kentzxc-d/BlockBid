@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyUser } from "@/lib/auth";
+import { actionRateLimiter } from "@/lib/rate-limit";
+import { AcquisitionSchema } from "@/lib/schemas";
 
 export const dynamic = 'force-dynamic';
 import { z } from 'zod';
@@ -9,16 +12,44 @@ export const runtime = 'edge';
 // Initialize Supabase client with the Service Role Key to bypass RLS
 
 export async function POST(request: Request) {
+  const verifiedUserId = await verifyUser(request);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Apply strict rate limiting for creating projects
+  if (actionRateLimiter) {
+    const { success, limit, remaining, reset } = await actionRateLimiter.limit(`create_acq_${verifiedUserId}`);
+    if (!success) {
+      return NextResponse.json({ 
+        error: "Too many project creations. Please try again later." 
+      }, { 
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        }
+      });
+    }
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const body = await request.json();
-    const { requestor_id, title, description, deadline, criteria, budget, location, contact_name, contact_number } = body;
+    const rawBody = await request.json();
+    const parseResult = AcquisitionSchema.safeParse(rawBody);
 
-    if (!requestor_id || !title || !deadline || !criteria || criteria.length === 0) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { requestor_id, title, description, deadline, criteria, budget, location, contact_name, contact_number } = parseResult.data;
+
+    if (requestor_id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot create projects for another user" }, { status: 403 });
     }
 
     // 1. Anti-Spam: Check active projects limit

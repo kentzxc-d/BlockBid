@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { verifyUser } from "@/lib/auth";
+import { ProfileSchema } from "@/lib/schemas";
 
 export const dynamic = 'force-dynamic';
 
@@ -17,11 +18,14 @@ export async function POST(req: Request) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const { id, role, entity_type, nickname, wallet_address, avatar_url, location, contact_name, contact_number } = await req.json();
-    
-    if (!id || !role || !entity_type || !nickname) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const rawBody = await req.json();
+    const parseResult = ProfileSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
     }
+
+    const { id, role, entity_type, nickname, wallet_address, avatar_url, location, contact_name, contact_number } = parseResult.data;
 
     if (id !== verifiedUserId) {
       return NextResponse.json({ error: "Forbidden: Cannot update another user's profile" }, { status: 403 });

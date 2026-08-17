@@ -25,7 +25,7 @@ type FieldData = {
 export default function SubmitBidPage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
   const router = useRouter();
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
   const { wallets } = useWallets();
   const { refreshProfile, profile, loadingProfile } = useProfile();
 
@@ -108,9 +108,13 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
     if (!currentValue.trim()) return;
     setEnhancingFieldId(id);
     try {
+      const token = await getAccessToken();
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ai/enhance`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ text: currentValue, type: "bid" })
       });
       const data = await res.json();
@@ -142,12 +146,16 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
       
       // 0. JIT Faucet Call
       try {
+        const token = await getAccessToken();
         await fetch('/api/gas-sponsor', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ 
             wallet_address: wallet.address,
-            user_id: user.id
+            user_id: user.id 
           })
         });
       } catch (gasErr) {
@@ -215,9 +223,13 @@ export default function SubmitBidPage(props: { params: Promise<{ id: string }> }
         }))
       };
 
+      const token = await getAccessToken();
       const res = await fetch("/api/bids", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(payload)
       });
 

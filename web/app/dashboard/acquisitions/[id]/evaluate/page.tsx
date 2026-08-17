@@ -116,9 +116,13 @@ export default function EvaluateBidsPage(props: { params: Promise<{ id: string }
         // If there are unevaluated bids, run AI on them
         if (unevaluatedBids.length > 0) {
           setIsEvaluating(true);
+          const token = await getAccessToken();
           const aiRes = await fetch(`/api/evaluate-bids`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({
               criteria: projData.project.criteria.map((c:any) => ({ name: c.name, weight: c.weight_percentage })),
               bids: unevaluatedBids,

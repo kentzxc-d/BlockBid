@@ -1,20 +1,33 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyUser } from "@/lib/auth";
+import { BidSchema } from "@/lib/schemas";
 
 // Initialize Supabase client with the Service Role Key to bypass RLS
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  const verifiedUserId = await verifyUser(request);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const body = await request.json();
-    const { project_id, supplier_id, anonymous_alias, bid_values, on_chain_hash } = body;
+    const rawBody = await request.json();
+    const parseResult = BidSchema.safeParse(rawBody);
 
-    if (!project_id || !supplier_id || !anonymous_alias || !bid_values || bid_values.length === 0) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { project_id, supplier_id, anonymous_alias, bid_values, on_chain_hash } = parseResult.data;
+
+    if (supplier_id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot submit bid for another user" }, { status: 403 });
     }
 
     // --- VERIFICATION CHECK ---

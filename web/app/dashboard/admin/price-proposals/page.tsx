@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useProfile } from "@/contexts/ProfileContext";
+import { usePrivy } from "@privy-io/react-auth";
 import { CheckIcon, XMarkIcon, ExclamationTriangleIcon, LinkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +24,7 @@ type Proposal = {
 
 export default function PriceProposalsAdminPage() {
   const { profile, loadingProfile } = useProfile();
+  const { getAccessToken } = usePrivy();
   const router = useRouter();
   
   const [proposals, setProposals] = useState<Proposal[]>([]);
@@ -60,9 +62,13 @@ export default function PriceProposalsAdminPage() {
     
     setProcessingId(id);
     try {
+      const token = await getAccessToken();
       const res = await fetch("/api/benchmark/proposals", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ id, status })
       });
       const data = await res.json();

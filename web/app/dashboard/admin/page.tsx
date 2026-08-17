@@ -36,7 +36,7 @@ const BrutalistTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function AdminOverview() {
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
   const { adminData, loadingProfile } = useProfile();
   
   const [pendingProjects, setPendingProjects] = useState<any[]>([]);
@@ -55,10 +55,14 @@ export default function AdminOverview() {
     if (!user) return;
     setProcessingId(projectId);
     try {
+      const token = await getAccessToken();
       const res = await fetch("/api/admin/approve-project", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ admin_id: user.id, project_id: projectId, action })
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ project_id: projectId, status: action, reviewer_id: user?.id })
       });
       const data = await res.json();
       if (data.success) {

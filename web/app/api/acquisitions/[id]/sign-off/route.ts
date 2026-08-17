@@ -4,7 +4,7 @@ import { createWalletClient, http, publicActions } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy } from "viem/chains";
 import { BlockBidABI } from "@/lib/abi";
-import { privy } from "@/lib/auth";
+import { privy, verifyUser } from "@/lib/auth";
 import { Resend } from "resend";
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +14,11 @@ export async function POST(
   req: Request,
   props: { params: Promise<{ id: string }> }
 ) {
+  const verifiedUserId = await verifyUser(req);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -25,6 +30,10 @@ export async function POST(
     
     if (!sender_id || !role || (role !== 'requestor' && role !== 'supplier')) {
       return NextResponse.json({ error: "Missing or invalid fields" }, { status: 400 });
+    }
+
+    if (sender_id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot sign off for another user" }, { status: 403 });
     }
     
     // Verify the project is currently awarded

@@ -30,7 +30,7 @@ type Profile = {
 
 export default function WorkspacePage(props: { params: Promise<{ id: string }> }) {
   const params = use(props.params);
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
   const { profile } = useProfile();
   const [project, setProject] = useState<any>(null);
   const [requestor, setRequestor] = useState<Profile | null>(null);
@@ -105,11 +105,15 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
 
     setSigningOff(true);
     try {
+      const token = await getAccessToken();
       const res = await fetch(`/api/acquisitions/${params.id}/sign-off`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ 
-          sender_id: profile.id, 
+          sender_id: user?.id, 
           role: amIRequestor ? 'requestor' : 'supplier'
         })
       });
@@ -134,12 +138,16 @@ export default function WorkspacePage(props: { params: Promise<{ id: string }> }
     setClaimingRefund(true);
     setIsRequestingGas(true);
     try {
+      const token = await getAccessToken();
       await fetch('/api/gas-sponsor', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          wallet_address: wallet.address,
-          user_id: user?.id
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          wallet_address: wallet.address, 
+          user_id: user?.id 
         })
       });
     } catch (gasErr) {

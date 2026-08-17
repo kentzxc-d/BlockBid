@@ -1,13 +1,28 @@
 import { NextResponse } from "next/server";
 import { createWalletClient, http, parseEther, createPublicClient } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { activeChain } from "@/utils/network"; // Make sure this exists, or use polygonAmoy from viem/chains
 import { polygonAmoy } from "viem/chains";
+import { verifyUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const verifiedUserId = await verifyUser(req);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+  const { createClient } = await import('@supabase/supabase-js');
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   try {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', verifiedUserId).single();
+    if (profile?.role !== 'admin' && profile?.role !== 'ict_head') {
+      return NextResponse.json({ error: "Forbidden: Admin only" }, { status: 403 });
+    }
+
     const { recipientAddress, amount } = await req.json();
 
     if (!recipientAddress || !amount) {

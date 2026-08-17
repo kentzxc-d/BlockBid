@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useProfile } from "@/contexts/ProfileContext";
+import { usePrivy } from "@privy-io/react-auth";
 import { MagnifyingGlassIcon, PlusIcon, XMarkIcon, CheckCircleIcon, ArrowTrendingUpIcon, FunnelIcon } from "@heroicons/react/24/outline";
 
 type BenchmarkItem = {
@@ -16,6 +17,7 @@ type BenchmarkItem = {
 
 export default function PriceBenchmarkPage() {
   const { profile } = useProfile();
+  const { getAccessToken } = usePrivy();
   const [items, setItems] = useState<BenchmarkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,9 +85,13 @@ export default function PriceBenchmarkPage() {
 
     setSubmitting(true);
     try {
+      const token = await getAccessToken();
       const res = await fetch("/api/benchmark/proposals", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({
           supplier_id: profile.id,
           item_name: formData.itemName,

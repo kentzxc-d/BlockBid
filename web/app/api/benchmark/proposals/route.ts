@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyUser } from "@/lib/auth";
+import { BenchmarkProposalSchema } from "@/lib/schemas";
 
 export const dynamic = 'force-dynamic';
 
@@ -35,16 +37,28 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const verifiedUserId = await verifyUser(request);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const body = await request.json();
-    const { supplier_id, item_name, category, subcategory, specs_description, proposed_price, proof_link } = body;
+    const rawBody = await request.json();
+    const parseResult = BenchmarkProposalSchema.safeParse(rawBody);
 
-    if (!supplier_id || !item_name || !category || !proposed_price) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { supplier_id, item_name, category, subcategory, specs_description, proposed_price, proof_link } = parseResult.data;
+
+    // Optional Check: supplier_id must match verifiedUserId
+    if (supplier_id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot submit proposal for another user" }, { status: 403 });
     }
 
     const { data: proposal, error } = await supabase
@@ -74,11 +88,21 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const verifiedUserId = await verifyUser(request);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', verifiedUserId).single();
+    if (profile?.role !== 'admin' && profile?.role !== 'ict_head') {
+      return NextResponse.json({ error: "Forbidden: Admin only" }, { status: 403 });
+    }
+
     const body = await request.json();
     const { id, status } = body; // status can be 'approved' or 'rejected'
 

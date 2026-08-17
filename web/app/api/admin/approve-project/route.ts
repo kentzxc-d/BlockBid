@@ -1,32 +1,39 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyUser } from "@/lib/auth";
+import { AdminApproveSchema } from "@/lib/schemas";
 
 export const dynamic = 'force-dynamic';
 
-
 export async function POST(request: Request) {
+  const verifiedUserId = await verifyUser(request);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    const body = await request.json();
-    const { admin_id, project_id, action } = body;
-
-    if (!admin_id || !project_id || !action) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
-    // Verify admin role
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', admin_id)
+      .eq('id', verifiedUserId)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'ict_head')) {
       return NextResponse.json({ error: "Forbidden: Not an admin" }, { status: 403 });
     }
+
+    const rawBody = await request.json();
+    const parseResult = AdminApproveSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { project_id, status: action } = parseResult.data;
 
     let newStatus = "";
     if (action === "approve") {

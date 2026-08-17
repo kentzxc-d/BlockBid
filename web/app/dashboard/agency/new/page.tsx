@@ -32,7 +32,7 @@ export default function CreateAcquisitionPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   
   const router = useRouter();
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
   
   // Dynamic Criteria State
   const [criteria, setCriteria] = useState([
@@ -109,9 +109,13 @@ export default function CreateAcquisitionPage() {
     if (!description.trim()) return;
     setIsEnhancing(true);
     try {
+      const token = await getAccessToken();
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ai/enhance`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ text: description, type: "acquisition" })
       });
       const data = await res.json();
@@ -147,9 +151,13 @@ export default function CreateAcquisitionPage() {
         criteria: criteria.map(c => ({ name: c.name, weight: c.weight }))
       };
 
+      const token = await getAccessToken();
       const res = await fetch("/api/acquisitions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(payload)
       });
 

@@ -52,7 +52,7 @@ export default function AdminUsersManagement() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ admin_id: user.id, target_user_id: targetUserId, new_role: newRole })
+        body: JSON.stringify({ user_id: targetUserId, action: newRole })
       });
       const data = await res.json();
       if (data.success) {

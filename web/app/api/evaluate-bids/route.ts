@@ -3,6 +3,9 @@ import { generateObject } from 'ai';
 import { google } from '@ai-sdk/google';
 import { z } from 'zod';
 import { createClient } from '@supabase/supabase-js';
+import { verifyUser } from "@/lib/auth";
+import { aiEvaluateRateLimiter } from "@/lib/rate-limit";
+import { EvaluateBidsSchema } from "@/lib/schemas";
 
 export const maxDuration = 60; // Allow longer execution time for Vercel functions
 
@@ -25,24 +28,50 @@ const EvaluationSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  const verifiedUserId = await verifyUser(req);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Apply Strict AI Rate Limiting (per user)
+  if (aiEvaluateRateLimiter) {
+    const { success, limit, remaining, reset } = await aiEvaluateRateLimiter.limit(`ai_${verifiedUserId}`);
+    if (!success) {
+      return NextResponse.json({ 
+        error: "Too many AI evaluations. Please try again later." 
+      }, { 
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        }
+      });
+    }
+  }
+
   try {
-    const { criteria, bids, procurementDetails } = await req.json();
+    const rawBody = await req.json();
+    const parseResult = EvaluateBidsSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { criteria, bids, procurementDetails } = parseResult.data;
 
     if (!bids || bids.length === 0) {
       return NextResponse.json({ evaluations: [] });
     }
 
-    const systemPrompt = `You are an expert government procurement evaluator.
-Your job is to evaluate supplier bids against the project requirements and criteria.
-Be extremely objective and rigorous.
+    const systemPrompt = `You are an AI Procurement Assistant. Evaluate the following supplier bids against the project criteria.
+      Project details:
+      Title: ${procurementDetails?.title || 'Unknown Title'}
+      Description: ${procurementDetails?.description || 'No description provided'}
+      Budget: ${procurementDetails?.budget || 'Not specified'}
 
-Project Details:
-Title: ${procurementDetails.title}
-Description: ${procurementDetails.description}
-Budget: ${procurementDetails.budget}
-
-Evaluation Criteria:
-${criteria.map((c: any) => `- ${c.name} (Max Score: ${c.weight})`).join('\n')}
+      Criteria with weights:
+      ${criteria.map((c: any) => `- ${c.name} (Max Score: ${c.weight})`).join('\n')}
 
 For each bid, evaluate it against EVERY criterion. 
 The scoreAchieved for a criterion MUST NOT exceed its maxWeight.

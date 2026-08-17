@@ -1,17 +1,31 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { createWalletClient, http, publicActions, parseEther, formatEther } from "viem";
+import { createWalletClient, http, publicActions, formatEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { polygonAmoy } from "viem/chains";
+import { verifyUser } from "@/lib/auth";
+import { GasSponsorSchema } from "@/lib/schemas";
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
-  try {
-    const { wallet_address, user_id } = await req.json();
+  const verifiedUserId = await verifyUser(req);
+  if (!verifiedUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    if (!wallet_address || !user_id) {
-      return NextResponse.json({ error: "Missing wallet_address or user_id" }, { status: 400 });
+  try {
+    const rawBody = await req.json();
+    const parseResult = GasSponsorSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid data", details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { wallet_address, user_id } = parseResult.data;
+
+    if (user_id !== verifiedUserId) {
+      return NextResponse.json({ error: "Forbidden: Cannot sponsor gas for another user" }, { status: 403 });
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
