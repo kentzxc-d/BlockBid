@@ -250,6 +250,20 @@ a:hover {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
+.bg-pattern {
+  background-color: #0b1120;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  background-position: center center;
+}
+
+.hex-watermark {
+  background-image: radial-gradient(circle at 2px 2px, rgba(197, 160, 89, 0.05) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
 .inner-card {
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -273,20 +287,57 @@ a:hover {
 .ambient-aura-2 {
   position: fixed;
   bottom: -200px;
-  right: -100px;
-  width: 600px;
-  height: 600px;
-  background: rgba(250, 204, 21, 0.1);
+  right: -200px;
+  width: 1000px;
+  height: 1000px;
+  background: rgba(250, 204, 21, 0.12);
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(150px);
   pointer-events: none;
   z-index: 0;
-  animation: breathe 15s ease-in-out infinite alternate-reverse;
+  animation: breathe2 15s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes breathe {
-  0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
-  100% { transform: scale(1.1) translate(20px, -20px); opacity: 0.8; }
+  0% { transform: scale(0.8) translate(0, 0); opacity: 0.5; }
+  100% { transform: scale(1.4) translate(20vw, 15vh); opacity: 0.9; }
+}
+
+@keyframes breathe2 {
+  0% { transform: scale(0.8) translate(0, 0); opacity: 0.4; }
+  100% { transform: scale(1.5) translate(-25vw, -15vh); opacity: 0.8; }
+}
+
+.animate-reveal-up {
+  animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes revealUp {
+  0% { transform: translateY(120%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.text-shimmer {
+  background: linear-gradient(110deg, #ffffff 30%, #facc15 50%, #ffffff 70%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% center; }
+}
+
+/* Scroll Reveal Classes */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .btn-gold {
@@ -313,6 +364,59 @@ a:hover {
   border-color: #facc15;
   box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
   transform: translateY(-2px);
+}
+
+/* Differentiator Micro-Animations */
+@keyframes icon-pulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.15); filter: brightness(1.5); }
+}
+@keyframes icon-strike {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  20% { transform: scale(1.2) rotate(10deg); filter: brightness(1.5); }
+  40% { transform: scale(1) rotate(-5deg); }
+  60% { transform: scale(1.1) rotate(5deg); }
+}
+@keyframes icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes icon-scan {
+  0%, 100% { opacity: 1; transform: translateY(0); }
+  50% { opacity: 0.5; transform: translateY(2px); filter: drop-shadow(0 0 4px #facc15); }
+}
+@keyframes icon-blink {
+  0%, 100% { transform: scaleY(1); }
+  10% { transform: scaleY(0.1); }
+  20% { transform: scaleY(1); }
+}
+
+.group:hover .animate-pulse-glow { animation: icon-pulse 1.5s ease-in-out infinite; }
+.group:hover .animate-strike { animation: icon-strike 1.5s ease-in-out infinite; }
+.group:hover .animate-bounce-up { animation: icon-bounce 1s ease-in-out infinite; }
+.group:hover .animate-scan { animation: icon-scan 2s ease-in-out infinite; }
+.group:hover .animate-blink { animation: icon-blink 3s ease-in-out infinite; }
+
+/* Ecosystem Pipeline & Focus */
+@keyframes pipeline-pulse {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+.animate-pipeline-pulse {
+  animation: pipeline-pulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.ecosystem-grid:has(.eco-step:hover) .eco-step:not(:hover) {
+  opacity: 0.3;
+  filter: grayscale(50%);
+}
+
+/* Gradient Text */
+.text-gradient-gold {
+  background: linear-gradient(to right, #fef08a, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Feature Grid Effects */
@@ -361,8 +465,36 @@ a:hover {
 }
 
 /* Isometric 3D Stack Classes */
+.iso-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s, z-index 0.8s, filter 0.8s;
+  will-change: transform, opacity, filter;
+}
+
 .pos-1, .pos-2, .pos-3, .pos-lifting {
   transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Button Checkmark Animation */
+@keyframes check-draw {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.check-anim {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.group:hover .check-anim {
+  stroke-dashoffset: 24;
+  animation: check-draw 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.2s;
 }
 
 /* Position 1 (Front) */
