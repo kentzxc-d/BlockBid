@@ -201,3 +201,201 @@ a:hover {
   background-color: #E3FCEF;
   color: var(--color-secondary-hover);
 }
+
+/* -----------------------------------------
+   BLOCKBID LANDING PAGE SPECIFIC STYLES
+   ----------------------------------------- */
+
+/* Hide scrollbars for the main landing page */
+.landing-page::-webkit-scrollbar {
+  display: none;
+}
+.landing-page {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom background pattern and glows */
+.bg-pattern {
+  background-color: #0b1120;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
+  background-position: center center;
+}
+
+.hex-watermark {
+  background-image: radial-gradient(circle at 2px 2px, rgba(197, 160, 89, 0.05) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+@keyframes check-draw {
+  0% { stroke-dashoffset: 24; opacity: 0; }
+  10% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+.group:hover .check-anim {
+  stroke-dasharray: 24;
+  animation: check-draw 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+/* Glassmorphism effects */
+.glass-card {
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.inner-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Impeccable Animations */
+.ambient-aura-1 {
+  position: fixed;
+  top: -100px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: rgba(250, 204, 21, 0.15);
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: breathe 12s ease-in-out infinite alternate;
+}
+
+.ambient-aura-2 {
+  position: fixed;
+  bottom: -200px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: rgba(250, 204, 21, 0.1);
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  animation: breathe 15s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes breathe {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+  100% { transform: scale(1.1) translate(20px, -20px); opacity: 0.8; }
+}
+
+.btn-gold {
+  background-color: var(--color-bb-gold, #facc15);
+  color: #020617;
+  box-shadow: 0 0 15px rgba(250, 204, 21, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  box-shadow: 0 0 25px rgba(250, 204, 21, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-outline-gold {
+  background-color: transparent;
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.5);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background-color: rgba(250, 204, 21, 0.1);
+  border-color: #facc15;
+  box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Feature Grid Effects */
+.feature-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.4), transparent) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.feature-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(250, 204, 21, 0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.group:hover .feature-glow {
+  opacity: 1;
+}
+
+/* Node connections for Ecosystem */
+.node-line {
+  position: absolute;
+  background: linear-gradient(90deg, rgba(250, 204, 21, 0.5), transparent);
+  height: 1px;
+}
+.node-line.vertical {
+  background: linear-gradient(180deg, rgba(250, 204, 21, 0.5), transparent);
+  width: 1px;
+  height: auto;
+}
+.node-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #facc15;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #facc15;
+}
+
+/* Isometric 3D Stack Classes */
+.pos-1, .pos-2, .pos-3, .pos-lifting {
+  transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Position 1 (Front) */
+.pos-1 {
+  transform: translateZ(0) translateY(0) translateX(0);
+  z-index: 30;
+  opacity: 1;
+  filter: brightness(1);
+}
+
+/* Position 2 (Middle) */
+.pos-2 {
+  transform: translateZ(-50px) translateY(25px) translateX(25px);
+  z-index: 20;
+  opacity: 0.9;
+  filter: brightness(0.7);
+  pointer-events: none;
+}
+
+/* Position 3 (Back) */
+.pos-3 {
+  transform: translateZ(-100px) translateY(50px) translateX(50px);
+  z-index: 10;
+  opacity: 0.7;
+  filter: brightness(0.4);
+  pointer-events: none;
+}
+
+/* Lifting animation state */
+.pos-lifting {
+  transform: translateZ(100px) translateY(-100px) translateX(-50px) rotateZ(-5deg);
+  z-index: 40;
+  opacity: 0.9;
+  filter: brightness(1.2);
+  pointer-events: none;
+}

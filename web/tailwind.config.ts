@@ -21,6 +21,18 @@ const config: Config = {
         "text-inverse-muted": "#A0AEC0",
         border: "#CBD5E1",
         "border-inverse": "#1E293B",
+        // Landing Page Specific Colors
+        'bb-dark': '#0f172a',
+        'bb-darker': '#020617',
+        'bb-gold-light': '#fef08a',
+        'bb-gold': '#facc15',
+        'bb-gold-dark': '#eab308',
+        'bb-card-bg': 'rgba(15, 23, 42, 0.6)',
+        'bb-card-inner': 'rgba(30, 41, 59, 0.8)',
+      },
+      backgroundImage: {
+        'gold-gradient': 'linear-gradient(to right, #fde047, #d97706)',
+        'btn-gradient': 'linear-gradient(90deg, #fce7f3 0%, #fef3c7 50%, #fde047 100%)',
       },
       fontFamily: {
         heading: ["Outfit", "sans-serif"],
