@@ -98,7 +98,7 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="landing-page bg-[#0b1120] text-slate-300 min-h-screen flex flex-col font-sans overflow-x-hidden relative">
+        <div className="landing-page bg-grid-pattern bg-[length:40px_40px] bg-center bg-[#0b1120] text-slate-300 min-h-screen flex flex-col font-sans overflow-x-hidden relative">
             
 <div className="ambient-aura-1"></div>
 <div className="ambient-aura-2"></div>

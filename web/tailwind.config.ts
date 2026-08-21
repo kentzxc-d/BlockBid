@@ -33,6 +33,7 @@ const config: Config = {
       backgroundImage: {
         'gold-gradient': 'linear-gradient(to right, #fde047, #d97706)',
         'btn-gradient': 'linear-gradient(90deg, #fce7f3 0%, #fef3c7 50%, #fde047 100%)',
+        'grid-pattern': 'linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px)',
       },
       fontFamily: {
         heading: ["Outfit", "sans-serif"],
