@@ -253,8 +253,8 @@ a:hover {
 .bg-pattern {
   background-color: #0b1120;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
   background-size: 40px 40px, 40px 40px;
   background-position: center center;
 }
@@ -276,9 +276,9 @@ a:hover {
   left: -200px;
   width: 800px;
   height: 800px;
-  background: rgba(250, 204, 21, 0.15);
+  background: rgba(250, 204, 21, 0.1);
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(140px);
   pointer-events: none;
   z-index: 0;
   animation: breathe 12s ease-in-out infinite alternate;
@@ -290,22 +290,22 @@ a:hover {
   right: -200px;
   width: 1000px;
   height: 1000px;
-  background: rgba(250, 204, 21, 0.12);
+  background: rgba(250, 204, 21, 0.08);
   border-radius: 50%;
-  filter: blur(150px);
+  filter: blur(160px);
   pointer-events: none;
   z-index: 0;
   animation: breathe2 15s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes breathe {
-  0% { transform: scale(0.8) translate(0, 0); opacity: 0.5; }
-  100% { transform: scale(1.4) translate(20vw, 15vh); opacity: 0.9; }
+  0% { transform: scale(0.8) translate(0, 0); opacity: 0.15; }
+  100% { transform: scale(1.4) translate(15vw, 10vh); opacity: 0.35; }
 }
 
 @keyframes breathe2 {
-  0% { transform: scale(0.8) translate(0, 0); opacity: 0.4; }
-  100% { transform: scale(1.5) translate(-25vw, -15vh); opacity: 0.8; }
+  0% { transform: scale(0.8) translate(0, 0); opacity: 0.1; }
+  100% { transform: scale(1.5) translate(-20vw, -10vh); opacity: 0.25; }
 }
 
 .animate-reveal-up {
@@ -432,16 +432,9 @@ a:hover {
   pointer-events: none;
 }
 
+/* Feature Glow removed for quieter UX */
 .feature-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(250, 204, 21, 0.15), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-.group:hover .feature-glow {
-  opacity: 1;
+  display: none;
 }
 
 /* Node connections for Ecosystem */
