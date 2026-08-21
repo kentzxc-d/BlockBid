@@ -251,12 +251,12 @@ a:hover {
 }
 
 .bg-pattern {
-  background-color: #0b1120;
+  background-color: #0b1120 !important;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 40px 40px, 40px 40px;
-  background-position: center center;
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px) !important;
+  background-size: 40px 40px, 40px 40px !important;
+  background-position: center center !important;
 }
 
 .hex-watermark {
