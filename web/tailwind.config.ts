@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#C5A059", /* Seal Gold */
-        "primary-hover": "#D4AF68",
+        primary: "#FACC15", /* Bright Gold */
+        "primary-hover": "#EAB308",
         secondary: "#0B132B", /* Midnight Navy */
         "secondary-hover": "#16264A",
         background: "#F9F9F6", /* Parchment White */
