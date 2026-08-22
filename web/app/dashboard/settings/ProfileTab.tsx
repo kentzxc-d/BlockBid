@@ -142,7 +142,7 @@ export default function ProfileTab({ user, profile, loadingProfile, refreshProfi
                 size={72}
                 name={walletAddress}
                 variant="beam"
-                colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
+                colors={['#FACC15', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
               />
             )}
           </div>

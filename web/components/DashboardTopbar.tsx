@@ -170,7 +170,7 @@ export default function DashboardTopbar() {
                   size={34}
                   name={identifier}
                   variant="beam"
-                  colors={['#C5A059', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
+                  colors={['#FACC15', '#1A2138', '#4B5563', '#FFFFFF', '#D1D5DB']}
                 />
               ) : (
                 <div className="w-full h-full bg-gray-200 animate-pulse rounded-sm"></div>

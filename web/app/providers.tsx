@@ -14,7 +14,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         loginMethods: ["email"],
         appearance: {
           theme: "dark",
-          accentColor: "#C5A059",
+          accentColor: "#FACC15",
+          showWalletLoginFirst: false,
         },
         embeddedWallets: {
           ethereum: {
