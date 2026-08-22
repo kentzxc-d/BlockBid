@@ -16,9 +16,23 @@ export default function PublicHeader() {
         
         {/* Left: Logo */}
         <div className="flex items-center gap-3 z-10">
-          <Link href="/" className="flex items-center gap-3 group">
-            <img src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/brand/56c94a00-09c1-4de7-9ad9-b1855552e0a9/assets/487fd5ae-53ad-44f8-9459-afa4773fbe93.png" alt="BlockBid Logo" className="w-8 h-8 md:w-10 md:h-10 group-hover:scale-105 transition-transform" />
-            <span className="text-xl md:text-2xl font-black text-[#0B132B] tracking-tight font-outfit">BLOCK<span className="text-[#FBBF24]">BID</span></span>
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div 
+              className="w-8 h-8 md:w-9 md:h-9 bg-[#FBBF24] transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_2px_4px_rgba(0,0,0,0.1)]"
+              style={{
+                maskImage: 'url(/logo-gold-transparent.png)',
+                maskSize: 'contain',
+                maskRepeat: 'no-repeat',
+                maskPosition: 'center',
+                WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+                WebkitMaskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center'
+              }}
+              aria-label="BlockBid Logo"
+              role="img"
+            ></div>
+            <span className="text-[1.5rem] md:text-[1.75rem] font-black text-[#0B132B] tracking-tight font-outfit leading-none mt-1">BLOCK<span className="text-[#FBBF24]">BID</span></span>
           </Link>
         </div>
 

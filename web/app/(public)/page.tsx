@@ -104,15 +104,26 @@ export default function Home() {
 <div className="ambient-aura-2"></div>
 
 <header className="w-full max-w-7xl mx-auto px-6 py-8 flex justify-between items-center z-10 relative">
-{/* Logo */}
-<div className="flex items-center gap-2 cursor-pointer group">
-<svg className="w-8 h-8 text-bb-gold transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
-  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-  <polyline points="3.27 6.96 12 12 20.73 6.96"></polyline>
-  <line x1="12" y1="22.08" x2="12" y2="12"></line>
-  <circle cx="12" cy="12" r="3"></circle>
-</svg>
-<span className="text-2xl font-bold tracking-wide text-white">BLOCKBID</span>
+{/* Logo Lockup */}
+<div className="flex items-center gap-2.5 cursor-pointer group">
+<div 
+  className="w-9 h-9 bg-bb-gold transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)] group-hover:drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]"
+  style={{
+    maskImage: 'url(/logo-gold-transparent.png)',
+    maskSize: 'contain',
+    maskRepeat: 'no-repeat',
+    maskPosition: 'center',
+    WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+    WebkitMaskSize: 'contain',
+    WebkitMaskRepeat: 'no-repeat',
+    WebkitMaskPosition: 'center'
+  }}
+  aria-label="BlockBid Logo"
+  role="img"
+></div>
+  <span className="text-[1.75rem] font-black tracking-tight text-white font-outfit leading-none mt-1">
+    BLOCK<span className="text-bb-gold">BID</span>
+  </span>
 </div>
 {/* Navigation */}
 <nav className="hidden md:flex gap-8 items-center text-sm">
@@ -502,14 +513,25 @@ export default function Home() {
       
       {/*  Col 1  */}
       <div>
-        <div className="flex items-center gap-2 mb-6 cursor-pointer group">
-          <svg className="w-6 h-6 text-bb-gold transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-          <span className="text-xl font-bold text-white tracking-wide">BLOCKBID</span>
+        <div className="flex items-center gap-2.5 mb-6 cursor-pointer group">
+          <div 
+            className="w-8 h-8 bg-bb-gold transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(251,191,36,0.2)] group-hover:drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]"
+            style={{
+              maskImage: 'url(/logo-gold-transparent.png)',
+              maskSize: 'contain',
+              maskRepeat: 'no-repeat',
+              maskPosition: 'center',
+              WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+              WebkitMaskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center'
+            }}
+            aria-label="BlockBid Logo"
+            role="img"
+          ></div>
+          <span className="text-2xl font-black tracking-tight text-white font-outfit leading-none mt-1">
+            BLOCK<span className="text-bb-gold">BID</span>
+          </span>
         </div>
         <p className="text-slate-500 text-sm leading-relaxed mb-6">Institutional-grade blockchain infrastructure for bias-free government procurement. Built for absolute public accountability.</p>
         <div className="flex gap-4 text-slate-500">

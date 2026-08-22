@@ -119,9 +119,23 @@ export default function OnboardingPage() {
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent mix-blend-overlay pointer-events-none"></div>
 
         <div className="relative z-10">
-          <h1 className="flex items-center gap-3 text-3xl font-heading font-bold text-primary mb-2 uppercase tracking-wide">
-            <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={56} height={56} className="object-contain" />
-            BLOCKBID
+          <h1 className="flex items-center gap-2.5 mb-2 group">
+            <div 
+              className="w-12 h-12 bg-primary transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)]"
+              style={{
+                maskImage: 'url(/logo-gold-transparent.png)',
+                maskSize: 'contain',
+                maskRepeat: 'no-repeat',
+                maskPosition: 'center',
+                WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+                WebkitMaskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center'
+              }}
+              aria-label="BlockBid Logo"
+              role="img"
+            ></div>
+            <span className="text-[2.25rem] font-black text-white tracking-tight font-outfit leading-none mt-1">BLOCK<span className="text-primary">BID</span></span>
           </h1>
           <p className="text-text-inverse-muted font-medium text-sm max-w-xs hidden md:block">
             Acquisition, cryptographically sealed. Authenticate your identity to proceed.

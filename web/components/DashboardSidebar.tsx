@@ -108,9 +108,23 @@ export default function DashboardSidebar() {
       }`}>
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-border-inverse">
-        <Link href="/" className="flex items-center gap-3 font-heading font-bold text-2xl text-primary tracking-wide uppercase">
-          <Image src="/logo-gold-transparent.png" alt="BlockBid Logo" width={40} height={40} className="object-contain" />
-          BLOCKBID
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div 
+            className="w-9 h-9 bg-primary transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)] group-hover:drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]"
+            style={{
+              maskImage: 'url(/logo-gold-transparent.png)',
+              maskSize: 'contain',
+              maskRepeat: 'no-repeat',
+              maskPosition: 'center',
+              WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+              WebkitMaskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center'
+            }}
+            aria-label="BlockBid Logo"
+            role="img"
+          ></div>
+          <span className="text-[1.75rem] font-black text-white tracking-tight font-outfit leading-none mt-1">BLOCK<span className="text-primary">BID</span></span>
         </Link>
       </div>
 
