@@ -19,7 +19,7 @@ import {
 import { useProfile } from "@/contexts/ProfileContext";
 
 export default function OnboardingPage() {
-  const { user, ready, getAccessToken } = usePrivy();
+  const { user, ready, getAccessToken, logout } = usePrivy();
   const { refreshProfile } = useProfile();
   const router = useRouter();
 
@@ -40,10 +40,14 @@ export default function OnboardingPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowTerms(false);
+      if (e.key === 'Escape') {
+        setShowTerms(false);
+        setShowCancelConfirm(false);
+      }
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
@@ -114,7 +118,7 @@ export default function OnboardingPage() {
     <div className="min-h-screen flex flex-col md:flex-row bg-background">
 
       {/* Left Panel: The Ledger (Signature Element) */}
-      <div className="w-full md:w-1/3 bg-secondary text-white p-6 md:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-border-inverse relative overflow-hidden shrink-0">
+      <div className="w-full md:w-1/3 bg-secondary text-white p-8 md:p-12 flex flex-col justify-between border-b md:border-b-0 md:border-r border-border-inverse relative overflow-hidden shrink-0">
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl mix-blend-screen pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent mix-blend-overlay pointer-events-none"></div>
 
@@ -158,11 +162,17 @@ export default function OnboardingPage() {
           ))}
         </div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 flex flex-col gap-4">
           <div className="font-mono text-xs text-text-inverse-muted tracking-wider break-all">
             CONNECTION_ESTABLISHED<br />
             DID: {getPrivyId()}
           </div>
+          <button 
+            onClick={() => setShowCancelConfirm(true)}
+            className="text-left font-mono text-xs text-red-400 hover:text-red-300 transition-colors uppercase tracking-widest mt-4 flex items-center gap-2 w-max"
+          >
+            [ Cancel & Sign Out ]
+          </button>
         </div>
       </div>
 
@@ -195,11 +205,18 @@ export default function OnboardingPage() {
               ))}
             </div>
 
-            <div className="mt-12 flex justify-end border-t border-border pt-8">
+            <div className="mt-12 flex flex-col items-end gap-3 border-t border-border pt-8">
+              {!supplyCategory && (
+                <p className="font-mono text-[11px] text-text-muted tracking-wider uppercase animate-pulse">← Select a category to proceed</p>
+              )}
               <button
                 disabled={!supplyCategory}
                 onClick={() => setStep(2)}
-                className="btn btn-primary w-full md:w-auto rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
+                className={`btn w-full md:w-auto rounded-none px-8 py-4 font-heading font-bold tracking-wide uppercase border ${
+                  supplyCategory
+                    ? "btn-primary border-primary shadow-none hover:-translate-y-0.5"
+                    : "bg-border text-text-muted border-border cursor-not-allowed opacity-60"
+                }`}
               >
                 Acknowledge & Proceed
               </button>
@@ -231,20 +248,29 @@ export default function OnboardingPage() {
               ))}
             </div>
 
-            <div className="mt-12 flex flex-col-reverse md:flex-row gap-6 md:gap-0 justify-between items-center border-t border-border pt-8">
-              <button
-                onClick={() => setStep(1)}
-                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5 w-full md:w-auto text-center"
-              >
-                ← Return to Previous
-              </button>
-              <button
-                disabled={!entityType}
-                onClick={() => setStep(3)}
-                className="btn btn-primary w-full md:w-auto rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5"
-              >
-                Acknowledge & Proceed
-              </button>
+            <div className="mt-12 flex flex-col gap-3 border-t border-border pt-8">
+              {!entityType && (
+                <p className="font-mono text-[11px] text-text-muted tracking-wider uppercase animate-pulse text-right">← Select an entity type to proceed</p>
+              )}
+              <div className="flex flex-col-reverse md:flex-row gap-6 md:gap-0 justify-between items-center">
+                <button
+                  onClick={() => setStep(1)}
+                  className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5 w-full md:w-auto text-center"
+                >
+                  ← Return to Previous
+                </button>
+                <button
+                  disabled={!entityType}
+                  onClick={() => setStep(3)}
+                  className={`btn w-full md:w-auto rounded-none px-8 py-4 font-heading font-bold tracking-wide uppercase border ${
+                    entityType
+                      ? "btn-primary border-primary shadow-none hover:-translate-y-0.5"
+                      : "bg-border text-text-muted border-border cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  Acknowledge & Proceed
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -295,26 +321,71 @@ export default function OnboardingPage() {
               </label>
             </div>
 
-            <div className="mt-12 flex flex-col-reverse md:flex-row gap-6 md:gap-0 justify-between items-center border-t border-border pt-8">
-              <button
-                onClick={() => setStep(2)}
-                className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5 w-full md:w-auto text-center"
-              >
-                ← Return to Previous
-              </button>
-              <button
-                disabled={!nickname || !acceptedTerms || isSubmitting}
-                onClick={handleSubmit}
-                className="btn btn-primary w-full md:w-auto rounded-none px-8 py-4 disabled:opacity-40 font-heading font-bold tracking-wide uppercase shadow-none border border-primary hover:-translate-y-0.5 flex items-center justify-center gap-3"
-              >
-                {isSubmitting ? "Committing..." : "Finalize Registration"}
-                {!isSubmitting && <CheckIcon className="w-5 h-5 stroke-2" />}
-              </button>
+            <div className="mt-12 flex flex-col gap-3 border-t border-border pt-8">
+              {(!nickname || !acceptedTerms) && (
+                <p className="font-mono text-[11px] text-text-muted tracking-wider uppercase animate-pulse text-right">
+                  {!nickname ? "← Enter a display name" : "← Accept the terms to proceed"}
+                </p>
+              )}
+              <div className="flex flex-col-reverse md:flex-row gap-6 md:gap-0 justify-between items-center">
+                <button
+                  onClick={() => setStep(2)}
+                  className="font-mono text-sm tracking-wider text-text-muted hover:text-text-main transition-colors uppercase border-b border-transparent hover:border-text-main pb-0.5 w-full md:w-auto text-center"
+                >
+                  ← Return to Previous
+                </button>
+                <button
+                  disabled={!nickname || !acceptedTerms || isSubmitting}
+                  onClick={handleSubmit}
+                  className={`btn w-full md:w-auto rounded-none px-8 py-4 font-heading font-bold tracking-wide uppercase flex items-center justify-center gap-3 border ${
+                    nickname && acceptedTerms && !isSubmitting
+                      ? "btn-primary border-primary shadow-none hover:-translate-y-0.5"
+                      : "bg-border text-text-muted border-border cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  {isSubmitting ? "Committing..." : "Finalize Registration"}
+                </button>
+              </div>
             </div>
           </div>
         )}
 
       </div>
+
+      {/* CANCEL CONFIRMATION MODAL */}
+      {showCancelConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-secondary rounded-none w-full max-w-sm border border-red-500/30 shadow-[6px_6px_0_0_rgba(239,68,68,0.15)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-red-500/20 bg-secondary">
+              <h3 className="font-heading font-bold text-lg text-red-400 uppercase tracking-tight">ABORT_REGISTRATION</h3>
+            </div>
+            
+            <div className="p-6 bg-secondary">
+              <p className="font-mono text-xs text-white leading-relaxed">
+                This will terminate your current session and sign you out. You will need to authenticate again to restart the onboarding process.
+              </p>
+              <p className="font-mono text-[10px] text-text-inverse-muted mt-3 tracking-wider">
+                NO DATA WILL BE SAVED.
+              </p>
+            </div>
+
+            <div className="p-4 bg-secondary border-t border-red-500/20 flex justify-end gap-3">
+              <button 
+                onClick={() => setShowCancelConfirm(false)} 
+                className="px-5 py-2.5 border border-border text-text-inverse-muted rounded-none font-mono text-xs font-bold tracking-widest uppercase hover:text-white hover:border-white transition-all"
+              >
+                RESUME
+              </button>
+              <button 
+                onClick={() => logout()} 
+                className="px-5 py-2.5 bg-red-500 text-white rounded-none font-mono text-xs font-bold tracking-widest uppercase hover:bg-red-400 transition-all hover:-translate-y-0.5 shadow-[4px_4px_0_0_rgba(239,68,68,0.2)]"
+              >
+                SIGN OUT
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TERMS MODAL */}
       {showTerms && (

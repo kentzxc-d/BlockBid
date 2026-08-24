@@ -5,7 +5,7 @@
   create table profiles (
     id text primary key, -- Privy DID (e.g. did:privy:...)
     role text check (role in ('ict_staff', 'ict_head', 'supplier')) not null,
-    entity_type text check (entity_type in ('individual', 'company')),
+    entity_type text check (entity_type in ('individual', 'company', 'government', 'ngo')),
     nickname text,
     wallet_address text, -- Derived from embedded wallet or Metamask
     verification_status text check (verification_status in ('unverified', 'pending', 'verified', 'rejected')) default 'unverified',

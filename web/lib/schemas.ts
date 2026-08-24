@@ -17,11 +17,11 @@ const EthereumAddress = z.string().regex(/^0x[a-fA-F0-9]{40}$/, "Invalid Ethereu
 // --- API Route Schemas ---
 
 export const ProfileSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(), // Changed to string to accept Privy DIDs (e.g., did:privy:...)
   role: z.enum(["supplier", "agency", "admin", "ict_head"]),
-  entity_type: z.enum(["individual", "company", "government"]).optional().nullable(),
+  entity_type: z.enum(["individual", "company", "government", "ngo"]).optional().nullable(),
   nickname: createSanitizedString(undefined, 100).optional().nullable(),
-  wallet_address: EthereumAddress.optional().nullable(),
+  wallet_address: z.string().optional().nullable(), // Relaxed to allow either email or eth address
   avatar_url: z.string().url().optional().nullable(),
   location: createSanitizedString(undefined, 200).optional().nullable(),
   contact_name: createSanitizedString(undefined, 100).optional().nullable(),
