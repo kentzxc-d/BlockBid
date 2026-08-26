@@ -412,12 +412,12 @@ export default function Home() {
 
   {/*  SECTION B: THE ECOSYSTEM  */}
   <section id="ecosystem" className="w-full mt-32 scroll-mt-24">
-    <div className="mb-16 text-center lg:text-left">
+    <div className="mb-16 text-center">
       <span className="text-bb-gold font-semibold tracking-widest text-sm uppercase mb-4 block">[ THE ECOSYSTEM ]</span>
       <h2 className="text-3xl lg:text-5xl font-bold text-white">Simplified Governance.</h2>
     </div>
     
-    <div className="ecosystem-grid relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mt-12">
+    <div className="ecosystem-grid relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mt-12 items-start">
       {/*  Step 1  */}
       <div className="eco-step transition-all duration-500 reveal-hidden relative z-10 glass-card rounded-2xl p-8 pt-10 mt-6">
         <div className="absolute -top-6 left-8 w-12 h-12 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center text-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] border border-blue-500/50">1</div>
@@ -442,7 +442,7 @@ export default function Home() {
         </ul>
       </div>
       {/*  Step 2  */}
-      <div className="eco-step transition-all duration-500 reveal-hidden relative z-10 glass-card rounded-2xl p-8 pt-10 mt-6" style={{"transitionDelay":"150ms"}}>
+      <div className="eco-step transition-all duration-500 reveal-hidden relative z-10 glass-card rounded-2xl p-8 pt-10 mt-6 md:mt-16" style={{"transitionDelay":"150ms"}}>
         <div className="absolute -top-6 left-8 w-12 h-12 rounded-xl bg-bb-gold text-bb-darker font-bold flex items-center justify-center text-xl shadow-[0_0_20px_rgba(250,204,21,0.5)] border border-yellow-400">2</div>
         <h3 className="text-xl font-bold text-white mb-6">Suppliers (Bidders)</h3>
         <ul className="flex flex-col gap-4">
@@ -465,7 +465,7 @@ export default function Home() {
         </ul>
       </div>
       {/*  Step 3  */}
-      <div className="eco-step transition-all duration-500 reveal-hidden relative z-10 glass-card rounded-2xl p-8 pt-10 mt-6" style={{"transitionDelay":"300ms"}}>
+      <div className="eco-step transition-all duration-500 reveal-hidden relative z-10 glass-card rounded-2xl p-8 pt-10 mt-6 md:mt-28" style={{"transitionDelay":"300ms"}}>
         <div className="absolute -top-6 left-8 w-12 h-12 rounded-xl inner-card border border-slate-700/50 text-white font-bold flex items-center justify-center text-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]">3</div>
         <h3 className="text-xl font-bold text-white mb-6">Public & Auditors</h3>
         <ul className="flex flex-col gap-4">
