@@ -94,7 +94,7 @@ export default function VerifyPage() {
   const status = profile?.verification_status || "unverified";
 
   return (
-    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
       <div className="mb-8">
         <button 
           onClick={() => router.back()}
@@ -102,9 +102,9 @@ export default function VerifyPage() {
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_OVERVIEW
         </button>
-        <h1 className="text-2xl md:text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-start sm:items-center gap-3 uppercase break-all sm:break-normal">
+        <h1 className="text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-start sm:items-center gap-3 uppercase break-all sm:break-normal">
           <CheckBadgeIcon className="w-8 h-8 text-primary shrink-0 mt-1 sm:mt-0" />
-          <span>[&nbsp;IDENTITY_VERIFICATION&nbsp;]</span>
+          <span><span className="text-primary">[</span> IDENTITY_VERIFICATION <span className="text-primary">]</span></span>
         </h1>
         <p className="text-text-muted font-mono text-sm tracking-wide">
           Upload your documents to get the Verified Badge and build reputation on BlockBid.

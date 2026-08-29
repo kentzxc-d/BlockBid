@@ -50,13 +50,13 @@ export default function ActiveSolicitationsPage() {
   }, [searchQuery, activeSolicitations]);
 
   return (
-    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
       
       {/* Header */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2 break-all sm:break-normal">
-            [&nbsp;ACTIVE_ACQUISITIONS&nbsp;]
+          <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2 break-all sm:break-normal">
+            <span className="text-primary">[</span> ACTIVE_ACQUISITIONS <span className="text-primary">]</span>
           </h1>
           <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
             Browse and bid on open item acquisitions across all sectors.

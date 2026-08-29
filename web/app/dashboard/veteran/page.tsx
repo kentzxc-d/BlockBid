@@ -10,7 +10,7 @@ export default function VeteranPage() {
   const { profile } = useProfile();
 
   return (
-    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
       <div className="mb-8">
         <button 
           onClick={() => router.back()}
@@ -18,9 +18,9 @@ export default function VeteranPage() {
         >
           <ArrowLeftIcon className="w-4 h-4 stroke-2" /> BACK_TO_OVERVIEW
         </button>
-        <h1 className="text-2xl md:text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-center gap-3 uppercase">
+        <h1 className="text-3xl font-heading font-bold tracking-tight text-text-main mb-2 flex items-center gap-3 uppercase">
           <TrophyIcon className="w-8 h-8 text-purple-600" />
-          [ VETERAN_STATUS ]
+          <span><span className="text-primary">[</span> VETERAN_STATUS <span className="text-primary">]</span></span>
         </h1>
         <p className="text-text-muted font-mono text-sm tracking-wide">
           Unlock this badge by completing 10 or more successful transactions on BlockBid.
