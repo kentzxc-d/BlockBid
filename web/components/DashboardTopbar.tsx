@@ -127,7 +127,7 @@ export default function DashboardTopbar() {
           >
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-600" : "bg-red-500"}`}></div>
-              <span className={`text-xs font-hexco font-bold truncate w-full max-w-[100px]`}>
+              <span className={`text-xs font-mono font-bold truncate w-full max-w-[100px]`}>
                 {identifier ? (identifier.length > 15 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) : "Not Connected"}
               </span>
             </div>
