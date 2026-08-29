@@ -214,7 +214,7 @@ export default function Home() {
         </div>
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">EST. BUDGET</p>
-          <p className="text-bb-gold text-sm font-bold font-mono">₱8,200,000.00</p>
+          <p className="text-bb-gold text-sm font-bold font-hexco">₱8,200,000.00</p>
         </div>
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">CLOSING DATE</p>
@@ -223,7 +223,7 @@ export default function Home() {
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">CONTRACT HASH</p>
           <div className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors text-bb-gold-light group/hash">
-            <p className="text-sm font-mono truncate">0x9a2b...4f81</p>
+            <p className="text-sm font-hexco truncate">0x9a2b...4f81</p>
             <svg className="w-3.5 h-3.5 opacity-70 group-hover/hash:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
           </div>
         </div>
@@ -266,7 +266,7 @@ export default function Home() {
         </div>
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">EST. BUDGET</p>
-          <p className="text-bb-gold text-sm font-bold font-mono">₱45,000,000.00</p>
+          <p className="text-bb-gold text-sm font-bold font-hexco">₱45,000,000.00</p>
         </div>
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">CLOSING DATE</p>
@@ -275,7 +275,7 @@ export default function Home() {
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">CONTRACT HASH</p>
           <div className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors text-bb-gold-light group/hash">
-            <p className="text-sm font-mono truncate">0x1f2c...88d2</p>
+            <p className="text-sm font-hexco truncate">0x1f2c...88d2</p>
             <svg className="w-3.5 h-3.5 opacity-70 group-hover/hash:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
           </div>
         </div>
@@ -318,7 +318,7 @@ export default function Home() {
         </div>
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">EST. BUDGET</p>
-          <p className="text-bb-gold text-sm font-bold font-mono">₱4,500,000.00</p>
+          <p className="text-bb-gold text-sm font-bold font-hexco">₱4,500,000.00</p>
         </div>
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">CLOSING DATE</p>
@@ -327,7 +327,7 @@ export default function Home() {
         <div>
           <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">CONTRACT HASH</p>
           <div className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors text-bb-gold-light group/hash">
-            <p className="text-sm font-mono truncate">0x7d57d4e0...17ca</p>
+            <p className="text-sm font-hexco truncate">0x7d57d4e0...17ca</p>
             <svg className="w-3.5 h-3.5 opacity-70 group-hover/hash:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
           </div>
         </div>
@@ -544,7 +544,7 @@ export default function Home() {
     
     {/*  Bottom Bar  */}
     <div className="border-t border-slate-800/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p className="text-slate-500 text-xs font-mono">© 2026 BLOCKBID PROTOCOL. BUILT FOR THE PUBLIC GOOD.</p>
+      <p className="text-slate-500 text-xs font-hexco">© 2026 BLOCKBID PROTOCOL. BUILT FOR THE PUBLIC GOOD.</p>
       <div className="flex gap-6 text-xs font-semibold tracking-wider">
         <a href="#" className="text-white hover:text-bb-gold transition-colors">PRIVACY</a>
         <a href="#" className="text-white hover:text-bb-gold transition-colors">TERMS</a>

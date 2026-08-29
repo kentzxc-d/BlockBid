@@ -43,12 +43,12 @@ export default function TopBidsCarousel({ location, onOpenLocationModal }: TopBi
               <h2 className="text-2xl md:text-3xl font-bold font-heading text-white tracking-tight uppercase">
                 Find local opportunities
               </h2>
-              <p className="text-text-inverse-muted mt-1 font-mono text-xs uppercase tracking-widest">
+              <p className="text-text-inverse-muted mt-1 font-hexco text-xs uppercase tracking-widest">
                 Configure node location to unlock regional solicitations.
               </p>
             </div>
           </div>
-          <button className="whitespace-nowrap px-6 py-3 bg-primary text-white font-mono text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-primary-hover hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 border border-transparent">
+          <button className="whitespace-nowrap px-6 py-3 bg-primary text-white font-hexco text-xs font-bold tracking-widest rounded-md transition-all shadow-sm hover:bg-primary-hover hover:shadow-md hover:-translate-y-0.5 uppercase flex items-center gap-2 border border-transparent">
             Set_Location <ArrowRightIcon className="w-4 h-4 stroke-2" />
           </button>
         </div>
@@ -72,11 +72,11 @@ export default function TopBidsCarousel({ location, onOpenLocationModal }: TopBi
           
           <div className="relative h-full p-8 md:p-10 flex flex-col justify-center border-l-4 border-l-primary">
             <div className="flex items-center gap-4 mb-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none bg-primary text-white text-[10px] font-mono font-bold uppercase tracking-widest shadow-sm">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-none bg-primary text-white text-[10px] font-hexco font-bold uppercase tracking-widest shadow-sm">
                 <FireIcon className="w-3.5 h-3.5 text-white" />
                 [{b.label}]
               </span>
-              <span className="text-text-inverse-muted text-xs font-mono font-bold tracking-widest uppercase flex items-center gap-1.5">
+              <span className="text-text-inverse-muted text-xs font-hexco font-bold tracking-widest uppercase flex items-center gap-1.5">
                 <MapPinIcon className="w-4 h-4 text-text-inverse-muted" /> {location}
               </span>
             </div>
@@ -86,12 +86,12 @@ export default function TopBidsCarousel({ location, onOpenLocationModal }: TopBi
                 <h2 className="text-3xl md:text-4xl font-bold font-heading text-white tracking-tight uppercase leading-tight">
                   {b.title}
                 </h2>
-                <p className="text-text-inverse-muted mt-2 font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                <p className="text-text-inverse-muted mt-2 font-hexco text-xs uppercase tracking-widest flex items-center gap-2">
                   <span className="w-2 h-2 rounded-none bg-primary"></span>
                   Category: {b.category}
                 </p>
               </div>
-              <button className="whitespace-nowrap px-8 py-3 rounded-md bg-white text-text-main font-mono text-xs font-bold uppercase tracking-widest hover:bg-gray-100 transition-colors flex items-center gap-2 z-20 border border-border">
+              <button className="whitespace-nowrap px-8 py-3 rounded-md bg-white text-text-main font-hexco text-xs font-bold uppercase tracking-widest hover:bg-gray-100 transition-colors flex items-center gap-2 z-20 border border-border">
                 View_Details <ArrowRightIcon className="w-4 h-4 stroke-2" />
               </button>
             </div>

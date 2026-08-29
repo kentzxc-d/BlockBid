@@ -118,7 +118,7 @@ export default function DashboardSidebar() {
         {(!ready || loadingProfile) ? (
           <div className="flex-1 flex flex-col items-center justify-center opacity-70 animate-pulse">
             <Cog6ToothIcon className="w-8 h-8 text-primary animate-[spin_3s_linear_infinite] mb-4 opacity-50" />
-            <p className="font-mono text-[10px] font-bold text-primary tracking-widest uppercase text-center">
+            <p className="font-hexco text-[10px] font-bold text-primary tracking-widest uppercase text-center">
               [ VERIFYING<br/>CLEARANCE ]
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function DashboardSidebar() {
             {/* Network Mode Switcher Removed */}
 
 
-            <p className="px-2 text-xs font-mono font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
+            <p className="px-2 text-xs font-hexco font-bold text-text-inverse-muted uppercase tracking-widest mb-4">
               [ NAVIGATION ]
             </p>
 
@@ -158,7 +158,7 @@ export default function DashboardSidebar() {
       {/* Footer Widget */}
       <div className="p-5 border-t border-border-inverse">
         <div className="mb-4">
-          <p className="text-xs font-mono text-text-inverse-muted tracking-wider mb-1">[ ACTIVE_ENTITY ]</p>
+          <p className="text-xs font-hexco text-text-inverse-muted tracking-wider mb-1">[ ACTIVE_ENTITY ]</p>
           <p className="text-sm font-heading font-bold text-white truncate">{(!ready || loadingProfile) ? "Authenticating..." : displayName}</p>
         </div>
 
@@ -167,7 +167,7 @@ export default function DashboardSidebar() {
             <div className="w-2.5 h-2.5 rounded-none bg-green-500"></div>
             <span className="text-sm font-heading font-semibold text-white tracking-wide uppercase">Network</span>
           </div>
-          <p className="text-xs font-mono text-text-inverse-muted leading-relaxed">
+          <p className="text-xs font-hexco text-text-inverse-muted leading-relaxed">
             Polygon Amoy<br />Systems Operational
           </p>
         </div>
@@ -183,13 +183,13 @@ export default function DashboardSidebar() {
               [ ROLE_UPGRADE_REQUIRED ]
             </h3>
             <div className="w-full h-px bg-border-inverse/30 mb-6"></div>
-            <p className="font-mono text-sm text-text-inverse-muted mb-8 leading-relaxed">
+            <p className="font-hexco text-sm text-text-inverse-muted mb-8 leading-relaxed">
               {upgradeMessage}
             </p>
             <div className="flex gap-4">
                <button
                 onClick={() => setUpgradeModalOpen(false)}
-                className="flex-1 py-3 px-4 font-mono text-xs rounded-md font-bold text-text-inverse-muted bg-surface-inverse hover:text-white transition-colors uppercase tracking-widest text-center"
+                className="flex-1 py-3 px-4 font-hexco text-xs rounded-md font-bold text-text-inverse-muted bg-surface-inverse hover:text-white transition-colors uppercase tracking-widest text-center"
               >
                 Cancel
               </button>
@@ -198,7 +198,7 @@ export default function DashboardSidebar() {
                   setUpgradeModalOpen(false);
                   router.push("/dashboard/settings");
                 }}
-                className="flex-1 py-3 px-4 font-mono text-xs rounded-md font-bold text-background bg-primary hover:bg-primary-light transition-colors uppercase tracking-widest text-center"
+                className="flex-1 py-3 px-4 font-hexco text-xs rounded-md font-bold text-background bg-primary hover:bg-primary-light transition-colors uppercase tracking-widest text-center"
               >
                 Go to Settings
               </button>

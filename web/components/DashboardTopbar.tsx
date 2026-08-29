@@ -127,7 +127,7 @@ export default function DashboardTopbar() {
           >
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full shrink-0 ${identifier ? "bg-green-600" : "bg-red-500"}`}></div>
-              <span className={`text-xs font-mono font-bold truncate w-full max-w-[100px]`}>
+              <span className={`text-xs font-hexco font-bold truncate w-full max-w-[100px]`}>
                 {identifier ? (identifier.length > 15 ? `${identifier.slice(0, 6)}...${identifier.slice(-4)}` : identifier) : "Not Connected"}
               </span>
             </div>
@@ -184,7 +184,7 @@ export default function DashboardTopbar() {
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-2 md:px-3 py-2 rounded-md transition-all uppercase"
+            className="flex items-center gap-2 text-xs font-hexco font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-2 md:px-3 py-2 rounded-md transition-all uppercase"
           >
             <ArrowRightOnRectangleIcon className="w-4 h-4 stroke-2" />
             <span className="hidden sm:inline">Sign Out</span>

@@ -92,14 +92,14 @@ export default function WalletBanner() {
           {profile?.verification_status === 'verified' && (
             <Link href="/dashboard/verify" className="relative group ml-2 flex items-center justify-center cursor-pointer flex-shrink-0">
               <Image src="/verified-badge.png" alt="Verified User" width={28} height={28} className="drop-shadow-sm group-hover:scale-105 transition-transform" />
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-green-500/10 border border-green-500 text-green-600 font-mono text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-green-500/10 border border-green-500 text-green-600 font-hexco text-[10px] font-bold tracking-widest uppercase rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-sm">
                 [ Verified ]
               </div>
             </Link>
           )}
           
           {profile?.reputation_score !== undefined && (
-            <div className="ml-3 px-3 py-1 bg-background border border-border text-text-main font-mono text-xs font-bold tracking-widest uppercase rounded-md shadow-sm flex items-center gap-1.5 shrink-0">
+            <div className="ml-3 px-3 py-1 bg-background border border-border text-text-main font-hexco text-xs font-bold tracking-widest uppercase rounded-md shadow-sm flex items-center gap-1.5 shrink-0">
               <span className="text-primary">REP:</span> {profile.reputation_score}/100
             </div>
           )}
@@ -115,7 +115,7 @@ export default function WalletBanner() {
           
           {/* LEFT: WALLET BALANCE & BUTTONS */}
           <div>
-            <div className="text-xs font-mono font-bold text-text-muted tracking-widest uppercase mb-2">
+            <div className="text-xs font-hexco font-bold text-text-muted tracking-widest uppercase mb-2">
               Wallet Balance
             </div>
             <div className="text-5xl font-heading font-black text-text-main mb-5 tracking-tighter">
@@ -129,13 +129,13 @@ export default function WalletBanner() {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => window.dispatchEvent(new Event('open-topup-modal'))}
-                className="flex items-center gap-1.5 px-6 py-2 bg-secondary text-white transition-all rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5"
+                className="flex items-center gap-1.5 px-6 py-2 bg-secondary text-white transition-all rounded-md font-hexco text-xs font-bold tracking-widest uppercase shadow-sm hover:bg-secondary-hover hover:text-primary hover:shadow-md hover:-translate-y-0.5"
               >
                 <ArrowDownIcon className="w-3 h-3 stroke-2" /> TOP-UP
               </button>
               <button 
                 onClick={() => window.dispatchEvent(new Event('open-withdraw-modal'))}
-                className="flex items-center gap-1.5 px-6 py-2 bg-transparent border border-border text-text-main rounded-md font-mono text-xs font-bold tracking-widest uppercase shadow-sm transition-all hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-md"
+                className="flex items-center gap-1.5 px-6 py-2 bg-transparent border border-border text-text-main rounded-md font-hexco text-xs font-bold tracking-widest uppercase shadow-sm transition-all hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-md"
               >
                 <ArrowUpIcon className="w-3.5 h-3.5 stroke-2" /> WITHDRAW
               </button>
@@ -144,17 +144,17 @@ export default function WalletBanner() {
 
           {/* RIGHT: NETWORK STATUS */}
           <div className="flex flex-col items-center md:items-end mt-6 md:mt-0 space-y-2 relative w-full md:w-auto">
-            <div className="text-[10px] font-mono text-text-muted tracking-widest uppercase mb-1 flex items-center gap-1.5 w-[200px] px-3">
+            <div className="text-[10px] font-hexco text-text-muted tracking-widest uppercase mb-1 flex items-center gap-1.5 w-[200px] px-3">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Network Status
             </div>
             <div className="flex items-center justify-between w-[200px] bg-background/50 border border-border px-3 py-1.5 rounded-none">
-              <span className="text-[10px] font-mono font-bold text-primary/70">BLOCK_HEIGHT</span>
-              <span className="text-xs font-mono text-text-main font-bold">#{blockHeight.toLocaleString()}</span>
+              <span className="text-[10px] font-hexco font-bold text-primary/70">BLOCK_HEIGHT</span>
+              <span className="text-xs font-hexco text-text-main font-bold">#{blockHeight.toLocaleString()}</span>
             </div>
             <div className="flex items-center justify-between w-[200px] bg-background/50 border border-border px-3 py-1.5 rounded-none">
-              <span className="text-[10px] font-mono font-bold text-primary/70">LOCAL_TIME</span>
-              <span className="text-xs font-mono text-text-main font-bold">{currentTime || "--:--:--"}</span>
+              <span className="text-[10px] font-hexco font-bold text-primary/70">LOCAL_TIME</span>
+              <span className="text-xs font-hexco text-text-main font-bold">{currentTime || "--:--:--"}</span>
             </div>
           </div>
 
