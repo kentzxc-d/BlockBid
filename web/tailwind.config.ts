@@ -39,7 +39,9 @@ const config: Config = {
         heading: ["Outfit", "sans-serif"],
         body: ["Inter", "sans-serif"],
         mono: ["Fira Code", "monospace"],
-      }
+        hexco: ["Hexco", "sans-serif"],
+        ichiji: ["Ichiji", "sans-serif"],
+      },
     },
   },
   plugins: [],

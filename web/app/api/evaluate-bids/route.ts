@@ -37,9 +37,9 @@ export async function POST(req: Request) {
   if (aiEvaluateRateLimiter) {
     const { success, limit, remaining, reset } = await aiEvaluateRateLimiter.limit(`ai_${verifiedUserId}`);
     if (!success) {
-      return NextResponse.json({ 
-        error: "Too many AI evaluations. Please try again later." 
-      }, { 
+      return NextResponse.json({
+        error: "Too many AI evaluations. Please try again later."
+      }, {
         status: 429,
         headers: {
           "X-RateLimit-Limit": limit.toString(),
@@ -81,7 +81,7 @@ aiSummary should be a professional, 2-3 sentence justification of the total scor
     const userPrompt = `Evaluate the following bids:\n\n${JSON.stringify(bids, null, 2)}`;
 
     const { object } = await generateObject({
-      model: google('gemini-3.5-flash'),
+      model: google('gemini-3.7-flash'),
       schema: EvaluationSchema,
       system: systemPrompt,
       prompt: userPrompt,

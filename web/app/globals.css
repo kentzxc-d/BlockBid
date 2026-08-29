@@ -1,28 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
+@font-face {
+  font-family: 'Hexco';
+  src: url('/fonts/HEXCO.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ichiji';
+  src: url('/fonts/Ichiji-Two.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   /* Immutable Ledger Theme */
-  --color-primary: #FACC15; /* Bright Gold */
+  --color-primary: #FACC15;
+  /* Bright Gold */
   --color-primary-hover: #D4AF68;
-  --color-secondary: #0B132B; /* Midnight Navy */
+  --color-secondary: #0B132B;
+  /* Midnight Navy */
   --color-secondary-hover: #16264A;
-  
-  --color-background: #F9F9F6; /* Parchment White */
-  --color-surface: #FFFFFF; /* Pure white for cards */
-  --color-surface-inverse: #0B132B; /* Midnight Navy */
-  
+
+  --color-background: #F9F9F6;
+  /* Parchment White */
+  --color-surface: #FFFFFF;
+  /* Pure white for cards */
+  --color-surface-inverse: #0B132B;
+  /* Midnight Navy */
+
   --color-text-main: #0B132B;
   --color-text-muted: #4A5568;
   --color-text-inverse: #F9F9F6;
   --color-text-inverse-muted: #A0AEC0;
-  
+
   --color-border: #CBD5E1;
   --color-border-inverse: #1E293B;
-  
+
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'Fira Code', monospace;
@@ -30,11 +51,11 @@
   --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.1);
   --shadow-md: 0 4px 8px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.2);
   --shadow-lg: 0 8px 16px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.2);
-  
+
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-pill: 9999px;
-  
+
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
 }
@@ -53,7 +74,12 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   color: var(--color-text-main);
@@ -186,7 +212,8 @@ a:hover {
   font-weight: 500;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover,
+.nav-item.active {
   color: var(--color-primary);
 }
 
@@ -210,6 +237,7 @@ a:hover {
 .landing-page::-webkit-scrollbar {
   display: none;
 }
+
 .landing-page {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -218,7 +246,7 @@ a:hover {
 /* Custom background pattern and glows */
 .bg-pattern {
   background-color: #0b1120;
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px, 40px 40px;
@@ -231,9 +259,19 @@ a:hover {
 }
 
 @keyframes check-draw {
-  0% { stroke-dashoffset: 24; opacity: 0; }
-  10% { opacity: 1; }
-  100% { stroke-dashoffset: 0; opacity: 1; }
+  0% {
+    stroke-dashoffset: 24;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
 }
 
 .group:hover .check-anim {
@@ -291,13 +329,27 @@ a:hover {
 }
 
 @keyframes breathe {
-  0% { transform: scale(0.8) translate(0, 0); opacity: 0.3; }
-  100% { transform: scale(1.4) translate(15vw, 10vh); opacity: 0.6; }
+  0% {
+    transform: scale(0.8) translate(0, 0);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.4) translate(15vw, 10vh);
+    opacity: 0.6;
+  }
 }
 
 @keyframes breathe2 {
-  0% { transform: scale(0.8) translate(0, 0); opacity: 0.2; }
-  100% { transform: scale(1.5) translate(-20vw, -10vh); opacity: 0.5; }
+  0% {
+    transform: scale(0.8) translate(0, 0);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: scale(1.5) translate(-20vw, -10vh);
+    opacity: 0.5;
+  }
 }
 
 .animate-reveal-up {
@@ -305,8 +357,15 @@ a:hover {
 }
 
 @keyframes revealUp {
-  0% { transform: translateY(120%); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .text-shimmer {
@@ -318,7 +377,9 @@ a:hover {
 }
 
 @keyframes shimmer {
-  to { background-position: -200% center; }
+  to {
+    background-position: -200% center;
+  }
 }
 
 /* Scroll Reveal Classes */
@@ -327,6 +388,7 @@ a:hover {
   transform: translateY(40px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .reveal-visible {
   opacity: 1;
   transform: translateY(0);
@@ -361,43 +423,118 @@ a:hover {
 
 /* Differentiator Micro-Animations */
 @keyframes icon-pulse {
-  0%, 100% { transform: scale(1); filter: brightness(1); }
-  50% { transform: scale(1.15); filter: brightness(1.5); }
-}
-@keyframes icon-strike {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  20% { transform: scale(1.2) rotate(10deg); filter: brightness(1.5); }
-  40% { transform: scale(1) rotate(-5deg); }
-  60% { transform: scale(1.1) rotate(5deg); }
-}
-@keyframes icon-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-@keyframes icon-scan {
-  0%, 100% { opacity: 1; transform: translateY(0); }
-  50% { opacity: 0.5; transform: translateY(2px); filter: drop-shadow(0 0 4px #facc15); }
-}
-@keyframes icon-blink {
-  0%, 100% { transform: scaleY(1); }
-  10% { transform: scaleY(0.1); }
-  20% { transform: scaleY(1); }
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+    filter: brightness(1.5);
+  }
 }
 
-.group:hover .animate-pulse-glow { animation: icon-pulse 1.5s ease-in-out infinite; }
-.group:hover .animate-strike { animation: icon-strike 1.5s ease-in-out infinite; }
-.group:hover .animate-bounce-up { animation: icon-bounce 1s ease-in-out infinite; }
-.group:hover .animate-scan { animation: icon-scan 2s ease-in-out infinite; }
-.group:hover .animate-blink { animation: icon-blink 3s ease-in-out infinite; }
+@keyframes icon-strike {
+
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  20% {
+    transform: scale(1.2) rotate(10deg);
+    filter: brightness(1.5);
+  }
+
+  40% {
+    transform: scale(1) rotate(-5deg);
+  }
+
+  60% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+@keyframes icon-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes icon-scan {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: translateY(2px);
+    filter: drop-shadow(0 0 4px #facc15);
+  }
+}
+
+@keyframes icon-blink {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  10% {
+    transform: scaleY(0.1);
+  }
+
+  20% {
+    transform: scaleY(1);
+  }
+}
+
+.group:hover .animate-pulse-glow {
+  animation: icon-pulse 1.5s ease-in-out infinite;
+}
+
+.group:hover .animate-strike {
+  animation: icon-strike 1.5s ease-in-out infinite;
+}
+
+.group:hover .animate-bounce-up {
+  animation: icon-bounce 1s ease-in-out infinite;
+}
+
+.group:hover .animate-scan {
+  animation: icon-scan 2s ease-in-out infinite;
+}
+
+.group:hover .animate-blink {
+  animation: icon-blink 3s ease-in-out infinite;
+}
 
 /* Ecosystem Pipeline & Focus */
 @keyframes pipeline-pulse {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(300%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(300%);
+  }
 }
+
 .animate-pipeline-pulse {
   animation: pipeline-pulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
 .ecosystem-grid:has(.eco-step:hover) .eco-step:not(:hover) {
   opacity: 0.3;
   filter: grayscale(50%);
@@ -436,11 +573,13 @@ a:hover {
   background: linear-gradient(90deg, rgba(250, 204, 21, 0.5), transparent);
   height: 1px;
 }
+
 .node-line.vertical {
   background: linear-gradient(180deg, rgba(250, 204, 21, 0.5), transparent);
   width: 1px;
   height: auto;
 }
+
 .node-dot {
   position: absolute;
   width: 8px;
@@ -461,14 +600,22 @@ a:hover {
   will-change: transform, opacity, filter;
 }
 
-.pos-1, .pos-2, .pos-3, .pos-lifting {
+.pos-1,
+.pos-2,
+.pos-3,
+.pos-lifting {
   transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Button Checkmark Animation */
 @keyframes check-draw {
-  0% { stroke-dashoffset: 24; }
-  100% { stroke-dashoffset: 0; }
+  0% {
+    stroke-dashoffset: 24;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 .check-anim {

@@ -106,8 +106,23 @@ export default function Home() {
 <header className="w-full max-w-7xl mx-auto px-6 py-8 flex justify-between items-center z-10 relative">
 {/* Logo Lockup */}
 <div className="flex items-center gap-2.5 cursor-pointer group">
-  <span className="text-[1.75rem] font-normal tracking-tight text-white font-ichiji leading-none mt-1">
-    block<span className="text-bb-gold">bid</span>
+<div 
+  className="w-9 h-9 bg-bb-gold transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_15px_rgba(251,191,36,0.3)] group-hover:drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]"
+  style={{
+    maskImage: 'url(/logo-gold-transparent.png)',
+    maskSize: 'contain',
+    maskRepeat: 'no-repeat',
+    maskPosition: 'center',
+    WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+    WebkitMaskSize: 'contain',
+    WebkitMaskRepeat: 'no-repeat',
+    WebkitMaskPosition: 'center'
+  }}
+  aria-label="BlockBid Logo"
+  role="img"
+></div>
+  <span className="text-[1.75rem] tracking-tight text-white font-ichiji leading-none mt-1">
+    BLOCK<span className="text-bb-gold">BID</span>
   </span>
 </div>
 {/* Navigation */}
@@ -499,8 +514,23 @@ export default function Home() {
       {/*  Col 1  */}
       <div>
         <div className="flex items-center gap-2.5 mb-6 cursor-pointer group">
-          <span className="text-2xl font-normal tracking-tight text-white font-ichiji leading-none mt-1">
-            block<span className="text-bb-gold">bid</span>
+          <div 
+            className="w-8 h-8 bg-bb-gold transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(251,191,36,0.2)] group-hover:drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]"
+            style={{
+              maskImage: 'url(/logo-gold-transparent.png)',
+              maskSize: 'contain',
+              maskRepeat: 'no-repeat',
+              maskPosition: 'center',
+              WebkitMaskImage: 'url(/logo-gold-transparent.png)',
+              WebkitMaskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center'
+            }}
+            aria-label="BlockBid Logo"
+            role="img"
+          ></div>
+          <span className="text-2xl tracking-tight text-white font-ichiji leading-none mt-1">
+            BLOCK<span className="text-bb-gold">BID</span>
           </span>
         </div>
         <p className="text-slate-500 text-sm leading-relaxed mb-6">Institutional-grade blockchain infrastructure for bias-free government procurement. Built for absolute public accountability.</p>

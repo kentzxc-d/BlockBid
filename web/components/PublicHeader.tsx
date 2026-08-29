@@ -17,22 +17,7 @@ export default function PublicHeader() {
         {/* Left: Logo */}
         <div className="flex items-center gap-3 z-10">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div 
-              className="w-8 h-8 md:w-9 md:h-9 bg-[#FBBF24] transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_2px_4px_rgba(0,0,0,0.1)]"
-              style={{
-                maskImage: 'url(/logo-gold-transparent.png)',
-                maskSize: 'contain',
-                maskRepeat: 'no-repeat',
-                maskPosition: 'center',
-                WebkitMaskImage: 'url(/logo-gold-transparent.png)',
-                WebkitMaskSize: 'contain',
-                WebkitMaskRepeat: 'no-repeat',
-                WebkitMaskPosition: 'center'
-              }}
-              aria-label="BlockBid Logo"
-              role="img"
-            ></div>
-            <span className="text-[1.5rem] md:text-[1.75rem] font-black text-[#0B132B] tracking-tight font-outfit leading-none mt-1">BLOCK<span className="text-[#FBBF24]">BID</span></span>
+            <span className="text-[1.5rem] md:text-[1.75rem] font-normal text-[#0B132B] tracking-tight font-ichiji leading-none mt-1">block<span className="text-[#FBBF24]">bid</span></span>
           </Link>
         </div>
 
