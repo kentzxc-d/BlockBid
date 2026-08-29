@@ -10,7 +10,7 @@ export default function VeteranPage() {
   const { profile } = useProfile();
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-6">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
       <div className="mb-8">
         <button 
           onClick={() => router.back()}

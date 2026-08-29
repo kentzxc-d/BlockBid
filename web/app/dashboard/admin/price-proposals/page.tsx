@@ -93,15 +93,12 @@ export default function PriceProposalsAdminPage() {
   if (loadingProfile || profile?.role !== "admin") return null;
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-2">
-          <h1 className="text-2xl md:text-3xl font-bold text-text-main font-heading tracking-tight uppercase break-all sm:break-normal">
-            [&nbsp;PENDING_PRICE_PROPOSALS&nbsp;]
+          <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase break-all sm:break-normal">
+            <span className="text-primary">[</span> PENDING_PRICE_PROPOSALS <span className="text-primary">]</span>
           </h1>
-          <span className="w-fit bg-primary/10 text-primary text-xs font-mono px-2 py-1 rounded-md">
-            {proposals.length} PENDING
-          </span>
         </div>
         <p className="text-text-muted font-mono text-xs uppercase tracking-widest">Review crowdsourced market prices submitted by suppliers before adding them to the public benchmark.</p>
       </div>

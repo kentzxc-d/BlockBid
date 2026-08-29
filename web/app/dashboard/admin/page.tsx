@@ -103,14 +103,14 @@ export default function AdminOverview() {
 
   return (
     <RoleGuard allowedRoles={["admin"]}>
-      <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full">
+      <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
         {/* Header */}
         <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
           <div>
-            <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
-              [ PLATFORM_OVERVIEW ]
+            <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+              <span className="text-primary">[</span> PLATFORM_OVERVIEW <span className="text-primary">]</span>
             </h1>
-            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
+            <p className="text-text-muted font-hexco text-xs uppercase tracking-widest">
               Global system statistics and health metrics.
             </p>
           </div>
