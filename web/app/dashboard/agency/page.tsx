@@ -80,7 +80,7 @@ export default function AgencyDashboard() {
           <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
             <span className="text-primary">[</span> PROCURING_AGENT_WORKSPACE <span className="text-primary">]</span>
           </h1>
-          <p className="text-sm font-hexco font-bold text-text-muted tracking-widest uppercase">Acquisition_&_Evaluation_Hub</p>
+          <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Acquisition_&_Evaluation_Hub</p>
         </div>
 
         {profile?.verification_status !== 'verified' && profile?.verification_status !== 'pending' && (

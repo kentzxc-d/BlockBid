@@ -82,11 +82,11 @@ export default function AdminUsersManagement() {
 
   return (
     <RoleGuard allowedRoles={["admin"]}>
-      <div className="py-6 px-4 md:py-10 md:px-8 max-w-7xl mx-auto w-full">
+      <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
         <div className="mb-10 border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
-              [ USER_MANAGEMENT ]
+            <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+              <span className="text-primary">[</span> USER_MANAGEMENT <span className="text-primary">]</span>
             </h1>
             <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
               Manage platform entities and access control roles.

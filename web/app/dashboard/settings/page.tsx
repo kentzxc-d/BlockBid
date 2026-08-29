@@ -39,7 +39,7 @@ function SettingsPageContent() {
         <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
           <span className="text-primary">[</span> ACCOUNT_SETTINGS <span className="text-primary">]</span>
         </h1>
-        <p className="text-sm font-hexco font-bold text-text-muted tracking-widest uppercase">Manage_Identity_&_Keys</p>
+        <p className="text-sm font-mono font-bold text-text-muted tracking-widest uppercase">Manage_Identity_&_Keys</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -129,12 +129,12 @@ export default function PriceBenchmarkPage() {
   const showTrendMarks = categoryFilter !== "ALL";
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
+    <div className="py-6 px-4 md:py-10 md:px-8 max-w-6xl mx-auto w-full space-y-8">
       {/* Header */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
-            [ PRICE_BENCHMARK ]
+          <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
+            <span className="text-primary">[</span> PRICE_BENCHMARK <span className="text-primary">]</span>
           </h1>
           <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
             A composite market index combining official SRPs and BlockBid historical data.

@@ -110,7 +110,7 @@ export default function AdminOverview() {
             <h1 className="text-3xl font-bold text-text-main font-heading tracking-tight uppercase mb-2">
               <span className="text-primary">[</span> PLATFORM_OVERVIEW <span className="text-primary">]</span>
             </h1>
-            <p className="text-text-muted font-hexco text-xs uppercase tracking-widest">
+            <p className="text-text-muted font-mono text-xs uppercase tracking-widest">
               Global system statistics and health metrics.
             </p>
           </div>

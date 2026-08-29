@@ -184,7 +184,7 @@ export default function DashboardTopbar() {
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 text-xs font-hexco font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-2 md:px-3 py-2 rounded-md transition-all uppercase"
+            className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-text-muted hover:text-text-main hover:bg-gray-50 border border-transparent hover:border-border px-2 md:px-3 py-2 rounded-md transition-all uppercase"
           >
             <ArrowRightOnRectangleIcon className="w-4 h-4 stroke-2" />
             <span className="hidden sm:inline">Sign Out</span>
