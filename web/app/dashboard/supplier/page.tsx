@@ -242,7 +242,9 @@ export default function UserDashboard() {
         {/* Sidebar (My Bids) */}
         <div className="space-y-6">
           <div className="border-b border-border pb-4">
-            <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">[ RECENT_BIDS ]</h2>
+            <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">
+              <span className="text-primary">[</span> RECENT_BIDS <span className="text-primary">]</span>
+            </h2>
           </div>
           
           <div className="bg-surface rounded-none border border-border flex flex-col overflow-hidden">

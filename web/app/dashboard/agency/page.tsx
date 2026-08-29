@@ -112,13 +112,15 @@ export default function AgencyDashboard() {
               href="/dashboard/agency/new"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-background hover:text-background hover:bg-primary-hover font-mono text-sm font-bold uppercase tracking-widest transition-colors rounded-md shadow-md shadow-primary/20 border border-primary hover:-translate-y-0.5"
             >
-              [ POST_NEW_ACQUISITION ] <ArrowRightIcon className="w-5 h-5 stroke-2" />
+              <span className="text-primary">[</span> POST_NEW_ACQUISITION <span className="text-primary">]</span> <ArrowRightIcon className="w-5 h-5 stroke-2" />
             </Link>
           </div>
         ) : (
           <div className="bg-surface border border-border rounded-none overflow-hidden">
             <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center justify-between">
-              <h3 className="text-xs font-mono font-bold tracking-widest text-text-main uppercase">[ RECENT_SOLICITATIONS ]</h3>
+              <h3 className="text-xs font-mono font-bold tracking-widest text-text-main uppercase">
+                <span className="text-primary">[</span> RECENT_SOLICITATIONS <span className="text-primary">]</span>
+              </h3>
               <Link href="/dashboard/my-acquisitions" className="text-xs font-mono font-bold tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-1 uppercase">
                 VIEW_ALL <ArrowRightIcon className="w-3.5 h-3.5 stroke-2" />
               </Link>

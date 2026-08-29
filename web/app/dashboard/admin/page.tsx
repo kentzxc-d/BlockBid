@@ -177,7 +177,9 @@ export default function AdminOverview() {
         <div className="mb-12 bg-surface rounded-md p-6 border-2 border-primary/30 shadow-[4px_4px_0px_0px_rgba(59,130,246,0.1)]">
           <div className="flex items-center gap-2 mb-4">
             <TrophyIcon className="w-6 h-6 text-primary" />
-            <h3 className="font-bold text-text-main font-heading text-base sm:text-lg uppercase tracking-tight break-all sm:break-normal">[&nbsp;QUICK_FUND_TEST_WALLET&nbsp;]</h3>
+            <h3 className="font-bold text-text-main font-heading text-base sm:text-lg uppercase tracking-tight break-all sm:break-normal">
+              <span className="text-primary">[</span> QUICK_FUND_TEST_WALLET <span className="text-primary">]</span>
+            </h3>
           </div>
           <p className="text-text-muted font-mono text-xs mb-6 uppercase tracking-widest leading-relaxed">
             Send POL directly from the main Admin wallet to any test wallet. Useful for giving testnet gas to suppliers.
@@ -244,7 +246,7 @@ export default function AdminOverview() {
         {/* Analytics Section */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
           <h2 className="text-xl font-bold text-text-main font-heading tracking-tight uppercase">
-            [&nbsp;ACTIVITY_ANALYTICS&nbsp;]
+            <span className="text-primary">[</span> ACTIVITY_ANALYTICS <span className="text-primary">]</span>
           </h2>
           <span className="w-fit px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-md font-mono text-xs font-bold tracking-widest uppercase">
             Last 30 Days
@@ -255,7 +257,9 @@ export default function AdminOverview() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
             {/* Line Chart: Users */}
             <div className="bg-surface rounded-md p-6 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.02)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.05)]">
-              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Entity_Registrations ]</h3>
+              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">
+                <span className="text-primary">[</span> Entity_Registrations <span className="text-primary">]</span>
+              </h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -300,7 +304,9 @@ export default function AdminOverview() {
 
             {/* Area Chart: Acquisitions vs Bids */}
             <div className="bg-surface rounded-md p-6 border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.02)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.05)]">
-              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">[ Platform_Activity ]</h3>
+              <h3 className="font-bold text-text-main font-heading text-lg mb-6 uppercase tracking-tight">
+                <span className="text-primary">[</span> Platform_Activity <span className="text-primary">]</span>
+              </h3>
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
